@@ -6,6 +6,6 @@
     <title>Activity | หน้าแรก</title>
 </head>
 <body>
-    
+<?php require_once __DIR__ . '/component/navbar.php'; ?>
 </body>
 </html>
