@@ -10,5 +10,4 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 
 COPY . /var/www/html
 
-# เปลี่ยน owner และ permission
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
