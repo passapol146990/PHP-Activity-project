@@ -7,12 +7,12 @@ services:
       - .:/var/www/html
     container_name: php_mvc_app
   mysql-db:
-    image: mysql:8.0
+    image: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: 38fe20690ede3df0bbc33e55ae2292864b88ca61069c6102d5dbed65dc14caec
+      MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: db
       MYSQL_USER: admin
-      MYSQL_PASSWORD: 88d46489f80dde0e12e5a9f6b0609e51835b2ff6ff0e4edff0e83ddf0dc48902
+      MYSQL_PASSWORD: 123456
     ports:
       - "3306:3306"
   phpmyadmin:
