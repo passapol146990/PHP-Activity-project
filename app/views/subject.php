@@ -5,10 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>รายวิชา</title>
 </head>
-<body class="bg-dark">
-    <?php require_once __DIR__ . '/component/navbar.php'; ?>
+<body class="bg-dark text-white">
+    <?php if(isset($_GET["warning"])){?>
+        <script>
+            let s = Swal.fire({
+                title: "แจ้งเตือน",
+                text: <?= json_encode($_GET["warning"]) ?>,
+                icon: "warning"
+            }).then((result) => {
+                window.location.href = "/subject"
+            });
+        </script>
+    <?php } ?>
+    <?php require_once '../app/component/navbar.php'; ?>
     <div class="container p-5 text-white">
         <h1>ระบบลงทะเบียนเรียน</h1>
         <hr>
@@ -32,7 +44,7 @@
                                   <td><?= htmlspecialchars($row['sub_name']) ?></td>
                                   <td><?= htmlspecialchars($row['t_name']) ?></td>
                                   <td>
-                                      <a href="/registion?id=<?= htmlspecialchars($row['sub_id']) ?>" class="btn btn-primary">ลงทะเบียน</a>
+                                      <a href="/registion?sub_id=<?= htmlspecialchars($row['sub_id']) ?>&tid=<?= htmlspecialchars($row['tid']) ?>" class="btn btn-primary">ลงทะเบียน</a>
                                   </td>
                               </tr>    
                           <? } ?>

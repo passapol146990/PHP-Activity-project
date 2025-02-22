@@ -5,10 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <title>ข้อมูล</title>
 </head>
-<body class="bg-dark">
-    <?php require_once __DIR__ . '/component/navbar.php'; ?>
+<body class="bg-dark text-white">
+    <?php if(isset($_GET["success"])){?>
+        <script>
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: <?= json_encode($_GET["success"]) ?>,
+                showConfirmButton: false,
+                timer: 1000
+            }).then((result) => {
+                window.location.href = "/about"
+            });
+        </script>
+    <?php } ?>
+    <?php if(isset($_GET["del"])){?>
+        <script>
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: <?= json_encode($_GET["del"]) ?>,
+                showConfirmButton: false,
+                timer: 500
+            }).then((result) => {
+                window.location.href = "/about"
+            });
+        </script>
+    <?php } ?>
+    <?php require_once '../app/component/navbar.php'; ?>
     <div class="container p-5 text-white">
         <h1><?= htmlspecialchars($data['fname'].' '.$data['lname']) ?></h1></h1>
         <hr>
@@ -37,19 +65,19 @@
                           </tr>
                         </thead>
                         <tbody>
-                            <?php if ($result->num_rows > 0) { ?>
-                              <?php while ($row = $result->fetch_assoc()) { ?>
-                                  <tr>
-                                    <th scope="row">1</th>
-                                    <td>$row['datatime']</td>
-                                    <td>$row['rid'].$row['subject_name']</td>
-                                    <td>$row['teacher_name']</td>
+                            <?php $i = 1; ?>
+                            <?php while ($row = $registion->fetch_assoc()) { ?>
+                                <tr>
+                                    <th scope="row"><?= htmlspecialchars($i) ?></th>
+                                    <td><?= htmlspecialchars($row['datetime']) ?></td>
+                                    <td><?= htmlspecialchars($row['sub_name']) ?></td>
+                                    <td><?= htmlspecialchars($row['t_name']) ?></td>
                                     <td>
-                                        <button class="btn btn-danger">ถอนวิชา</button>
+                                        <a class="btn btn-danger" href="/del?rid=<?= htmlspecialchars($row['rid']) ?>">ถอนวิชา</a>
                                     </td>
-                                  </tr>
-                              <?php  } ?>
-                            <?php } ?>
+                                </tr>
+                                <?php $i+=1; ?>
+                            <?php  }; ?>
                             <!-- <tr>
                               <th scope="row">1</th>
                               <td>12/1/2568 12:00:00</td>
