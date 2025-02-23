@@ -5,9 +5,10 @@ services:
       - "80:80"
     volumes:
       - .:/var/www/html
-    container_name: php_mvc_app
-  mysql-db:
+    container_name: php-activity-project
+  mysql-db-activity:
     image: mysql
+    container_name: mysql-db-activity
     environment:
       MYSQL_ROOT_PASSWORD: OSssA45!sd@
       MYSQL_DATABASE: db
@@ -15,10 +16,11 @@ services:
       MYSQL_PASSWORD: COS@-56ac
     ports:
       - "3306:3306"
-  phpmyadmin:
+  phpmyadmin-activity:
     image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-activity
     links:
-      - mysql-db
+      - mysql-db-activity
     ports:
       - "3030:80"
     environment:
