@@ -9,10 +9,10 @@ services:
   mysql-db:
     image: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: OSssA45!sd@
       MYSQL_DATABASE: db
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: 123456
+      MYSQL_USER: admin-dev
+      MYSQL_PASSWORD: COS@-56ac
     ports:
       - "3306:3306"
   phpmyadmin:
