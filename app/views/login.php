@@ -10,6 +10,7 @@
 <body class="bg-dark">
 <nav id="navbar"></nav>
     <div class="d-flex justify-content-center">
+        <a href="/auth/google">login with Google</a>
         <form method="post" action="/login" class="card shadow rounded p-5 m-5 w-50">
             <div class="mb-3">
                 <h2>login</h2>

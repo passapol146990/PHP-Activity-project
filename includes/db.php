@@ -1,5 +1,5 @@
 <?php
-  $server = "mysql-db";
+  $server = "mysql-db-activity";
   $username = "admin-dev";
   $password = "COS@-56ac";
   $dbname = "db";
