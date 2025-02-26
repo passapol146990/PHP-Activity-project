@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -110,11 +109,11 @@
 
     <!-- ส่วนของปุ่ม Login -->
     <div class="login-form">
-        <button class="btn btn-light w-100 btn-google mb-3">
+        <a href="/auth/google" class="btn btn-light w-100 btn-google mb-3">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png"
                 alt="Google Logo" width="30" class="me-2">
             Sign in with Google
-        </button>
+        </a>
 
         <div class="form-check d-flex justify-content-start">
             <input type="checkbox" id="remember" class="form-check-input me-2">

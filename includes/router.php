@@ -20,8 +20,8 @@ function isLogin(){
         $getaccount = getAccountID($login_token);
         $account = $getaccount['data']->fetch_assoc();
         if(empty($account['birthday'])||empty($account['gender'])){
-            print('กรุณากรอกข้อมูลส่วนตัวให้ครบถ้วน');
-            // header('location:/');
+            // print('กรุณากรอกข้อมูลส่วนตัวให้ครบถ้วน');
+            header('location:/form');
             exit();
         }
     } else {
