@@ -151,16 +151,10 @@ if($method=="GET"){
                 };
                 break;
         case '/req':
-
-
-
             require_once('../app/views/req_activity.php');
             exit();
             break;
         case '/activity_create':
-
-
-
             require_once('../app/views/show_activity_create.php');
             exit();
             break;
