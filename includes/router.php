@@ -50,6 +50,10 @@ if($method=="GET"){
             require_once('../app/views/login.php');
             exit();
             break;
+        case '/form':
+            require_once('../app/views/form.php');
+            exit();
+            break;
         case '/logout':
             session_unset(); 
             session_destroy();

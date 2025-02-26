@@ -1,14 +1,14 @@
 <?php
-  $server = "mysql-db";
-  $username = "admin-dev";
-  $password = "COS@-56ac";
-  $dbname = "db";
+  // $server = "mysql-db";
+  // $username = "admin-dev";
+  // $password = "COS@-56ac";
+  // $dbname = "db";
   
-  $conn = new mysqli($server, $username, $password, $dbname);
-  $conn->set_charset("utf8");
+  // $conn = new mysqli($server, $username, $password, $dbname);
+  // $conn->set_charset("utf8");
   
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
+  // if ($conn->connect_error) {
+  //   die("Connection failed: " . $conn->connect_error);
+  // }
   // echo "Connected successfully!";  
 ?>
