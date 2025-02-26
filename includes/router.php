@@ -237,7 +237,7 @@ if($method=="GET"){
                 header("Location:/login?message=กรุณาใส่ password.");
                 exit();
             }
-            $login = login($_POST["username"],$_POST["password"]);
+            // $login = login($_POST["username"],$_POST["password"]);
             if($login["status"]!=200){
                 header("Location:/login?message=".$login["message"]);
                 exit();
