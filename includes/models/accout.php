@@ -1,39 +1,67 @@
 <?php
     require_once '../includes/db.php';
-
-    function login($username, $password) {
+    
+    function getAccountID($id){
         global $conn;
-
-        $username = isset($_POST["username"]) ? $_POST["username"] : '';
-        $password = isset($_POST["password"]) ? $_POST["password"] : '';
-        $isLogin = false;
-        $message = "";
-
-        if (empty($username) || empty($password)) {
-            $message = "กรุณากรอก username และ password";
-            return ["status"=>400,"message"=>$message];
-        } else {
-            $sql = 'SELECT sid, username, password FROM user WHERE username = ?';
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param('s', $username);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                if (password_verify($password, $row['password'])) {
-                    $isLogin = true;
-                    $_SESSION['login'] = $row['sid'];
-                    $_SESSION['login_time'] = time();
-                    $message = "login success";
-                    return ["status"=>200,"message"=>$message];
-                } else {
-                    $message = "username or password ไม่ถูกต้อง.";
-                    return ["status"=>400,"message"=>$message];
-                }
-            } else {
-                $message = "username or password ไม่ถูกต้อง.";
-                return ["status"=>400,"message"=>$message];
+        $sql = 'SELECT * FROM account WHERE aid = ?';
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+        $stmt->bind_param('s',$id);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        $data = $stmt->get_result();
+        return ["status"=>200,"message"=>"successfuly.","data"=>$data];
+    };
+    function createAccount($id,$fname,$lname,$gmail,$image){
+        global $conn;
+        $sql = 'INSERT INTO account(aid,fname,lname,gmail,image) VALUES(?,?,?,?,?)';
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+        $stmt->bind_param('sssss',$id,$fname,$lname,$gmail,$image);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        $data = $stmt->get_result();
+        return ["status"=>200,"message"=>"successfuly.","data"=>$data];
+    };
+    function login($id,$fname,$lname,$gmail,$image) {
+        $getaccount = getAccountID($id);
+        if($getaccount['status']!=200){
+            print($getaccount["message"]);
+            exit();
+        }
+        if($getaccount['data']->num_rows === 0){
+            $create = createAccount($id,$fname,$lname,$gmail,$image);
+            if($getaccount['status']!=200){
+                print($getaccount["message"]);
+                // header('location:/');
+                exit();
             }
+        }
+        $_SESSION['login_token'] = $id;
+        $_SESSION['login_time'] = time();
+    }
+    function setBirthday($date,$id){
+        global $conn;
+        $sql = 'UPDATE account SET birthday = ? WHERE aid = ?';
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+        $stmt->bind_param('ss', $date, $id);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        if ($stmt->affected_rows > 0) {
+            return ["status" => 200, "message" => "Successfully updated."];
+        } else {
+            return ["status" => 204, "message" => "No changes made."];
+        }
+    }
+    function setGender($gender,$id){
+        global $conn;
+        $sql = 'UPDATE account SET gender = ? WHERE aid = ?';
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+        $stmt->bind_param('ss', $gender, $id);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        if ($stmt->affected_rows > 0) {
+            return ["status" => 200, "message" => "Successfully updated."];
+        } else {
+            return ["status" => 204, "message" => "No changes made."];
         }
     }
 

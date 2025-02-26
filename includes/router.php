@@ -1,6 +1,5 @@
 <?php
 require_once("models/accout.php");
-
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($request, PHP_URL_PATH);
@@ -8,13 +7,21 @@ $path = parse_url($request, PHP_URL_PATH);
 function isLogin(){
     if (isset($_SESSION['login_time'])) {
         $inactive = time() - $_SESSION['login_time'];
-        if ($inactive > 6000) {
+        if ($inactive > 600) {
             header('Location:/logout');
             exit();
         }
-        if(!isset($_SESSION["login"])||empty($_SESSION["login"])){
+        $login_token = $_SESSION["login_token"];
+        if(!isset($login_token)||empty($login_token)){
             session_destroy();
             header("Location:/logout");
+            exit();
+        }
+        $getaccount = getAccountID($login_token);
+        $account = $getaccount['data']->fetch_assoc();
+        if(empty($account['birthday'])||empty($account['gender'])){
+            print('กรุณากรอกข้อมูลส่วนตัวให้ครบถ้วน');
+            // header('location:/');
             exit();
         }
     } else {
@@ -25,25 +32,73 @@ function isLogin(){
 
 if($method=="GET"){
     switch ($path) {
-        case '/':
-            isLogin();
-            global $conn;
-            $sid = $_SESSION['login'];
-            $sql = 'SELECT fname,lname FROM user WHERE sid = ?';
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param('s', $sid);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($result->num_rows <= 0) {
-                header("Location:/logout");
+        case '/auth/google/callback':
+            $code = $_GET['code'] ?? null;
+            if (!$code) {
+                header("location:/");
                 exit();
             }
-            $data = $result->fetch_assoc();
+            $client_id = getenv('Auth_Google_CLIENT_ID');
+            $client_secret = getenv('Auth_Google_CLIENT_SECRET');
+            $redirect_uri = getenv('Auth_Google_REDIRECT');
+            $token_url = "https://oauth2.googleapis.com/token";
+            $token_data = [
+                'client_id' => $google_client_id,
+                'client_secret' => $google_client_secret,
+                'code' => $code,
+                'redirect_uri' => $google_redirect_uri,
+                'grant_type' => 'authorization_code'
+            ];
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $token_url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($token_data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+            $token_response = json_decode($response, true);
+            if (!isset($token_response['access_token'])) {
+                header("location:/");
+                exit();
+            }
+            $access_token = $token_response['access_token'];
+            $id_token = $token_response['id_token'];
+            $profile_url = "https://www.googleapis.com/oauth2/v1/userinfo";
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $profile_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer $access_token"]);
+            $profile_response = curl_exec($ch);
+            curl_close($ch);
+            $profile = json_decode($profile_response, true);
+            $id = hash('sha256',$profile['id']);
+            $verified_email = $profile['verified_email'];
+            $fname = $profile["given_name"];
+            $lname = $profile["family_name"];
+            $gmail = $profile["email"];
+            $image = $profile["picture"];
+            if($verified_email!=1){
+                header("location:/");
+                exit();
+            }
+            login($id,$fname,$lname,$gmail,$image);
+            header('location:/');
+            exit();
+            break;
+        case '/auth/google':
+            $url = "https://accounts.google.com/o/oauth2/v2/auth?client_id={$google_client_id}&redirect_uri={$google_redirect_uri}&response_type=code&scope=profile email";
+            header("Location:{$url}");
+            break;
+        case '/':
+            isLogin();
             require_once('../app/views/home.php');
             exit();
             break;
         case '/login':
-            if(isset($_SESSION["login"])){
+            if(isset($_SESSION["login_token"])){
                 header("Location:/");
                 exit();
             }
@@ -186,6 +241,21 @@ if($method=="GET"){
                 header("Location:/");
                 exit();
             }
+            break;
+        case '/update/profile':
+            $id = $_POST["id"] ?? "";
+            $birthday = $_POST["birthday"]?? "";
+            $gender= $_POST["gender"]?? "";
+            if (empty($id)){
+                exit();
+            }
+            if (!empty($birthday)){
+                setBirthday($birthday,$id);
+            }
+            if (!empty($gender)){
+                setGender($gender,$id);
+            }
+            header("Location:/");
             break;
         default:
             header("Location:/");
