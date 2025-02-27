@@ -4,7 +4,8 @@ $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($request, PHP_URL_PATH);
 
-function isLogin(){
+function isLogin()
+{
     if (isset($_SESSION['login_time'])) {
         $inactive = time() - $_SESSION['login_time'];
         if ($inactive > 600) {
@@ -12,14 +13,14 @@ function isLogin(){
             exit();
         }
         $login_token = $_SESSION["login_token"];
-        if(!isset($login_token)||empty($login_token)){
+        if (!isset($login_token) || empty($login_token)) {
             session_destroy();
             header("Location:/logout");
             exit();
         }
         $getaccount = getAccountID($login_token);
         $account = $getaccount['data']->fetch_assoc();
-        if(empty($account['birthday'])||empty($account['gender'])){
+        if (empty($account['birthday']) || empty($account['gender'])) {
             // print('กรุณากรอกข้อมูลส่วนตัวให้ครบถ้วน');
             header('location:/form');
             exit();
@@ -30,7 +31,7 @@ function isLogin(){
     }
 };
 
-if($method=="GET"){
+if ($method == "GET") {
     switch ($path) {
         case '/auth/google/callback':
             $code = $_GET['code'] ?? null;
@@ -74,17 +75,17 @@ if($method=="GET"){
             $profile_response = curl_exec($ch);
             curl_close($ch);
             $profile = json_decode($profile_response, true);
-            $id = hash('sha256',$profile['id']);
+            $id = hash('sha256', $profile['id']);
             $verified_email = $profile['verified_email'];
             $fname = $profile["given_name"];
             $lname = $profile["family_name"];
             $gmail = $profile["email"];
             $image = $profile["picture"];
-            if($verified_email!=1){
+            if ($verified_email != 1) {
                 header("location:/");
                 exit();
             }
-            login($id,$fname,$lname,$gmail,$image);
+            login($id, $fname, $lname, $gmail, $image);
             header('location:/');
             exit();
             break;
@@ -98,7 +99,7 @@ if($method=="GET"){
             exit();
             break;
         case '/login':
-            if(isset($_SESSION["login_token"])){
+            if (isset($_SESSION["login_token"])) {
                 header("Location:/");
                 exit();
             }
@@ -110,9 +111,14 @@ if($method=="GET"){
             exit();
             break;
         case '/logout':
-            session_unset(); 
+            session_unset();
             session_destroy();
             header("Location:/login");
+            exit();
+            break;
+        case '/':
+        case '/home':
+            require_once('../app/views/home.php'); // ตรวจสอบว่า path ถูกต้อง
             exit();
             break;
         case '/about':
@@ -165,50 +171,50 @@ if($method=="GET"){
         case '/registion':
             global $conn;
             isLogin();
-            if(isset($_GET["sub_id"])&&isset($_GET["tid"])){
-                $rid = $_GET["sub_id"].$_SESSION["login"];
+            if (isset($_GET["sub_id"]) && isset($_GET["tid"])) {
+                $rid = $_GET["sub_id"] . $_SESSION["login"];
                 $sql = "SELECT 	* 
                         FROM 	registion 
                         WHERE 	registion.rid = ?;";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param('s',$rid);
+                $stmt->bind_param('s', $rid);
                 $stmt->execute();
                 $check = $stmt->get_result();
-                if($check->num_rows > 0){
+                if ($check->num_rows > 0) {
                     header("Location:/subject?warning=คุณลงทะเบียนวิชานี้ไปแล้ว");
-                }else{
+                } else {
                     $sid = $_SESSION["login"];
                     $tid = $_GET["tid"];
                     $sub_id = $_GET["sub_id"];
                     $datetime = date('Y-m-d H:i:s');
-    
+
                     $sql = "INSERT INTO registion (`id`, `rid`, `sid`, `tid`, `sub_id`, `datatime`) 
                             VALUES (NULL,?,?,?,?,?);";
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param('sssss', $rid, $sid, $tid, $sub_id, $datetime);
                     $stmt->execute();
                     header("Location:/about?success=ลงทะเบียนสำเร็จ");
-                }  
-            }else{
+                }
+            } else {
                 header("Location:/subject");
             };
             break;
         case '/del':
-                global $conn;
-                isLogin();
-                if(isset($_GET["rid"])){
-                    $rid = $_GET["rid"];
-                    $sql = "DELETE 	FROM 	registion 
+            global $conn;
+            isLogin();
+            if (isset($_GET["rid"])) {
+                $rid = $_GET["rid"];
+                $sql = "DELETE 	FROM 	registion 
                             WHERE 	registion.rid = ?
                             AND registion.sid = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param('ss',$rid,$_SESSION["login"]);
-                    $stmt->execute(); 
-                    header("Location:/about?del=ลบข้อมูลสำเร็จ");
-                }else{
-                    header("Location:/about");
-                };
-                break;
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param('ss', $rid, $_SESSION["login"]);
+                $stmt->execute();
+                header("Location:/about?del=ลบข้อมูลสำเร็จ");
+            } else {
+                header("Location:/about");
+            };
+            break;
         case '/req':
             require_once('../app/views/req_activity.php');
             exit();
@@ -221,43 +227,42 @@ if($method=="GET"){
             header("Location:/");
             break;
     }
-    
-}else if($method=="POST"){
+} else if ($method == "POST") {
     switch ($path) {
         case '/login':
-            if(isset($_SESSION["login"])){
+            if (isset($_SESSION["login"])) {
                 header("Location:/");
                 exit();
             }
-            if(!isset($_POST["username"])||empty($_POST["username"])){
+            if (!isset($_POST["username"]) || empty($_POST["username"])) {
                 header("Location:/login?message=กรุณาใส่ username.");
                 exit();
             }
-            if(!isset($_POST["password"])||empty($_POST["password"])){
+            if (!isset($_POST["password"]) || empty($_POST["password"])) {
                 header("Location:/login?message=กรุณาใส่ password.");
                 exit();
             }
             // $login = login($_POST["username"],$_POST["password"]);
-            if($login["status"]!=200){
-                header("Location:/login?message=".$login["message"]);
+            if ($login["status"] != 200) {
+                header("Location:/login?message=" . $login["message"]);
                 exit();
-            }else{
+            } else {
                 header("Location:/");
                 exit();
             }
             break;
         case '/update/profile':
             $id = $_POST["id"] ?? "";
-            $birthday = $_POST["birthday"]?? "";
-            $gender= $_POST["gender"]?? "";
-            if (empty($id)){
+            $birthday = $_POST["birthday"] ?? "";
+            $gender = $_POST["gender"] ?? "";
+            if (empty($id)) {
                 exit();
             }
-            if (!empty($birthday)){
-                setBirthday($birthday,$id);
+            if (!empty($birthday)) {
+                setBirthday($birthday, $id);
             }
-            if (!empty($gender)){
-                setGender($gender,$id);
+            if (!empty($gender)) {
+                setGender($gender, $id);
             }
             header("Location:/");
             break;
@@ -265,6 +270,6 @@ if($method=="GET"){
             header("Location:/");
             break;
     }
-}else{
+} else {
     header("Location:/");
 }
