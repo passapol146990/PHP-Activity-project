@@ -20,7 +20,6 @@ function isLogin(){
         $getaccount = getAccountID($login_token);
         $account = $getaccount['data']->fetch_assoc();
         if(empty($account['birthday'])||empty($account['gender'])){
-            // print('กรุณากรอกข้อมูลส่วนตัวให้ครบถ้วน');
             header('location:/form');
             exit();
         }
@@ -225,15 +224,13 @@ if($method=="GET"){
             require_once('../app/views/show_activity_create.php');
             exit();
             break;
-        case '/upload':
-            $destination = __DIR__ . '/../image/0.png';
-                print($destination);
-                require_once('../app/views/upload_img.php');
-                exit();
-                break;
+        case '/upload/image':
+            require_once('../app/views/upload_img.php');
+            exit();
+            break;
         case '/get/image':
             $img = $_GET['img'] ?? '';
-            $file = '../image/submit/'.$img;
+            $file = '../image/'.$img;
             if (file_exists($file)) {
                 header('Content-Type: image/png');
                 readfile($file);
@@ -246,7 +243,6 @@ if($method=="GET"){
             header("Location:/");
             break;
     }
-    
 }else if($method=="POST"){
     switch ($path) {
         case '/login':
@@ -286,10 +282,24 @@ if($method=="GET"){
             // }
             // header("Location:/");
             break;
-        case '/upload':
+        case '/save/image/submit':
+            isLogin();
             if ($_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                $name = date('Ymd').$_SESSION["login_token"].'_'.uniqid().'.png';
                 $fileTmp = $_FILES['image']['tmp_name'];
-                $destination = '../image/submit/img.png';
+                $destination = '../image/submit/'.$name;
+                resizeImage($fileTmp, $destination, 300, 300);
+                echo "อัปโหลดสำเร็จ!";
+            } else {
+                echo "อัปโหลดล้มเหลว!";
+            }
+            break;
+        case '/save/image/post':
+            isLogin();
+            if ($_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                $name = date('Ymd').$_SESSION["login_token"].'_'.uniqid().'.png';
+                $fileTmp = $_FILES['image']['tmp_name'];
+                $destination = '../image/post/'.$name;
                 resizeImage($fileTmp, $destination, 300, 300);
                 echo "อัปโหลดสำเร็จ!";
             } else {
