@@ -7,7 +7,7 @@ CREATE TABLE account (
     gmail       VARCHAR(255),
     gender      VARCHAR(10),
     image       TEXT,
-    datetime DATETIME DEFAULT CURRENT_TIMESTAMP
+    datetime    DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE post (
@@ -16,14 +16,21 @@ CREATE TABLE post (
     p_aid       VARCHAR(255) NOT NULL,
     p_name      VARCHAR(255),
     p_about     VARCHAR(1000),
-    p_date_start      DATE,
-    p_date_end      DATE,
-    p_time_start      TIME,
-    p_time_end      TIME,
     p_max       INT,
-    p_image     VARCHAR(1000),
+    p_address   VARCHAR(1000),
+    p_date_start DATE,
+    p_date_end  DATE,
+    p_give    VARCHAR(1000),
     p_datetime  DATETIME DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_create_aid FOREIGN KEY (p_aid) REFERENCES account(aid) ON DELETE CASCADE
+);
+
+CREATE TABLE image (
+    id      INT AUTO_INCREMENT PRIMARY KEY,
+    datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
+    image   VARCHAR(1000),
+    pid     VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_image_pid FOREIGN KEY (pid) REFERENCES post(p_id) ON DELETE CASCADE
 );
 
 CREATE TABLE register (
@@ -34,7 +41,7 @@ CREATE TABLE register (
     aid     VARCHAR(255) NOT NULL, -- id user register
     status  VARCHAR(255),
     CONSTRAINT fk_pid FOREIGN KEY (pid) REFERENCES post(p_id) ON DELETE CASCADE,
-    CONSTRAINT fk_cid FOREIGN KEY (cid) REFERENCES account(aid),
+    CONSTRAINT fk_cid FOREIGN KEY (cid) REFERENCES account(aid) ON DELETE CASCADE,
     CONSTRAINT fk_aid FOREIGN KEY (aid) REFERENCES account(aid) ON DELETE CASCADE
 );
 
@@ -48,6 +55,7 @@ CREATE TABLE submit (
     CONSTRAINT fk_post_pid FOREIGN KEY (pid) REFERENCES post(p_id) ON DELETE CASCADE, 
     CONSTRAINT fk_submit_aid FOREIGN KEY (aid) REFERENCES account(aid) ON DELETE CASCADE 
 );
+
 
 
 CREATE  VIEW count_registion_post AS

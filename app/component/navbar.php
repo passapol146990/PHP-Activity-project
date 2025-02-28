@@ -1,4 +1,3 @@
-
 <nav style="background-color: #333; padding: 1em;" class="d-flex justify-content-between">
     <div>
         <a href="/" class='btn text-white'>หน้าแรก</a>

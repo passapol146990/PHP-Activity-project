@@ -1,5 +1,7 @@
 <?php
 require_once("models/accout.php");
+require_once("models/post.php");
+require_once("models/image.php");
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($request, PHP_URL_PATH);
@@ -102,7 +104,16 @@ if($method=="GET"){
             break;
         case '/':
             isLogin();
-            require_once('../app/views/home.php');
+            $page = $_GET['page'] ?? 1;
+            $posts = getPost(10,$page);
+            // print_r($posts["data"]);
+            // print_r($posts["data"][0]["image"]);
+            foreach($posts["data"] as $key => $post){
+                echo $post["p_name"];
+                echo $post["image"];
+            }
+            $postsTop = getPost(10,1); 
+            // require_once('../app/views/home.php');
             exit();
             break;
         case '/login':
@@ -125,6 +136,9 @@ if($method=="GET"){
                     session_destroy();
                     header("Location:/logout");
                     exit();
+                }else{
+                    header("Location:/");
+                    exit();
                 }
             }else{
                 header('Location:/logout');
@@ -141,6 +155,10 @@ if($method=="GET"){
             break;
         case '/req':
             require_once('../app/views/req_activity.php');
+            exit();
+            break;
+        case '/activity/create':
+            require_once('../app/views/activity_create.php');
             exit();
             break;
         case '/activity_create':
@@ -189,6 +207,73 @@ if($method=="GET"){
                 header("Location:/");
                 exit();
             }
+            break;
+        case '/activity/create':
+            isLogin();
+            if(!isset($_POST["title"])||empty($_POST["title"])){
+                header("Location:/activity/create?message=กรุณาใส่ชื่อกิจกรรม.");
+                exit();
+            }
+            if(!isset($_POST["description"])||empty($_POST["description"])){
+                header("Location:/activity/create?message=กรุณาใส่รายละเอียดกิจกรรม.");
+                exit();
+            }
+            if(!isset($_POST["max_count"])||empty($_POST["max_count"])){
+                header("Location:/activity/create?message=กรุณาใส่จำนวนคนที่รับ.");
+                exit();
+            }
+            if(!isset($_POST["start_date"])||empty($_POST["start_date"])){
+                header("Location:/activity/create?message=กรุณาใส่วันที่เริ่มกิจกรรม.");
+                exit();
+            }
+            if(!isset($_POST["end_date"])||empty($_POST["end_date"])){
+                header("Location:/activity/create?message=กรุณาใส่วันที่สิ้นสุดกิจกรรม.");
+                exit();
+            }
+            if(!isset($_POST["location"])||empty($_POST["location"])){
+                header("Location:/activity/create?message=กรุณาใส่สถานที่จัดกิจกรรม.");
+                exit();
+            }
+            if(!isset($_FILES['images'])||empty($_POST["location"])){
+                header("Location:/activity/create?message=กรุณาใส่รูปภาพ.");
+                exit();
+            }
+            $aid = $_SESSION["login_token"];
+            $title = $_POST["title"];
+            $pid =  hash('sha256',$aid.uniqid().$title); 
+            $description = $_POST["description"];
+            $max_count = $_POST["max_count"];
+            $start_date = $_POST["start_date"];
+            $end_date = $_POST["end_date"];
+            $location = $_POST["location"];
+            $p_give = $_POST["p_give"] ?? "";
+            $uploadedFiles = []; //image,path
+            createPost($pid,$aid,$title,$description,$max_count,$location,$start_date,$end_date,$p_give);
+            foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+                if ($_FILES['images']['error'][$key] === 0) {
+                    $name = date('Ymd').$_SESSION["login_token"].'_'.uniqid().'.png';
+                    $fileName = $_FILES['images']['name'][$key];
+                    $fileSize = $_FILES['images']['size'][$key];
+                    $fileTmp = $_FILES['images']['tmp_name'][$key];
+                    $fileType = $_FILES['images']['type'][$key];
+                    $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                    $allowedExtensions = ['jpg', 'png'];
+                    if (in_array($fileExt, $allowedExtensions)) {
+                        if ($fileSize < 5000000) {
+                            $destination = '../image/post/'.$name;
+                            if (move_uploaded_file($fileTmp, $destination)) {
+                                $uploadedFiles[] = [
+                                    'image' => $name,
+                                    'path' => $destination
+                                ];
+                                createImage($name,$pid);
+                            }
+                        }
+                    }
+                }
+            }
+            header("Location:/");
+            exit();
             break;
         case '/update/user/data':
             if (isset($_SESSION['login_time'])) {

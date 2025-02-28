@@ -6,6 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <title>ระบบกิจกรรม</title>
+    <link rel="stylesheet" href="../style/home.css">
     <style>
         * {
             margin: 0;
@@ -253,13 +254,13 @@
         <div class="navbar-left">
             <div class="dropdown profile-dropdown">
                 <img src="<?= $_SESSION['login_image'] ?>" alt="โปรไฟล์" class="dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="profile-name">นายสมพงค์</span>
+                <span class="profile-name"><?= $_SESSION['login_name'] ?></span>
                 <ul class="dropdown-menu" aria-labelledby="profileDropdown">
                     <li><a class="dropdown-item" href="/seting">ตั้งค่า</a></li>
                     <li><a class="dropdown-item" href="/logout">ออกจากระบบ</a></li>
                 </ul>
             </div>
-            <a href="#">สร้างกิจกรรม</a>
+            <a href="/activity/create">สร้างกิจกรรม</a>
             <a href="#">กิจกรรมที่สร้าง <span class=" top-0 start-100 translate-middle badge rounded-pill bg-danger">
                     5<span class="visually-hidden">unread messages</span>
                 </span></a>
@@ -300,8 +301,33 @@
         </div>
 
         <div class="carousel-inner">
+        <?php if (isset($postsTop['data']) && is_array($postsTop['data'])) { ?>
+            <?php foreach ($postsTop['data'] as $row) { ?>
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="event-card text-center">
+                                    <p>วันที่: <?= htmlspecialchars($row['p_date_start']) ?> - <?= htmlspecialchars($row['p_date_end']) ?></p>
+                                    <?php if (!empty($row['image'])) { ?>
+                                        <img src="/get/image?img=/post/<?= htmlspecialchars($row['image']) ?>" 
+                                            alt="<?= htmlspecialchars($row['p_name']) ?>" 
+                                            width="300" height="150">
+                                    <?php } else { ?>
+                                        <p>ไม่มีรูปภาพ</p>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+        <?php } else { ?>
+            <p>ไม่มีข้อมูลโพสต์</p>
+        <?php } ?>
+
             <!-- Slide 1 -->
-            <div class="carousel-item active ">
+            <!-- <div class="carousel-item active ">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6">
@@ -319,10 +345,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Slide 2 -->
-            <div class="carousel-item">
+            <!-- <div class="carousel-item">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6">
@@ -341,7 +367,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <!-- ปุ่มเลื่อนซ้ายขวา -->
@@ -358,7 +384,26 @@
         <h1 class="text-head">กิจกรรมที่เปิดรับสมัคร</h1>
         <div class="container">
             <div class="row">
+            <? foreach ($posts as $row) { ?>
                 <div class="col-md-4 mb-4">
+                    <div class="event-card">
+                        <div class="text-end">10/20</div>
+                        <div class="event-info">
+                            <div class="text-start">
+                                <img src="/get/image?img=/post/<?= $row['image'] ?>" alt="<?= $row['p_name'] ?>" width="300" height="150">
+                                <p><?= $row['p_name'] ?> <br> <?= $row['p_date_start'] ?>-<?= $row['p_date_end'] ?></p>
+                            </div>
+                            <div>
+                                <button class="btn join-btn">เข้าร่วม</button>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal1">
+                                    รายละเอียด
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <? } ?>
+                <!-- <div class="col-md-4 mb-4">
                     <div class="event-card">
                         <div class="text-end">10/20</div>
                         <div class="event-info">
@@ -423,7 +468,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
