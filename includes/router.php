@@ -20,7 +20,7 @@ function isLogin(){
         $getaccount = getAccountID($login_token);
         $account = $getaccount['data']->fetch_assoc();
         if(empty($account['birthday'])||empty($account['gender'])){
-            header('location:/form');
+            header('location:/form/user/data');
             exit();
         }
     } else {
@@ -35,7 +35,6 @@ function resizeImage($source, $destination, $width, $height) {
     imagedestroy($img);
     imagedestroy($newImg);
 }
-
 
 if($method=="GET"){
     switch ($path) {
@@ -87,6 +86,8 @@ if($method=="GET"){
             $lname = $profile["family_name"];
             $gmail = $profile["email"];
             $image = $profile["picture"];
+            $fname = "";
+            $lname = "";
             if($verified_email!=1){
                 header("location:/");
                 exit();
@@ -112,8 +113,24 @@ if($method=="GET"){
             require_once('../app/views/login.php');
             exit();
             break;
-        case '/form':
-            require_once('../app/views/form.php');
+        case '/form/user/data':
+            if (isset($_SESSION['login_time'])) {
+                $inactive = time() - $_SESSION['login_time'];
+                if ($inactive > 600) {
+                    header('Location:/logout');
+                    exit();
+                }
+                $login_token = $_SESSION["login_token"];
+                if(!isset($login_token)||empty($login_token)){
+                    session_destroy();
+                    header("Location:/logout");
+                    exit();
+                }
+            }else{
+                header('Location:/logout');
+                exit();
+            }
+            require_once('../app/views/form_user.php');
             exit();
             break;
         case '/logout':
@@ -267,20 +284,36 @@ if($method=="GET"){
                 exit();
             }
             break;
-        case '/update/profile':
-            // $id = $_POST["id"] ?? "";
-            // $birthday = $_POST["birthday"]?? "";
-            // $gender= $_POST["gender"]?? "";
-            // if (empty($id)){
-            //     exit();
-            // }
-            // if (!empty($birthday)){
-            //     setBirthday($birthday,$id);
-            // }
-            // if (!empty($gender)){
-            //     setGender($gender,$id);
-            // }
-            // header("Location:/");
+        case '/update/user/data':
+            if (isset($_SESSION['login_time'])) {
+                $inactive = time() - $_SESSION['login_time'];
+                if ($inactive > 600) {
+                    header('Location:/logout');
+                    exit();
+                }
+                $login_token = $_SESSION["login_token"];
+                if(!isset($login_token)||empty($login_token)){
+                    session_destroy();
+                    header("Location:/logout");
+                    exit();
+                }
+            } else {
+                header('Location:/logout');
+                exit();
+            }
+            $id = $_SESSION["login_token"];
+            $fname = $_POST["fname"]?? "";
+            $lname = $_POST["lname"]?? "";
+            $birthday = $_POST["birthday"]?? "";
+            $gender= $_POST["gender"]?? "";
+            if(empty($fname)||empty($lname)||empty($birthday)||empty($gender)){
+                header("Location:/form/user/data?message=กรุณากรอกข้อมูลให้ครบ");
+                exit();
+            }
+            setName($fname,$lname,$id);
+            setBirthday($birthday,$id);
+            setGender($gender,$id);
+            header("Location:/");
             break;
         case '/save/image/submit':
             isLogin();

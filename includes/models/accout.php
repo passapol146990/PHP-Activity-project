@@ -24,18 +24,18 @@
     function login($id,$fname,$lname,$gmail,$image) {
         $getaccount = getAccountID($id);
         if($getaccount['status']!=200){
-            print($getaccount["message"]);
+            header('location:/login?message='.$getaccount["message"]);
             exit();
         }
         if($getaccount['data']->num_rows === 0){
             $create = createAccount($id,$fname,$lname,$gmail,$image);
             if($getaccount['status']!=200){
-                print($getaccount["message"]);
-                // header('location:/');
+                header('location:/login?message='.$getaccount["message"]);
                 exit();
             }
         }
         $_SESSION['login_token'] = $id;
+        $_SESSION['login_image'] = $image;
         $_SESSION['login_time'] = time();
     }
     function setBirthday($date,$id){
@@ -64,6 +64,20 @@
             return ["status" => 204, "message" => "No changes made."];
         }
     }
+    function setName($fname,$lname,$id){
+        global $conn;
+        $sql = 'UPDATE account SET fname = ? , lname = ? WHERE aid = ?';
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+        $stmt->bind_param('sss', $fname,$fname,$id);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        if ($stmt->affected_rows > 0) {
+            return ["status" => 200, "message" => "Successfully updated."];
+        } else {
+            return ["status" => 204, "message" => "No changes made."];
+        }
+    }
+
 
     function addaccout($sid,$username, $password, $fname, $lname, $birthday, $phone) {
         global $conn;
