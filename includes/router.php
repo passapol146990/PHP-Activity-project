@@ -151,6 +151,10 @@ if($method=="GET"){
             require_once('../app/views/upload_img.php');
             exit();
             break;
+        case '/setting':
+            require_once('../app/views/setting.php');
+            exit();
+            break;    
         case '/get/image':
             $img = $_GET['img'] ?? '';
             $file = '../image/'.$img;
