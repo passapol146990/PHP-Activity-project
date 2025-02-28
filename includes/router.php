@@ -29,6 +29,14 @@ function isLogin(){
         exit();
     }
 };
+function resizeImage($source, $destination, $width, $height) {
+    $img = imagecreatefromstring(file_get_contents($source));
+    $newImg = imagescale($img, $width, $height);
+    imagepng($newImg, $destination); // บันทึกเป็น PNG
+    imagedestroy($img);
+    imagedestroy($newImg);
+}
+
 
 if($method=="GET"){
     switch ($path) {
@@ -217,6 +225,23 @@ if($method=="GET"){
             require_once('../app/views/show_activity_create.php');
             exit();
             break;
+        case '/upload':
+            $destination = __DIR__ . '/../image/0.png';
+                print($destination);
+                require_once('../app/views/upload_img.php');
+                exit();
+                break;
+        case '/get/image':
+            $img = $_GET['img'] ?? '';
+            $file = '../image/submit/'.$img;
+            if (file_exists($file)) {
+                header('Content-Type: image/png');
+                readfile($file);
+            } else {
+                http_response_code(404);
+                echo "ไม่พบรูปภาพ";
+            }
+            break;
         default:
             header("Location:/");
             break;
@@ -247,19 +272,29 @@ if($method=="GET"){
             }
             break;
         case '/update/profile':
-            $id = $_POST["id"] ?? "";
-            $birthday = $_POST["birthday"]?? "";
-            $gender= $_POST["gender"]?? "";
-            if (empty($id)){
-                exit();
+            // $id = $_POST["id"] ?? "";
+            // $birthday = $_POST["birthday"]?? "";
+            // $gender= $_POST["gender"]?? "";
+            // if (empty($id)){
+            //     exit();
+            // }
+            // if (!empty($birthday)){
+            //     setBirthday($birthday,$id);
+            // }
+            // if (!empty($gender)){
+            //     setGender($gender,$id);
+            // }
+            // header("Location:/");
+            break;
+        case '/upload':
+            if ($_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                $fileTmp = $_FILES['image']['tmp_name'];
+                $destination = '../image/submit/img.png';
+                resizeImage($fileTmp, $destination, 300, 300);
+                echo "อัปโหลดสำเร็จ!";
+            } else {
+                echo "อัปโหลดล้มเหลว!";
             }
-            if (!empty($birthday)){
-                setBirthday($birthday,$id);
-            }
-            if (!empty($gender)){
-                setGender($gender,$id);
-            }
-            header("Location:/");
             break;
         default:
             header("Location:/");

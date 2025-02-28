@@ -16,7 +16,7 @@
             
             <!-- Profile Picture Upload -->
             <div class="mb-3">
-                <img id="profileImage" src="https://via.placeholder.com/120" class="profile-pic mb-2" alt="Profile">
+                <img id="profileImage" src="http://localhost/get/image?img=passapol.jpg" width="150px" class="profile-pic mb-2" alt="Profile">
                 <input type="file" id="imageUpload" class="form-control" accept="image/*">
             </div>
             
