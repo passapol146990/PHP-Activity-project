@@ -11,6 +11,7 @@
 </head>
 
 <body>
+    <!-- ใช้แค่ boot strap -->
     <?php require_once '../app/component/navbar.php'; ?>
     <div class="container text-center">
         <div class="mt-3 card p-4 shadow-sm" style="max-width: 500px; margin: auto;border-radus:50%;">
