@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-    <title>Form Example</title>
+    <title>แก้ไขกิจกรรม</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,6 +68,40 @@
 
         }
 
+        .preview-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin: 5px;
+        }
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 12px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-preview-item {
+            position: relative;
+        }
         
     </style>
 </head>
@@ -78,26 +112,14 @@
 
     <div class="d-flex justify-content-center">
         <form class="form-content">
+
             <h2 class="mb-3 ms-3">แก้ไขกิจกรรม : c4c กิจกรรมค่ายเพื่อชุมชน</h2>
-            <div class="image-upload-container">
-                <!-- รูปแสดงผล -->
-                <img id="preview-img" 
-                    src="https://c4.wallpaperflare.com/wallpaper/613/501/200/steven-universe-cartoon-pink-lighthouse-wallpaper-preview.jpg" 
-                    alt="Image Preview" 
-                    class="image-preview"
-                    onclick="document.getElementById('file-upload').click()">  <!-- คลิกที่รูปเพื่อเปลี่ยน -->
 
-                <!-- ปุ่มอัพโหลด -->
-                <button type="button" class="btn btn-outline-secondary upload-btn" 
-                    onclick="document.getElementById('file-upload').click()">อัพโหลดรูปภาพ</button>
-
-                <!-- Input file -->
-                <input id="file-upload" type="file" accept="image/*" 
-                    onchange="previewImage(event)" style="display: none;">
-
-                <!-- ปุ่มเปลี่ยนรูป -->
-                <button type="button" class="btn btn-outline-danger change-btn" 
-                    onclick="document.getElementById('file-upload').click()">เปลี่ยนรูป</button>
+            <div class="mb-3">
+                <label for="image-upload" class="form-label">รูปภาพกิจกรรม</label>
+                 <input type="file" class="form-control" id="image-upload" name="images[]" accept="image/*" multiple>
+                <div class="form-text">อัพโหลดได้หลายรูป (สูงสุด 5MB ต่อรูป, รองรับไฟล์ JPEG, PNG)</div>
+                <div id="image-preview" class="image-preview-container"></div>
             </div>
 
             <div class="p-2">
@@ -131,23 +153,43 @@
         </form>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function previewImage(event) {
-            var file = event.target.files[0];
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var output = document.getElementById('preview-img');
-                    var uploadBtn = document.querySelector('.upload-btn');
-                    var changeBtn = document.querySelector('.change-btn');
-
-                    output.src = e.target.result; // อัพเดตรูป
-                    uploadBtn.style.display = 'none'; // ซ่อนปุ่มอัพโหลด
-                    changeBtn.style.display = 'block'; // แสดงปุ่มเปลี่ยนรูป
+        document.getElementById('image-upload').addEventListener('change', function(event) {
+            const preview = document.getElementById('image-preview');
+            preview.innerHTML = '';
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (!file.type.match('image.*')) {
+                    continue;
                 }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'image-preview-item';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-image';
+                    img.title = file.name;
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-btn';
+                    removeBtn.innerHTML = '×';
+                    removeBtn.title = 'ลบรูปนี้';
+                    removeBtn.onclick = function() {
+                        div.remove();
+                        return false;
+                    };
+                    
+                    div.appendChild(img);
+                    div.appendChild(removeBtn);
+                    preview.appendChild(div);
+                };
                 reader.readAsDataURL(file);
             }
-        }
+        });
     </script>
 </body>
 </html>
