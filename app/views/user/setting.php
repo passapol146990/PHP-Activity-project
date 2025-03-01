@@ -12,6 +12,10 @@
 
 <body>
     <?php require_once '../app/component/navbar.php'; ?>
+    <script>
+        const x = document.querySelector(".search-container");
+        x.remove();
+    </script>
     <div class="container text-center">
         <div class="mt-3 card p-4 shadow-sm" style="max-width: 500px; margin: auto;border-radus:50%;">
             <div class="mb-3 ">

@@ -147,20 +147,7 @@
         const prevButton = document.querySelector('.prev');
         const nextButton = document.querySelector('.next');
         const dotsContainer = document.getElementById('dots-container');
-        
-        // สร้างจุดนำทาง
-        slides.forEach((_, index) => {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            if (index === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => {
-                goToSlide(index);
-            });
-            dotsContainer.appendChild(dot);
-        });
-        
-        const dots = document.querySelectorAll('.dot');
-        
+
         // จัดการปุ่มเลื่อนไปข้างหน้า
         nextButton.addEventListener('click', () => {
             slider.scrollLeft += 310; // ขนาดของสไลด์บวกช่องว่าง
@@ -191,17 +178,6 @@
             const activeIndex = Math.round(scrollPosition / (slideWidth + slideMargin));
             
             updateActiveDot(activeIndex);
-        }
-        
-        // อัพเดทสถานะจุดที่กำลังใช้งาน
-        function updateActiveDot(index) {
-            dots.forEach((dot, i) => {
-                if (i === index) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
         }
         
         // ตรวจจับการเลื่อนด้วยเมาส์หรือการกด

@@ -6,6 +6,7 @@
         font-family: 'Prompt', sans-serif;
     }
     body {
+        background: linear-gradient(to right, #f77062, #fe5196);
         /* height: 10000px; */
         font-family: 'Prompt', sans-serif;
     }

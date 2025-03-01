@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-    <title>Activity Create</title>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>กิจกรรมที่สร้าง</title>
     <style>
         
         .text-font {
@@ -192,26 +191,21 @@
 <body>   
     <?php require_once '../app/component/navbar.php'; ?>
     <div class="container" style="margin-top: 20px;">
-    <div class="text-head">
-            กิจกรรมที่สร้าง
-    </div>
+        <div class="text-head">กิจกรรมที่สร้าง</div>
         <div class="mt-4">
             <table class="table">
                 <thead>
                     <div style="border-top: 2px solid black;"></div>
                     <tr class="text-font">
-                            <th style="width: 16%;">รูปกิจกรรม</th>
-                            <th style="width: 15%;">ชื่อกิจกรรม</th>
-                            <th style="width: 15%;">รายละเอียด</th>
-                            <th style="width: 16%;">วันที่</th>
-                            <th style="width: 12%;">จำนวนคนสมัคร</th>
-                            <th style="width: 16%;">เพิ่มเติม</th>
-                            <th style="width: 12%;"></th>
-                            
+                        <th style="width: 16%;">รูปกิจกรรม</th>
+                        <th style="width: 15%;">ชื่อกิจกรรม</th>
+                        <th style="width: 15%;">รายละเอียด</th>
+                        <th style="width: 16%;">วันที่</th>
+                        <th style="width: 12%;">จำนวนคนสมัคร</th>
+                        <th style="width: 16%;">เพิ่มเติม</th>
+                        <th style="width: 12%;"></th>
                     </tr>
                 </thead>
-
-            <!-- show data-->
                 <tbody>
                     <tr>
                     <td><img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" class="img-thumbnail" alt="กิจกรรม"></td>
@@ -244,83 +238,8 @@
                         </td>
                     </tr>
                 </tbody>
-
-                <tbody>
-                    <tr>
-                    <td><img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" class="img-thumbnail" alt="กิจกรรม"></td>
-                        <td>C4C ค่ายมหาลัยสู่โรงเรียนในชุมชน</td>
-                        <td>
-                            <button class="btn btn-outline-primary btn-sm raduis" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
-                                รายละเอียดกิจกรรม
-                            </button>
-                        </td>
-                        <td>1/2/2568 - 5/2/2568</td>
-                        <td>
-                            1/20
-                            <div class="position-relative d-inline-block">
-                                <button class="btn btn-outline-secondary btn-sm raduis btn_secondary">คำขอเข้าร่วม</button>
-                                <span class="badge-notification">2</span>
-                            </div>
-                        </td>
-
-                        <td><p>คำขอทั้งหมด : 2</p>
-                            <p>อนุมัติ : 0</p>
-                            <p>ปฏิเสธ : 0</p>
-                            <p>สร้างกิจกรรมเมื่อ : 21/2/2568 </p>
-                        </td>                      
-                        <td>
-                            <button class="btn btn-primary bt_pri btn-sm">แก้ไข</button>
-                            <div class="mb-3"></div>
-                            <button class="btn btn-danger bt_pri btn-sm">ลบ</button>
-                        </td>
-                    </tr>
-                </tbody>
-
-                <tbody>
-                    <tr>
-                    <td><img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" class="img-thumbnail" alt="กิจกรรม"></td>
-                        <td>C4C ค่ายมหาลัยสู่โรงเรียนในชุมชน</td>
-                        <td>
-                            <button class="btn btn-outline-primary btn-sm raduis" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
-                                รายละเอียดกิจกรรม
-                            </button>
-                        </td>
-                        <td>1/2/2568 - 5/2/2568</td>
-                        <td>
-                            20/20
-                            <div class="position-relative d-inline-block">
-                                <button class="btn btn-outline-secondary btn-sm raduis btn_secondary">คำขอเข้าร่วม</button>
-                                <span class="badge-notification"></span>
-                            </div>
-                        </td>
-
-                        <td><p>คำขอทั้งหมด : 0</p>
-                            <p>อนุมัติ : 20</p>
-                            <p>ปฏิเสธ : 0</p>
-                            <p>สร้างกิจกรรมเมื่อ : 21/2/2568 </p>
-                        </td>                      
-                        <td>
-                            <div class="position-relative d-inline-block">
-                                <button class="btn btn-warning bt_pri btn-sm">ตรวจสอบรูปภาพ</button>
-                                <span class="badge-notification">4</span>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
             </table>
         </div> 
-    </div>
-    <!-- model profile -->
-    <style>
-        .model-profilex{
-            position: fixed;
-            background: black;
-            width: 100vw;
-            width: 100vh;
-        }
-    </style>
-    <div class="model-profilex">
-        x
     </div>
     <!-- Modal -->
     <div class="modal fade text-font" id="Modal_Activity_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -363,8 +282,7 @@
             </div>
         </div>
     </div>
-
-        <!-- Modal show people req activity-->
+    <!-- Modal show people req activity-->
     <div class="modal fade text-font" id="req_activity_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
@@ -490,7 +408,6 @@
                 </div>
         </div>
     </div>
-
     <!-- Modal_submit_picture -->
     <div class="modal fade text-font" id="Modal_submit_pic_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-lg">

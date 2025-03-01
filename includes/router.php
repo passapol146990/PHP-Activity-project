@@ -151,8 +151,12 @@ if($method=="GET"){
             require_once('../app/views/activity/show.php');
             exit();
             break;
-        case '/upload/image':
-            require_once('../app/views/upload_img.php');
+        case '/user/setting':
+            isLogin();
+            $login_token = $_SESSION["login_token"];
+            $getaccount = getAccountID($login_token);
+            $account = $getaccount['data']->fetch_assoc();
+            require_once('../app/views/user/setting.php');
             exit();
             break;
         case '/get/image':

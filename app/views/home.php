@@ -12,9 +12,9 @@
 <body>
     <?php require_once '../app/component/navbar.php'; ?>
     <?php require_once '../app/component/slide.php'; ?>
-    <div class="event-section text-center">
-        <h1 class="title">กิจกรรมที่เปิดรับสมัคร</h1>
+    <div class="event-section text-center bg-white pt-5">
         <div class="container">
+            <h1 class="title text-start">กิจกรรมที่เปิดรับสมัคร</h1>
             <div class="row">
                 <? foreach($posts["data"] as $key => $post){ ?>
                     <div class="col-md-4 mb-4 d-flex">
