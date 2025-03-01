@@ -104,9 +104,9 @@ if($method=="GET"){
             header("Location:{$url}");
             break;
         case '/':
-            // isLogin();
-            // $page = $_GET['page'] ?? 1;
-            // $posts = getPost(10,$page);
+            isLogin();
+            $page = $_GET['page'] ?? 1;
+            $posts = getPost(10,$page);
             // foreach($posts["data"] as $key => $post){
             //     echo $post["p_name"];
             //     echo $post["image"];

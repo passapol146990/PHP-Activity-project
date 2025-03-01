@@ -84,7 +84,7 @@
             const activity_date = data.post_start+" - "+data.post_end;//20/2/2568 - 22/2/2568 (3 วัน) 
             let images = ""
             for(let i = 0;i<data.images.length;i++){
-                images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}">`
+                images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`
             }
             let e = ""
             e = `<div class="modal-dialog modal-dialog-centered modal-lg">
@@ -108,9 +108,7 @@
                                 <div class="row d-flex align-items-center mb-3">
                                 <div class="col-12">
                                         <div class="overflow-x d-flex">
-                                            ${images.map(img => `
-                                                <img src="${img}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">
-                                            `).join('')}
+                                            ${images}
                                         </div>
                                     </div>
                                 </div>
