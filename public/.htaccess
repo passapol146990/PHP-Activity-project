@@ -2,6 +2,9 @@
     RewriteEngine On
     RewriteBase /
 
+    # อนุญาตให้โหลดไฟล์ CSS, JS, Images และ Fonts
+    RewriteCond %{REQUEST_URI} !\.(css|js|png|jpg|jpeg|gif|ico|woff|woff2|ttf|svg|map)$ [NC]
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
 
