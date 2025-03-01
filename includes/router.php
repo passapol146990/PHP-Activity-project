@@ -331,6 +331,23 @@ if($method=="GET"){
                 echo "อัปโหลดล้มเหลว!";
             }
             break;
+        case '/api/get/post':
+            // isLogin();
+            if(!isset($_POST["id_post"])||empty(isset($_POST["id_post"]))){
+                echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            $post = getPostById($_POST["id_post"]);
+            if(empty($post["data"][0]["images"])){
+                $post["data"][0]["images"] = [];
+            }else{
+                $images = explode(',', $post["data"][0]["images"]);
+                $post["data"][0]["images"] = $images;
+            }
+            $post["data"] = $post["data"][0];
+            echo json_encode($post,JSON_UNESCAPED_UNICODE);
+            exit();
+            break;
         default:
             header("Location:/");
             break;

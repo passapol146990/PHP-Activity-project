@@ -28,59 +28,94 @@
                                 <p class="limited-text"><?= $post["p_date_start"] ?> - <?= $post["p_date_end"] ?></p>
                                 <div class="mt-auto d-flex justify-content-between gap-2">
                                     <button class="btn btn-success col-6">เข้าร่วม</button>
-                                    <button class="btn btn-primary col-6" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">รายละเอียด</button>
+                                    <button class="btn btn-primary col-6" onClick="getDetailPost('<?= htmlspecialchars($post["p_id"]) ?>')" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">รายละเอียด</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 <? } ?>
                 <div class="modal fade text-font" id="Modal_Activity_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <div>
-                                    <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม</h5>
-                                    <p class="small-text">วันที่ 25/2/68 19:25:40 น.</p>
-                                </div>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- 🔹 ผู้สร้างกิจกรรม -->
-                                <div class="row d-flex align-items-center mb-3">
-                                    <div class="col-2 text-start"><strong>ผู้สร้าง:</strong></div>
-                                    <div class="col-10 d-flex align-items-center">
-                                        <img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" 
-                                            style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์">
-                                        <p class="d-inline-block ms-3 mb-0">พัสพล สุธาธรรม</p>
-                                    </div>
-                                </div>
-
-                                <!-- 🔹 รูปกิจกรรม -->
-                                <div class="row d-flex align-items-center mb-3">
-                                    <div class="col-12">
-                                        <img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" 
-                                            alt="กิจกรรม">
-                                    </div>
-                                </div>
-
-                                <!-- 🔹 รายละเอียดกิจกรรม -->
-                                <div class="text-start">
-                                    <p><strong>ชื่อกิจกรรม:</strong> กิจกรรม C4C เข้าค่ายเพื่อโรงเรียนทางบ้าน</p>
-                                    <p><strong>ช่วงเวลา:</strong> 20/2/2568 - 22/2/2568 (3 วัน)</p>
-                                    <p><strong>รายละเอียด:</strong> มหาลัยมหาสารคามออกค่ายเพื่อช่วยเหลือโรงเรียนทางบ้าน
-                                        ร่วมเป็นส่วนหนึ่งกับเรา ค่าเดินทาง 0 บาท</p>
-                                    <p><strong>จำนวนที่เปิดรับ:</strong> 20 คน</p>
-                                </div>
-                            </div>
-                            <div class="modal-footer justify-content-center">
-                                <button class="btn btn-success">เข้าร่วม</button>
-                            </div>
-                        </div>
-                    </div>
+                    <p>กำลังโหลดขอ้มูล...</p>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        async function getDetailPost(id){
+            const myHeaders = new Headers();
+            myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+
+            const formdata = new FormData();
+            formdata.append("id_post", id);
+
+            const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow"
+            };
+
+            fetch("http://localhost/api/get/post", requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                result = JSON.parse(result);
+                console.log(result);
+                setModal_Activity_1(result)
+            })
+            .catch((error) => console.error(error));
+        }
+        function setModal_Activity_1(result) {
+            if(result.status!=200){
+                return 
+            }
+            const data = result.data;
+            const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
+            const create_date = data.post_create; //วันที่ 25/2/68 19:25:40 น
+            const activity_date = data.post_start+" - "+data.post_end;//20/2/2568 - 22/2/2568 (3 วัน) 
+            let images = ""
+            for(let i = 0;i<data.images.length;i++){
+                images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}">`
+            }
+            let e = ""
+            e = `<div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div>
+                                    <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม</h5>
+                                    <p class="small-text">${create_date}</p>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row d-flex align-items-center mb-3">
+                                    <div class="col-2 text-start"><strong>ผู้สร้าง:</strong></div>
+                                    <div class="col-10 d-flex align-items-center">
+                                        <img src="${data.img}" 
+                                            style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์">
+                                        <p class="d-inline-block ms-3 mb-0">${data.fname} ${data.lname}</p>
+                                    </div>
+                                </div>
+                                <div class="row d-flex align-items-center mb-3">
+                                    <div class="col-12">${images}</div>
+                                </div>
+                                <div class="text-start">
+                                    <p><strong>ชื่อกิจกรรม:</strong> ${data.post_name}</p>
+                                    <p><strong>ช่วงเวลา:</strong> ${activity_date}</p>
+                                    <p><strong>รายละเอียด:</strong> ${data.post_about}</p>
+                                    <p><strong>สถานที่:</strong> ${data.post_address}</p>
+                                    <p><strong>สิ่งที่ได้:</strong> ${data.post_give}</p>
+                                    <p><strong>จำนวนที่เปิดรับ:</strong> ${data.post_people} คน</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-center">
+                                <button class="btn btn-success" onClick="joinActivity('${data.post_id}')">เข้าร่วม</button>
+                            </div>
+                        </div>
+                    </div>`
+            Modal_Activity_1.innerHTML = e;
+            console.log(Modal_Activity_1)
+        }
+    </script>
 </body>
 
 </html>
