@@ -142,12 +142,12 @@ if($method=="GET"){
             break;
                     
         case '/activity/create':
-            isLogin();
+            // isLogin();
             require_once('../app/views/activity/create.php');
             exit();
             break;
         case '/activity/create/show':
-            isLogin();
+            // isLogin();
             require_once('../app/views/activity/show.php');
             exit();
             break;
