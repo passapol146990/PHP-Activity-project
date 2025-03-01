@@ -133,7 +133,7 @@ button {
     </style>
 </head>
 <body>   
-    <?php require_once '../app/component/navbar.php'; ?>
+ <?php // require_once '../app/component/navbar.php'; ?>
     <div class="container" style="margin-top: 20px;">
     <div class="text-head">
             กิจกรรมที่ขอเข้าร่วม

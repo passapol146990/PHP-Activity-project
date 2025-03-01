@@ -7,7 +7,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($request, PHP_URL_PATH);
 
 function isLogin(){
-    if (isset($_SESSION['login_time'])) {
+    /*if (isset($_SESSION['login_time'])) {
         $inactive = time() - $_SESSION['login_time'];
         if ($inactive > 600) {
             header('Location:/logout');
@@ -30,7 +30,7 @@ function isLogin(){
     } else {
         header('Location:/logout');
         exit();
-    }
+    }*/
 };
 function resizeImage($source, $destination, $width, $height) {
     $img = imagecreatefromstring(file_get_contents($source));
@@ -161,6 +161,11 @@ if($method=="GET"){
                 require_once('../app/views/setting.php');
                 exit();
                 break;
+        case '/edit':
+            require_once('../app/views/activity/edit_activity.php');
+            exit();
+            break;
+                    
         case '/activity/create':
             isLogin();
             require_once('../app/views/activity/create.php');
