@@ -11,6 +11,7 @@
 
 <body>
     <?php require_once '../app/component/navbar.php'; ?>
+    <?php require_once '../app/component/slide.php'; ?>
     <div class="event-section text-center">
         <h1 class="title">กิจกรรมที่เปิดรับสมัคร</h1>
         <div class="container">

@@ -111,7 +111,7 @@ if($method=="GET"){
             //     echo $post["p_name"];
             //     echo $post["image"];
             // }
-            // $postsTop = getPost(10,1); 
+            $postsTop = getPost(10,1); 
             require_once('../app/views/home.php');
             exit();
             break;
