@@ -23,7 +23,6 @@ function isLogin(){
         $getaccount = getAccountID($login_token);
         $account = $getaccount['data']->fetch_assoc();
         if(empty($account['birthday'])||empty($account['gender'])){
-            // header('location:/user/form/data');
             require_once('../app/views/user/update.php');
             exit();
         }
@@ -202,7 +201,6 @@ if($method=="GET"){
                 header("Location:/login?message=กรุณาใส่ password.");
                 exit();
             }
-            // $login = login($_POST["username"],$_POST["password"]);
             if($login["status"]!=200){
                 header("Location:/login?message=".$login["message"]);
                 exit();

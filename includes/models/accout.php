@@ -71,7 +71,7 @@
         $sql = 'UPDATE account SET fname = ? , lname = ? WHERE aid = ?';
         $stmt = $conn->prepare($sql);
         if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
-        $stmt->bind_param('sss', $fname,$fname,$id);
+        $stmt->bind_param('sss', $fname,$lname,$id);
         if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
         if ($stmt->affected_rows > 0) {
             return ["status" => 200, "message" => "Successfully updated."];
@@ -79,8 +79,6 @@
             return ["status" => 204, "message" => "No changes made."];
         }
     }
-
-
     function addaccout($sid,$username, $password, $fname, $lname, $birthday, $phone) {
         global $conn;
 

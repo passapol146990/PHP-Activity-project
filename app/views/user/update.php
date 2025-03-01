@@ -34,22 +34,23 @@
             </div>
             <div class="mb-3 text-start">
                 <label class="form-label">ชื่อ</label>
-                <input type="text" class="form-control" name="fname" placeholder="กรอกชื่อ" value="<?= htmlspecialchars($account["fname"]) ?>">
+                <input type="text" class="form-control" name="fname" placeholder="กรอกชื่อ" value="<?= htmlspecialchars($account["fname"]??"") ?>" required>
             </div>
             <div class="mb-3 text-start">
                 <label class="form-label">นามสกุล</label>
-                <input type="text" class="form-control" name="lname" placeholder="นามสกุล" value="<?= htmlspecialchars($account["lname"]) ?>">
+                <input type="text" class="form-control" name="lname" placeholder="นามสกุล" value="<?= htmlspecialchars($account["lname"]??"") ?>" required>
             </div>
             <div class="mb-3 text-start">
                 <label class="form-label">วันเกิด</label>
-                <input type="date" name="birthday" class="form-control" value="<?= htmlspecialchars($account["birthday"]) ?>">
+                <input type="date" name="birthday" class="form-control" value="<?= htmlspecialchars($account["birthday"]??"") ?>" required>
             </div>
             <div class="mb-3 text-start">
                 <label class="form-label">เพศ</label>
-                <select class="form-select" name="gender" value="<?= htmlspecialchars($account["gender"]) ?>">
+                <select class="form-select" name="gender" required>
+                    <option style="display:none;"><?= htmlspecialchars($account["gender"]??"กรุณาใส่เพศ") ?></option>
                     <option>ชาย</option>
                     <option>หญิง</option>
-                    <option>อื่น ๆ</option>
+                    <option>อื่นๆ</option>
                 </select>
             </div>
             <div class="mb-1 text-start">
