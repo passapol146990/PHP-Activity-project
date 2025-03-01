@@ -20,6 +20,7 @@
         padding: 10px 20px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         .logo-container {
+            width: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -48,7 +49,7 @@
                 }
             }
             .site-name {
-                font-size: 16px;
+                font-size: 12px;
                 color: #333;
             }
             .menu-user{
@@ -165,13 +166,19 @@
                 </div>
             </div>
             <div class="site-name"><?= htmlspecialchars($_SESSION["login_name"]) ?></div>
+            <script>
+                const name = document.querySelector(".site-name");
+                if(name.textContent.length > 15){
+                    name.textContent = name.textContent.substring(0, 15) + '...';
+                }
+            </script>
         </div>
         <div class="menu-user">
-            <a class="menu" href="/setting">
-                <span href="/setting">ตั้งค่า</span>
+            <a class="menu" href="/user/setting">
+                <span>ตั้งค่า</span>
             </a>
             <a class="menu" href="/logout">
-                <span href="/logout">ออกจากระบบ</span>
+                <span>ออกจากระบบ</span>
             </a>
         </div>
     </div>

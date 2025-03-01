@@ -310,7 +310,18 @@
             </table>
         </div> 
     </div>
-
+    <!-- model profile -->
+    <style>
+        .model-profilex{
+            position: fixed;
+            background: black;
+            width: 100vw;
+            width: 100vh;
+        }
+    </style>
+    <div class="model-profilex">
+        x
+    </div>
     <!-- Modal -->
     <div class="modal fade text-font" id="Modal_Activity_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-lg">
