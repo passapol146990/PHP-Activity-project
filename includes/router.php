@@ -9,12 +9,14 @@ $path = parse_url($request, PHP_URL_PATH);
 function isLogin(){
     if (isset($_SESSION['login_time'])) {
         $inactive = time() - $_SESSION['login_time'];
-        if ($inactive > 6000) {
+        if ($inactive > 600) {
             header('Location:/logout');
             exit();
         }
         $login_token = $_SESSION["login_token"];
-        if(!isset($login_token)||empty($login_token)){
+        $login_image = $_SESSION["login_image"];
+        $login_name = $_SESSION["login_name"];
+        if(!isset($login_token)||empty($login_token)||!isset($login_image)||empty($login_image)||!isset($login_name)||empty($login_name)){
             session_destroy();
             header("Location:/logout");
             exit();
@@ -103,11 +105,9 @@ if($method=="GET"){
             header("Location:{$url}");
             break;
         case '/':
-            // isLogin();
-            // $page = $_GET['page'] ?? 1;
+            isLogin();
+            $page = $_GET['page'] ?? 1;
             $posts = getPost(10,$page);
-            // print_r($posts["data"]);
-            // print_r($posts["data"][0]["image"]);
             // foreach($posts["data"] as $key => $post){
             //     echo $post["p_name"];
             //     echo $post["image"];
@@ -162,12 +162,13 @@ if($method=="GET"){
                 exit();
                 break;
         case '/activity/create':
-            require_once('../app/views/activity_create.php');
+            isLogin();
+            require_once('../app/views/activity/create.php');
             exit();
             break;
-        
-        case '/activity_create':
-            require_once('../app/views/show_activity_create.php');
+        case '/activity/create/show':
+            isLogin();
+            require_once('../app/views/activity/show.php');
             exit();
             break;
         case '/upload/image':

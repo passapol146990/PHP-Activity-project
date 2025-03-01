@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ฟอร์มอัพโหลดรูปภาพ</title>
+    <title>สร้างกิจกรรม</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .preview-image {
@@ -43,22 +43,21 @@
         }
     </style>
 </head>
-<body>
-    <div class="container mt-5">
+<body class="bg-dark">
+    <?php require_once '../app/component/navbar.php'; ?>
+    <div class="container mt-1">
         <div class="row">
             <div class="col-md-8 offset-md-2">
                 <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="mb-0">ฟอร์มกิจกรรม</h3>
+                    <div class="h1 p-2">
+                        <h3 class="mb-0">สร้างกิจกรรมของคุณ</h3>
                     </div>
                     <div class="card-body">
-                        <form action="/activity/create" method="POST" enctype="multipart/form-data">
+                        <form class="p-3" action="/activity/create" method="POST" enctype="multipart/form-data">
                             <div class="mb-3">
-                                    <label for="image-upload" class="form-label">รูปภาพกิจกรรม</label>
-                                    <input type="file" class="form-control" id="image-upload" name="images[]" accept="image/*" multiple>
-                                    <div class="form-text">อัพโหลดได้หลายรูป (สูงสุด 5MB ต่อรูป, รองรับไฟล์ JPEG, PNG, GIF)</div>
-                                </div>
-                                <!-- แสดงตัวอย่างรูปภาพที่เลือก (ก่อนอัพโหลด) -->
+                                <label for="image-upload" class="form-label">รูปภาพกิจกรรม</label>
+                                <input type="file" class="form-control" id="image-upload" name="images[]" accept="image/*" multiple>
+                                <div class="form-text">อัพโหลดได้หลายรูป (สูงสุด 5MB ต่อรูป, รองรับไฟล์ JPEG, PNG)</div>
                                 <div id="image-preview" class="image-preview-container"></div>
                             </div>
                             <div class="mb-3">
@@ -98,26 +97,18 @@
             </div>
         </div>
     </div>
-    
-    <!-- Bootstrap JS และ JavaScript สำหรับแสดงตัวอย่างรูปภาพ -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.getElementById('image-upload').addEventListener('change', function(event) {
             const preview = document.getElementById('image-preview');
-            preview.innerHTML = ''; // ล้างตัวอย่างเดิม
-            
+            preview.innerHTML = '';
             const files = event.target.files;
-            
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
-                
-                // ตรวจสอบว่าเป็นไฟล์รูปภาพหรือไม่
                 if (!file.type.match('image.*')) {
                     continue;
                 }
-                
                 const reader = new FileReader();
-                
                 reader.onload = function(e) {
                     const div = document.createElement('div');
                     div.className = 'image-preview-item';
@@ -140,7 +131,6 @@
                     div.appendChild(removeBtn);
                     preview.appendChild(div);
                 };
-                
                 reader.readAsDataURL(file);
             }
         });

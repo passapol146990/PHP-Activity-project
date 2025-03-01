@@ -14,13 +14,13 @@ CREATE TABLE post (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     p_id        VARCHAR(255) UNIQUE NOT NULL,
     p_aid       VARCHAR(255) NOT NULL,
-    p_name      VARCHAR(255),
-    p_about     VARCHAR(1000),
+    p_name      TEXT,
+    p_about     TEXT,
     p_max       INT,
-    p_address   VARCHAR(1000),
+    p_address   TEXT,
     p_date_start DATE,
     p_date_end  DATE,
-    p_give    VARCHAR(1000),
+    p_give      TEXT,
     p_datetime  DATETIME DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_create_aid FOREIGN KEY (p_aid) REFERENCES account(aid) ON DELETE CASCADE
 );
@@ -28,7 +28,7 @@ CREATE TABLE post (
 CREATE TABLE image (
     id      INT AUTO_INCREMENT PRIMARY KEY,
     datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
-    image   VARCHAR(1000),
+    image   TEXT,
     pid     VARCHAR(255) NOT NULL,
     CONSTRAINT fk_image_pid FOREIGN KEY (pid) REFERENCES post(p_id) ON DELETE CASCADE
 );

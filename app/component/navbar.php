@@ -6,10 +6,10 @@
         font-family: 'Prompt', sans-serif;
     }
     body {
-        height: 10000px;
+        /* height: 10000px; */
         font-family: 'Prompt', sans-serif;
     }
-    .navbar {
+    .navbar-component{
         z-index: 100;
         position: sticky;
         top: 0;
@@ -61,8 +61,11 @@
                     display: block;
                 }
                 .menu{
+                    display:block;
                     background: #fff;
                     padding: 10px;
+                    text-decoration: none;
+                    color: black;
                     &:hover{
                         cursor: pointer;
                         background: rgb(210, 210, 210);
@@ -70,118 +73,112 @@
                 }
             }
         }
-    }
-
-    .nav-links {
-        display: flex;
-        flex-grow: 1;
-        .nav-item {
-            text-decoration: none;
-            color: #333;
-            padding: 0 15px;
-            position: relative;
-            font-size: 16px;
-            padding: 10px 20px;
-            &:hover{
-                border-radius: 5px;
-                background: rgb(210, 210, 210);
+        .nav-links {
+            display: flex;
+            flex-grow: 1;
+            .nav-item {
+                text-decoration: none;
+                color: #333;
+                padding: 0 15px;
+                position: relative;
+                font-size: 16px;
+                padding: 10px 20px;
+                &:hover{
+                    border-radius: 5px;
+                    background: rgb(210, 210, 210);
+                }
+                .notification-badge {
+                    position: absolute;
+                    top: -5px;
+                    right: 5px;
+                    background-color: #f44336;
+                    color: white;
+                    border-radius: 50%;
+                    width: 18px;
+                    height: 18px;
+                    font-size: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            .search-box {
+                display: flex;
+                align-items: center;
+                background-color:rgb(224, 223, 223);
+                border-radius: 20px;
+                padding: 5px 15px;
+                margin-right: 10px;
+                .search-input {
+                    border: none;
+                    background-color: transparent;
+                    outline: none;
+                    width: 200px;
+                    padding: 5px;
+                    font-size: 14px;
+                    &::placeholder {
+                        color: #aaa;
+                    }
+                }
+            }
+            .filter-button {
+                background-color: #f44336;
+                color: white;
+                border: none;
+                border-radius: 20px;
+                padding: 5px 15px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                .filter-text {
+                    margin-right: 5px;
+                }
+            }
+            .search-icon {
+                padding: 10px 20px;
+                cursor: pointer;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border:none;
+                background:none;
+                border-radius: 50%;
+                &:hover{
+                    transform: scale(1.1);
+                }
             }
         }
     }
-
-    .notification-badge {
-        position: absolute;
-        top: -5px;
-        right: 5px;
-        background-color: #f44336;
-        color: white;
-        border-radius: 50%;
-        width: 18px;
-        height: 18px;
-        font-size: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .search-container {
-        display: flex;
-        align-items: center;
-        margin-left: auto;
-    }
-
-    .search-box {
-        display: flex;
-        align-items: center;
-        background-color: #f1f1f1;
-        border-radius: 20px;
-        padding: 5px 15px;
-        margin-right: 10px;
-    }
-
-    .search-input {
-        border: none;
-        background-color: transparent;
-        outline: none;
-        width: 200px;
-        padding: 5px;
-        font-size: 14px;
-    }
-
-    .search-input::placeholder {
-        color: #aaa;
-    }
-
-    .filter-button {
-        background-color: #f44336;
-        color: white;
-        border: none;
-        border-radius: 20px;
-        padding: 5px 15px;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    .filter-text {
-        margin-right: 5px;
-    }
-
-    .search-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background-color: white;
-        margin-left: 10px;
-        cursor: pointer;
-    }
 </style>
-<nav class="navbar">
+<nav class="navbar-component">
     <div class="logo-container">
         <div>
             <div class="box-logo">
                 <div class="logo">
-                    <img src="https://lh3.googleusercontent.com/a/ACg8ocLEtsi8D0taNDubAOmqHCRyp6Wag9lUo0Qe3lArfOI9ZEE2oj6e=s96-c" alt="Logo">
+                    <img src="<?= htmlspecialchars($_SESSION["login_image"]) ?>" alt="Logo">
                 </div>
             </div>
-            <div class="site-name">สังคม ชุมชมสมุด</div>
+            <div class="site-name"><?= htmlspecialchars($_SESSION["login_name"]) ?></div>
         </div>
         <div class="menu-user">
-            <div class="menu">
-                <a>ตั้งค่า</a>
-            </div>
-            <div class="menu">
-                <a>ออกจากระบบ</a>
-            </div>
+            <a class="menu" href="/setting">
+                <span href="/setting">ตั้งค่า</span>
+            </a>
+            <a class="menu" href="/logout">
+                <span href="/logout">ออกจากระบบ</span>
+            </a>
         </div>
     </div>
-    
     <div class="nav-links">
-        <a href="#" class="nav-item">สร้างกิจกรรม</a>
-        <a href="#" class="nav-item">กิจกรรมที่สร้าง<span class="notification-badge">1</span></a>
+        <a href="/" class="nav-item">หน้าแรก</a>
+        <a href="/activity/create" class="nav-item">สร้างกิจกรรม</a>
+        <a href="/activity/create/show" class="nav-item">กิจกรรมที่สร้าง<span class="notification-badge">1</span></a>
         <a href="#" class="nav-item">กิจกรรมที่เข้าร่วม<span class="notification-badge">1</span></a>
     </div>
     <form action="#" method="get" class="search-container">
