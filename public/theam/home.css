@@ -310,3 +310,30 @@ body {
     cursor: pointer;
     color: #28a745;
 }
+/* ✅ ปรับสไตล์ Modal */
+.modal-content {
+    border-radius: 15px;
+}
+
+/* ✅ ปรับขนาดและไม่ให้รูปภาพเบี้ยว */
+.modal-body img {
+    width: 100%;
+    max-height: 230px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* ✅ ปรับให้ Modal อยู่ตรงกลาง */
+.modal-dialog {
+    max-width: 700px;
+}
+
+/* ✅ กำหนดขนาดตัวอักษร */
+.bold_text_modal {
+    font-weight: 500;
+}
+
+.small-text {
+    font-size: 0.9rem;
+    color: gray;
+}
