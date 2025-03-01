@@ -2,6 +2,7 @@
 require_once("models/accout.php");
 require_once("models/post.php");
 require_once("models/image.php");
+require_once("models/register.php");
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($request, PHP_URL_PATH);
@@ -103,6 +104,10 @@ if($method=="GET"){
             $url = "https://accounts.google.com/o/oauth2/v2/auth?client_id={$google_client_id}&redirect_uri={$google_redirect_uri}&response_type=code&scope=profile email";
             header("Location:{$url}");
             break;
+        case '/x':
+            $data = getRegister("x","x","x",1);
+            print_r($data);
+            break;
         case '/':
             isLogin();
             $page = $_GET['page'] ?? 1;
@@ -125,14 +130,15 @@ if($method=="GET"){
             header("Location:/login");
             exit();
             break;
-        case '/req':
-            require_once('../app/views/req_activity.php');
+        case '/activity/register/show':
+            isLogin();
+            require_once('../app/views/register/show.php');
             exit();
             break;
-            case '/setting':
-                require_once('../app/views/setting.php');
-                exit();
-                break;
+        case '/setting':
+            require_once('../app/views/setting.php');
+            exit();
+            break;
         case '/activity/edit':
             isLogin();
             $id_post = $_GET["id_post"]??"";
@@ -353,6 +359,19 @@ if($method=="GET"){
             $id_post = $_POST["id_post"];
             $id_user = $_SESSION["login_token"];
             echo json_encode($post,JSON_UNESCAPED_UNICODE);
+            exit();
+            break;
+        case '/api/get/register':
+            isLogin();
+            if(!isset($_POST["id_post"])||empty(isset($_POST["id_post"]))){
+                echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            $page = $_POST['page'] ?? 1;
+            $id_post = $_POST["id_post"];
+            $id_user = $_SESSION["login_token"];
+            $data = getRegisterByIdPostAndIdUser($id_post,$id_user,100,$page);
+            echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
             break;
         default:

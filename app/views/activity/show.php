@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -127,7 +126,6 @@
             border: 2px solid #ddd;
             border-radius: 8px;
             margin-bottom: 10px;
-            /* ระยะห่างระหว่างรูปและปุ่ม */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -195,7 +193,6 @@
 
         .modal-header p {
             margin-top: auto;
-            /* ดันให้ <p> ลงไปชิดด้านล่าง */
             margin-bottom: 3px;
         }
 
@@ -206,20 +203,16 @@
 
         }
 
-        /* modal ทับ modal */
         .modal-backdrop {
             z-index: 1040 !important;
-            /* ป้องกัน backdrop ซ้อนทับ modal ตัวแรก */
         }
 
         .modal {
             z-index: 1050 !important;
-            /* กำหนดให้ modal 1 อยู่ระดับกลาง */
         }
 
         #profileModal {
             z-index: 1060 !important;
-            /* กำหนดให้ modal 2 อยู่ด้านบนสุด */
         }
     </style>
 </head>
@@ -248,7 +241,7 @@
                             <img src="/get/image?img=/post/<?= htmlspecialchars($doc['image']) ?>" class="img-thumbnail" alt="กิจกรรม"><br>
                             <lable style="font-size:12px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['p_datetime']) ?> </lable>
                         </td>
-                        <td><?= htmlspecialchars($doc['p_name']) ?></td>
+                        <td id="title:<?= htmlspecialchars($doc["p_id"]) ?>"><?= htmlspecialchars($doc['p_name']) ?></td>
                         <td>
                             <button onClick="getDetailPost('<?= htmlspecialchars($doc["p_id"]) ?>')" class="btn btn-outline-primary btn-sm raduis" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
                                 รายละเอียดกิจกรรม
@@ -256,9 +249,9 @@
                         </td>
                         <td style="font-size:14px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['p_date_start']) ?> - <?= htmlspecialchars($doc['p_date_end']) ?></td>
                         <td>
-                            <?= htmlspecialchars($doc['approved_registers']."/".$doc["p_max"]) ?>
+                            <lable id="numberpeople:<?= htmlspecialchars($doc["p_id"]) ?>"><?= htmlspecialchars($doc['approved_registers']."/".$doc["p_max"]) ?></lable><br>
                             <div class="position-relative d-inline-block">
-                                <button class="btn btn-outline-secondary btn-sm raduis btn_secondary"
+                                <button onClick="getRegisterPost('<?= htmlspecialchars($doc['approved_registers']."/".$doc["p_max"]) ?>')" class="btn btn-outline-secondary btn-sm raduis btn_secondary"
                                     data-bs-toggle="modal" data-bs-target="#req_activity_1">คำขอเข้าร่วม
                                 </button>
                                 <span class="badge-notification">3</span>
@@ -266,8 +259,9 @@
                         </td>
                         <td>
                             <p>คำขอทั้งหมด : <?= htmlspecialchars($doc['total_registers']) ?></p>
-                            <p>อนุมัติ : <?= htmlspecialchars($doc['approved_registers']) ?></p>
-                            <p>ปฏิเสธ : <?= htmlspecialchars($doc['rejected_registers']) ?></p>
+                            <p>อนุมัติ : <lable id="approved:<?= htmlspecialchars($doc["p_id"]) ?>"><?= htmlspecialchars($doc['approved_registers']) ?></lable></p>
+                            <p>ปฏิเสธ : <lable id="rejected:<?= htmlspecialchars($doc["p_id"]) ?>"><?= htmlspecialchars($doc['rejected_registers']) ?></lable></p>
+                            <lable id="pending:<?= htmlspecialchars($doc["p_id"]) ?>" style="display:none;"><?= htmlspecialchars($doc['pending_registers']) ?></lable>
                         </td>
                         <td>
                             <button class="btn btn-primary bt_pri btn-sm">แก้ไข</button>
@@ -282,7 +276,7 @@
     </div>
 
     <!-- Modal  มันคือ modal แรก-->
-    <div class="modal fade text-font" id="Modal_Activity_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade text-font" id="Modal_Activity_1" tabindex="-1" aria-labelledby="Modal_Activity_1">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -297,7 +291,7 @@
         </div>
     </div>
     <!-- Modal show people req activity-->
-    <div class="modal fade text-font" id="req_activity_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade text-font" id="req_activity_1" tabindex="-1" aria-labelledby="req_activity_1">
         <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -308,7 +302,6 @@
                 <div class="modal-body">
                     <div>
                         <table class="table">
-
                             <tr style="font-size: meduim;">
                                 <td style="width: 15%;">3/20</td>
                                 <td style="width: 55%;">ยังไม่ได้ดำเนินการ : 1</td>
@@ -316,119 +309,42 @@
                                 <td style="width: 15%;">ปฏิเสธ : 1</td>
                             </tr>
                         </table>
-
                         <div class="container">
                             <div class="row d-flex justify-content-start align-items-center text-left text_show_data">
                                 <!-- วันที่และเวลา (2 ส่วน) -->
                                 <div class="col-1 p-0">
-                                    <div class="d-inline text-left" style="font-size: 16px;">1/2/2568</div>
-                                    <div class="d-inline text-left" style="font-size: 16px;">12:3:44</div>
+                                    <div class="d-inline text-left" style="font-size: 16px;">1/2/2568 12:3:44</div>
                                 </div>
-
                                 <!-- รูปโปรไฟล์ (1 ส่วน) -->
                                 <div class="col-2 d-inline justify-content-center align-items-center">
                                     <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg"
                                         style="width: 55px; height: 55px; border-radius: 50%;" alt="รูปโปรไฟล์" class="ms-3">
-                                                                                                <!-- modalซ้อนทับ -->
                                     <div style="font-size: small; color: blue; cursor: pointer;" onclick="openModal2()">
                                         <img src="https://cdn-icons-png.flaticon.com/512/6388/6388049.png"
                                             style="width: 15px; height: 15px; border-radius: 0%;" alt="">
                                         ข้อมูลเพิ่มเติม
                                     </div>
                                 </div>
-
                                 <div class="col-5 p-0">
                                     <p>ชื่อ ภานุมาศ ท่าสะอาด</p>
                                     <p>เพศ : ชาย</p>
                                     <p>อายุ : 19</p>
-
-
-
                                 </div>
-
                                 <div class="col-2 text-center">
                                     <button class="btn btn-success bt_pri btn-sm">อนุมัติ</button>
                                     <div class="mb-2"></div>
                                     <button class="btn btn-danger bt_pri btn-sm mb-2">ปฏิเสธ</button>
                                 </div>
-                                <div class="col-2 p-0" style="color:rgb(230, 191, 62);">⏳ยังไม่ดำเนินการ</div>
-
-                                <div class="p-1" style="border-top: 2px solid black;"></div>
-
-                            </div>
-
-
-                        </div>
-
-                        <div class="container">
-                            <div class="row d-flex justify-content-start align-items-center text-left text_show_data">
-                                <!-- วันที่และเวลา (2 ส่วน) -->
-                                <div class="col-1 p-0">
-                                    <div class="d-inline text-left" style="font-size: 16px;">1/2/2568</div>
-                                    <div class="d-inline text-left" style="font-size: 16px;">12:3:44</div>
-                                </div>
-
-                                <!-- รูปโปรไฟล์ (1 ส่วน) -->
-                                <div class="col-2 d-inline justify-content-center align-items-center">
-                                    <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg"
-                                        style="width: 55px; height: 55px; border-radius: 50%;" alt="รูปโปรไฟล์" class="ms-3">
-                                    <div style="font-size: small; color: blue;"><img src="https://cdn-icons-png.flaticon.com/512/6388/6388049.png"
-                                            style="width: 15px; height: 15px; border-radius: 0%;" alt="">ข้อมูลเพิ่มเติม</div>
-                                </div>
-
-                                <div class="col-5 p-0">
-                                    <p>ชื่อ นฤพล ท่าสะอาด</p>
-                                    <p>เพศ : ชาย</p>
-                                    <p>อายุ : 19</p>
-
-
-
-                                </div>
-
-                                <div class="col-2 text-center">✅</div>
-                                <div class="col-2" style="color:rgb(32, 185, 21);">อนุมัติ</div>
-                                <div style="border-top: 2px solid black;"></div>
+                                <div class="col-2 p-0 text-warning">⏳ยังไม่ดำเนินการ</div>
                             </div>
                         </div>
-
-                        <div class="container">
-                            <div class="row d-flex justify-content-start align-items-center text-left text_show_data">
-                                <!-- วันที่และเวลา (2 ส่วน) -->
-                                <div class="col-1 p-0">
-                                    <div class="d-inline text-left" style="font-size: 16px;">1/2/2568</div>
-                                    <div class="d-inline text-left" style="font-size: 16px;">12:3:44</div>
-                                </div>
-
-                                <!-- รูปโปรไฟล์ (1 ส่วน) -->
-                                <div class="col-2 d-inline justify-content-center align-items-center">
-                                    <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg"
-                                        style="width: 55px; height: 55px; border-radius: 50%;" alt="รูปโปรไฟล์" class="ms-3">
-                                    <div style="font-size: small; color: blue;"><img src="https://cdn-icons-png.flaticon.com/512/6388/6388049.png"
-                                            style="width: 15px; height: 15px; border-radius: 0%;" alt="">ข้อมูลเพิ่มเติม</div>
-                                </div>
-
-                                <div class="col-5 p-0">
-                                    <p>ชื่อ นฤพล ท่าสะอาด</p>
-                                    <p>เพศ : ชาย</p>
-                                    <p>อายุ : 19</p>
-
-
-
-                                </div>
-
-                                <div class="col-2 text-center">❌</div>
-                                <div class="col-2" style="color:rgb(230, 0, 65);">ปฏิเสธ</div>
-                                <div style="border-top: 2px solid black;"></div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Modal_submit_picture -->
-    <div class="modal fade text-font" id="Modal_submit_pic_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade text-font" id="Modal_submit_pic_1" tabindex="-1" aria-labelledby="Modal_submit_pic_1">
         <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -478,7 +394,7 @@
 
 
     <!-- Modal Profile คนขอเข้าร่วม มันคือ modal2-->
-    <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModal">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content p-4 position-relative">
                 <div class="text-start mb-3">
@@ -508,14 +424,8 @@
         function openModal2() {
             var modal1 = document.getElementById("req_activity_1");
             var modal2 = new bootstrap.Modal(document.getElementById("profileModal"));
-
-            // ✅ ลดความสว่างของ modal 1 (ทำให้ดูเหมือนถูกบัง)
             modal1.style.opacity = "0.5";
-
-            // ✅ เปิด modal 2
             modal2.show();
-
-            // ✅ คืนค่า opacity กลับมาเมื่อ modal 2 ปิด
             document.getElementById("profileModal").addEventListener("hidden.bs.modal", function() {
                 modal1.style.opacity = "1";
             });
@@ -537,9 +447,7 @@
             fetch("http://localhost/api/get/post", requestOptions)
             .then((response) => response.text())
             .then((result) => {
-                console.log(result);
                 result = JSON.parse(result);
-                console.log(result);
                 setModal_Activity_1(result)
             })
             .catch((error) => console.error(error));
@@ -594,6 +502,101 @@
                         </div>
                     </div>`
             Modal_Activity_1.innerHTML = e;
+        }
+        // 
+        async function getRegisterPost(id){
+            const myHeaders = new Headers();
+            myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+
+            const formdata = new FormData();
+            formdata.append("id_post", id);
+            formdata.append("page", 1);
+
+            const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow"
+            };
+
+            let res = await fetch("http://localhost/api/get/register", requestOptions);
+            res = res.text();
+            console.log(res);
+            res = JSON.parse(res);
+            console.log(res);
+            setModal_Activity_1(res,id)
+            // .then((response) => response.text())
+            // .then((result) => {
+            //     result = JSON.parse(result);
+            //     console.log(result);
+            //     setModal_Activity_1(result,id)
+            // })
+            // .catch((error) => console.error(error));
+        }
+        function setReq_activity_1(result,pid){
+            // if(result.status!=200){
+            //     return 
+            // }
+            const data = result.data;
+            const req_activity_1 = document.getElementById('req_activity_1');
+            const title = req_activity_1.querySelector(`title:${pid}`).textContent;
+            const numberpeople = req_activity_1.querySelector(`numberpeople:${pid}`).textContent;
+            const pending = req_activity_1.querySelector(`pending:${pid}`).textContent;
+            const approved = req_activity_1.querySelector(`approved:${pid}`).textContent;
+            const rejected = req_activity_1.querySelector(`rejected:${pid}`).textContent;
+            console.log(title)
+            let e = '';
+            e = `<div class="modal-dialog modal-dialog-scrollable modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">คำขอเข้าร่วมกิจกรรม : </h5>
+                            <p>${title}</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <table class="table">
+                                    <tr style="font-size: meduim;">
+                                        <td style="width: 15%;">${numberpeople}</td>
+                                        <td style="width: 55%;">ยังไม่ได้ดำเนินการ : ${pending}</td>
+                                        <td style="width: 15%;">อนุมัติ : ${approved}</td>
+                                        <td style="width: 15%;">ปฏิเสธ : ${rejected}</td>
+                                    </tr>
+                                </table>
+                                <div class="container">
+                                    <div class="row d-flex justify-content-start align-items-center text-left text_show_data">
+                                        <!-- วันที่และเวลา (2 ส่วน) -->
+                                        <div class="col-1 p-0">
+                                            <div class="d-inline text-left" style="font-size: 16px;">1/2/2568 12:3:44</div>
+                                        </div>
+                                        <!-- รูปโปรไฟล์ (1 ส่วน) -->
+                                        <div class="col-2 d-inline justify-content-center align-items-center">
+                                            <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg"
+                                                style="width: 55px; height: 55px; border-radius: 50%;" alt="รูปโปรไฟล์" class="ms-3">
+                                            <div style="font-size: small; color: blue; cursor: pointer;" onclick="openModal2()">
+                                                <img src="https://cdn-icons-png.flaticon.com/512/6388/6388049.png"
+                                                    style="width: 15px; height: 15px; border-radius: 0%;" alt="">
+                                                ข้อมูลเพิ่มเติม
+                                            </div>
+                                        </div>
+                                        <div class="col-5 p-0">
+                                            <p>ชื่อ ภานุมาศ ท่าสะอาด</p>
+                                            <p>เพศ : ชาย</p>
+                                            <p>อายุ : 19</p>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <button class="btn btn-success bt_pri btn-sm">อนุมัติ</button>
+                                            <div class="mb-2"></div>
+                                            <button class="btn btn-danger bt_pri btn-sm mb-2">ปฏิเสธ</button>
+                                        </div>
+                                        <div class="col-2 p-0 text-warning">⏳ยังไม่ดำเนินการ</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+            // req_activity_1.innerHTML = e;
         }
     </script>
 </body>

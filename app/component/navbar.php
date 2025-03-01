@@ -187,7 +187,7 @@
         <a href="/" class="nav-item">หน้าแรก</a>
         <a href="/activity/create" class="nav-item">สร้างกิจกรรม</a>
         <a href="/activity/create/show" class="nav-item">กิจกรรมที่สร้าง<span class="notification-badge">1</span></a>
-        <a href="#" class="nav-item">กิจกรรมที่เข้าร่วม<span class="notification-badge">1</span></a>
+        <a href="/activity/register/show" class="nav-item">กิจกรรมที่เข้าร่วม<span class="notification-badge">1</span></a>
     </div>
     <form action="#" method="get" class="search-container">
         <div class="search-box">
