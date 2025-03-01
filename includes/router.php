@@ -9,7 +9,7 @@ $path = parse_url($request, PHP_URL_PATH);
 function isLogin(){
     if (isset($_SESSION['login_time'])) {
         $inactive = time() - $_SESSION['login_time'];
-        if ($inactive > 600) {
+        if ($inactive > 6000) {
             header('Location:/logout');
             exit();
         }
@@ -24,7 +24,7 @@ function isLogin(){
         $getaccount = getAccountID($login_token);
         $account = $getaccount['data']->fetch_assoc();
         if(empty($account['birthday'])||empty($account['gender'])){
-            header('location:/form/user/data');
+            require_once('../app/views/user/update.php');
             exit();
         }
     } else {
@@ -117,26 +117,6 @@ if($method=="GET"){
                 exit();
             }
             require_once('../app/views/login.php');
-            exit();
-            break;
-        case '/form/user/data':
-            if (isset($_SESSION['login_time'])) {
-                $inactive = time() - $_SESSION['login_time'];
-                if ($inactive > 600) {
-                    header('Location:/logout');
-                    exit();
-                }
-                $login_token = $_SESSION["login_token"];
-                if(!isset($login_token)||empty($login_token)){
-                    session_destroy();
-                    header("Location:/logout");
-                    exit();
-                }
-            }else{
-                header('Location:/logout');
-                exit();
-            }
-            require_once('../app/views/user/update.php');
             exit();
             break;
         case '/logout':
