@@ -96,7 +96,7 @@ if($method=="GET"){
                 header("location:/");
                 exit();
             }
-            login($id,$fname,$lname,$gmail,$image);
+            // login($id,$fname,$lname,$gmail,$image);
             header('location:/');
             exit();
             break;
@@ -144,7 +144,7 @@ if($method=="GET"){
             exit();
             break;
         case '/user/setting':
-            isLogin();
+            // isLogin();
             require_once('../app/views/user/setting.php');
             exit();
             break;
