@@ -9,7 +9,7 @@ $path = parse_url($request, PHP_URL_PATH);
 function isLogin(){
     if (isset($_SESSION['login_time'])) {
         $inactive = time() - $_SESSION['login_time'];
-        if ($inactive > 600) {
+        if ($inactive > 6000) {
             header('Location:/logout');
             exit();
         }
@@ -108,12 +108,12 @@ if($method=="GET"){
             $posts = getPost(10,$page);
             // print_r($posts["data"]);
             // print_r($posts["data"][0]["image"]);
-            foreach($posts["data"] as $key => $post){
-                echo $post["p_name"];
-                echo $post["image"];
-            }
+            // foreach($posts["data"] as $key => $post){
+            //     echo $post["p_name"];
+            //     echo $post["image"];
+            // }
             $postsTop = getPost(10,1); 
-            // require_once('../app/views/home.php');
+            require_once('../app/views/home.php');
             exit();
             break;
         case '/login':
