@@ -37,7 +37,7 @@
         }
         $_SESSION['login_token'] = $id;
         $_SESSION['login_image'] = $image;
-        $_SESSION['login_name'] = $data["fname"]." ".$data["lname"];
+        $_SESSION['login_name'] = $data["fname"]??""." ".$data["lname"]??"";
         $_SESSION['login_time'] = time();
     }
     function setBirthday($date,$id){

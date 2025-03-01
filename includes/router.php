@@ -15,8 +15,7 @@ function isLogin(){
         }
         $login_token = $_SESSION["login_token"];
         $login_image = $_SESSION["login_image"];
-        $login_name = $_SESSION["login_name"];
-        if(!isset($login_token)||empty($login_token)||!isset($login_image)||empty($login_image)||!isset($login_name)||empty($login_name)){
+        if(!isset($login_token)||empty($login_token)||!isset($login_image)||empty($login_image)){
             session_destroy();
             header("Location:/logout");
             exit();
@@ -24,7 +23,8 @@ function isLogin(){
         $getaccount = getAccountID($login_token);
         $account = $getaccount['data']->fetch_assoc();
         if(empty($account['birthday'])||empty($account['gender'])){
-            header('location:/form/user/data');
+            // header('location:/user/form/data');
+            require_once('../app/views/user/update.php');
             exit();
         }
     } else {
@@ -124,7 +124,7 @@ if($method=="GET"){
             require_once('../app/views/login.php');
             exit();
             break;
-        case '/form/user/data':
+        case '/user/form/data':
             if (isset($_SESSION['login_time'])) {
                 $inactive = time() - $_SESSION['login_time'];
                 if ($inactive > 600) {
@@ -133,18 +133,19 @@ if($method=="GET"){
                 }
                 $login_token = $_SESSION["login_token"];
                 if(!isset($login_token)||empty($login_token)){
-                    session_destroy();
                     header("Location:/logout");
-                    exit();
-                }else{
-                    header("Location:/");
                     exit();
                 }
             }else{
                 header('Location:/logout');
                 exit();
             }
-            require_once('../app/views/form_user.php');
+            require_once('../app/views/user/update.php');
+            exit();
+            break;
+        case '/user/setting':
+            isLogin();
+            require_once('../app/views/user/setting.php');
             exit();
             break;
         case '/logout':
@@ -157,10 +158,6 @@ if($method=="GET"){
             require_once('../app/views/req_activity.php');
             exit();
             break;
-            case '/setting':
-                require_once('../app/views/setting.php');
-                exit();
-                break;
         case '/activity/create':
             isLogin();
             require_once('../app/views/activity/create.php');

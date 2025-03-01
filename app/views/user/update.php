@@ -3,42 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>อัพเดทข้อมูล</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #f77062, #fe5196);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        #profileImage{
+            border-radius: 50%;
+        }
+    </style>
 </head>
 <body class>
     <div class="container text-center">
         <form action="/update/user/data" method="post" class="mt-3 card p-4 shadow-sm" style="max-width: 500px; margin: auto;">
             <div class="mb-3 text-start">
-                <a class="btn btn-danger" href="/logout">กลับหน้าหลัก</a>
+                <a class="btn btn-danger" href="/logout">ออกจากระบบ</a>
             </div>
-            <h3 class="mb-3">กรอกข้อมูลผู้ใช้</h3>
+            <h4 class="mb-2">กรอกข้อมูลผู้ใช้</h4>
             <div class="mb-3">
-                <img id="profileImage" src="<?= $_SESSION['login_image'] ?>" width="150px" class="profile-pic mb-2" alt="Profile">
+                <img id="profileImage" src="<?= htmlspecialchars($_SESSION['login_image']) ?>" width="100px" class="profile-pic mb-2" alt="Profile">
             </div>
             <div class="mb-3 text-start">
                 <label class="form-label">ชื่อ</label>
-                <input type="text" class="form-control" name="fname" placeholder="กรอกชื่อ">
+                <input type="text" class="form-control" name="fname" placeholder="กรอกชื่อ" value="<?= htmlspecialchars($account["fname"]) ?>">
             </div>
             <div class="mb-3 text-start">
                 <label class="form-label">นามสกุล</label>
-                <input type="text" class="form-control" name="lname" placeholder="นามสกุล">
+                <input type="text" class="form-control" name="lname" placeholder="นามสกุล" value="<?= htmlspecialchars($account["lname"]) ?>">
             </div>
             <div class="mb-3 text-start">
                 <label class="form-label">วันเกิด</label>
-                <input type="date" name="birthday" class="form-control">
+                <input type="date" name="birthday" class="form-control" value="<?= htmlspecialchars($account["birthday"]) ?>">
             </div>
             <div class="mb-3 text-start">
                 <label class="form-label">เพศ</label>
-                <select class="form-select" name="gender">
+                <select class="form-select" name="gender" value="<?= htmlspecialchars($account["gender"]) ?>">
                     <option>ชาย</option>
                     <option>หญิง</option>
                     <option>อื่น ๆ</option>
                 </select>
             </div>
-            <div class="mb-3 text-start">
+            <div class="mb-1 text-start">
                 <a href="/privacy-policy" class="btn btn-link">อ่านนโยบายการเก็บข้อมูลส่วนตัว</a>
             </div>
             <div class="mb-3 text-start">

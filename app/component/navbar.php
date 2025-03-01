@@ -20,6 +20,7 @@
         padding: 10px 20px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         .logo-container {
+            width: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -167,11 +168,11 @@
             <div class="site-name"><?= htmlspecialchars($_SESSION["login_name"]) ?></div>
         </div>
         <div class="menu-user">
-            <a class="menu" href="/setting">
-                <span href="/setting">ตั้งค่า</span>
+            <a class="menu" href="/user/setting">
+                <span>ตั้งค่า</span>
             </a>
             <a class="menu" href="/logout">
-                <span href="/logout">ออกจากระบบ</span>
+                <span>ออกจากระบบ</span>
             </a>
         </div>
     </div>
