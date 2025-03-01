@@ -7,10 +7,30 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <title>กิจกรรมที่สร้าง</title>
     <style>
+        .overflow-x {
+            width: 100%; 
+            overflow-x: auto; 
+            overflow-y: hidden; 
+            white-space: nowrap;
+            display: flex;
+            gap: 10px;
+            
+            .overflow-x::-webkit-scrollbar {
+                height: 8px;
+            }
+            
+            .overflow-x::-webkit-scrollbar-thumb {
+                background-color: #888;
+                border-radius: 4px;
+            }
+            
+            .overflow-x::-webkit-scrollbar-thumb:hover {
+                background-color: #555;
+            }
+        }
         .text-font {
             font-family: 'Mitr';
             font-size: 18px;
@@ -31,7 +51,6 @@
             vertical-align: middle;
             border: 0px solid #ddd;
             padding: 8px;
-            /*white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
         }
 
         th {
@@ -40,15 +59,12 @@
 
         .btn-success {
             width: 90px;
-            /* กำหนดขนาดปุ่มให้เท่ากัน */
         }
 
         .img-thumbnail {
             width: 140px;
             height: 85px;
             object-fit: cover;
-            /* ป้องกันรูปเบี้ยว */
-
         }
 
         .text-head {
@@ -59,12 +75,6 @@
 
         .raduis {
             border-radius: 15px;
-        }
-
-        tr:first-child th,
-        tr:first-child td {
-            /*border-top: 2px solid black; */
-            border-bottom: 2px solid black;
         }
 
         h5 {
@@ -216,12 +226,11 @@
 
 <body>
     <?php require_once '../app/component/navbar.php'; ?>
-    <div class="container" style="margin-top: 20px;">
+    <div class="container bg-white pt-2 rounded" style="margin-top: 20px;">
         <div class="text-head">กิจกรรมที่สร้าง</div>
         <div class="mt-4">
             <table class="table">
                 <thead>
-                    <div style="border-top: 2px solid black;"></div>
                     <tr class="text-font">
                         <th style="width: 16%;">รูปกิจกรรม</th>
                         <th style="width: 15%;">ชื่อกิจกรรม</th>
@@ -232,20 +241,22 @@
                         <th style="width: 12%;"></th>
                     </tr>
                 </thead>
-
-                <!-- show data-->
                 <tbody>
+                <? foreach($data["data"] as $key => $doc){ ?>
                     <tr>
-                        <td><img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" class="img-thumbnail" alt="กิจกรรม"></td>
-                        <td>C4C ค่ายมหาลัยสู่โรงเรียนในชุมชน</td>
+                        <td class="text-center">
+                            <img src="/get/image?img=/post/<?= htmlspecialchars($doc['image']) ?>" class="img-thumbnail" alt="กิจกรรม"><br>
+                            <lable style="font-size:12px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['p_datetime']) ?> </lable>
+                        </td>
+                        <td><?= htmlspecialchars($doc['p_name']) ?></td>
                         <td>
-                            <button class="btn btn-outline-primary btn-sm raduis" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
+                            <button onClick="getDetailPost('<?= htmlspecialchars($doc["p_id"]) ?>')" class="btn btn-outline-primary btn-sm raduis" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
                                 รายละเอียดกิจกรรม
                             </button>
                         </td>
-                        <td>1/2/2568 - 5/2/2568</td>
+                        <td style="font-size:14px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['p_date_start']) ?> - <?= htmlspecialchars($doc['p_date_end']) ?></td>
                         <td>
-                            1/20
+                            <?= htmlspecialchars($doc['approved_registers']."/".$doc["p_max"]) ?>
                             <div class="position-relative d-inline-block">
                                 <button class="btn btn-outline-secondary btn-sm raduis btn_secondary"
                                     data-bs-toggle="modal" data-bs-target="#req_activity_1">คำขอเข้าร่วม
@@ -253,12 +264,10 @@
                                 <span class="badge-notification">3</span>
                             </div>
                         </td>
-
                         <td>
-                            <p>คำขอทั้งหมด : 3</p>
-                            <p>อนุมัติ : 1</p>
-                            <p>ปฏิเสธ : 1</p>
-                            <p>สร้างกิจกรรมเมื่อ : 21/2/2568 </p>
+                            <p>คำขอทั้งหมด : <?= htmlspecialchars($doc['total_registers']) ?></p>
+                            <p>อนุมัติ : <?= htmlspecialchars($doc['approved_registers']) ?></p>
+                            <p>ปฏิเสธ : <?= htmlspecialchars($doc['rejected_registers']) ?></p>
                         </td>
                         <td>
                             <button class="btn btn-primary bt_pri btn-sm">แก้ไข</button>
@@ -266,71 +275,7 @@
                             <button class="btn btn-danger bt_pri btn-sm">ลบ</button>
                         </td>
                     </tr>
-                </tbody>
-
-                <tbody>
-                    <tr>
-                        <td><img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" class="img-thumbnail" alt="กิจกรรม"></td>
-                        <td>C4C ค่ายมหาลัยสู่โรงเรียนในชุมชน</td>
-                        <td>
-                            <button class="btn btn-outline-primary btn-sm raduis" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
-                                รายละเอียดกิจกรรม
-                            </button>
-                        </td>
-                        <td>1/2/2568 - 5/2/2568</td>
-                        <td>
-                            1/20
-                            <div class="position-relative d-inline-block">
-                                <button class="btn btn-outline-secondary btn-sm raduis btn_secondary">คำขอเข้าร่วม</button>
-                                <span class="badge-notification">2</span>
-                            </div>
-                        </td>
-
-                        <td>
-                            <p>คำขอทั้งหมด : 2</p>
-                            <p>อนุมัติ : 0</p>
-                            <p>ปฏิเสธ : 0</p>
-                            <p>สร้างกิจกรรมเมื่อ : 21/2/2568 </p>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary bt_pri btn-sm">แก้ไข</button>
-                            <div class="mb-3"></div>
-                            <button class="btn btn-danger bt_pri btn-sm">ลบ</button>
-                        </td>
-                    </tr>
-                </tbody>
-
-                <tbody>
-                    <tr>
-                        <td><img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" class="img-thumbnail" alt="กิจกรรม"></td>
-                        <td>C4C ค่ายมหาลัยสู่โรงเรียนในชุมชน</td>
-                        <td>
-                            <button class="btn btn-outline-primary btn-sm raduis" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
-                                รายละเอียดกิจกรรม
-                            </button>
-                        </td>
-                        <td>1/2/2568 - 5/2/2568</td>
-                        <td>
-                            20/20
-                            <div class="position-relative d-inline-block">
-                                <button class="btn btn-outline-secondary btn-sm raduis btn_secondary">คำขอเข้าร่วม</button>
-                                <span class="badge-notification"></span>
-                            </div>
-                        </td>
-
-                        <td>
-                            <p>คำขอทั้งหมด : 0</p>
-                            <p>อนุมัติ : 20</p>
-                            <p>ปฏิเสธ : 0</p>
-                            <p>สร้างกิจกรรมเมื่อ : 21/2/2568 </p>
-                        </td>
-                        <td>
-                            <div class="position-relative d-inline-block">
-                                <button class="btn btn-warning bt_pri btn-sm">ตรวจสอบรูปภาพ</button>
-                                <span class="badge-notification">4</span>
-                            </div>
-                        </td>
-                    </tr>
+                <? } ?>
                 </tbody>
             </table>
         </div>
@@ -338,42 +283,16 @@
 
     <!-- Modal  มันคือ modal แรก-->
     <div class="modal fade text-font" id="Modal_Activity_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม<br><small class="text-muted small-text">วันที่ 25/2/68 19:25:40 น.</small></h5>
+                    <div>
+                        <h5 class="modal-title" id="exampleModalLabel">กำลังโหลดรายละเอียดกิจกรรม...</h5>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row d-flex align-items-center mb-2">
-                        <div class="col-3  text-end">ผู้สร้าง : </div>
-                        <div class="col-9">
-                            <img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์">
-                            <p class="d-inline-block ms-2" style="margin-bottom: 0;">พัสพล สุธาธรรม</p>
-
-                        </div>
-                    </div>
-
-                    <div class="row d-flex align-items-center mb-3">
-                        <div class="col-3 text-end">กิจกรรม : </div>
-                        <div class="col-9">
-                            <img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" alt="กิจกรรม" style="width: 350px; height: 230px; object-fit: cover;">
-                        </div>
-                    </div>
-
-
-                    <div class="row d-flex align-items-center mb-2">
-                        <div class="col-3 text-end"></div>
-                        <div class="col-9">
-                            <div><span class="bold_text_modal">ชื่อกิจกรรม :</span> กิจกรรม c4c เข้าค่ายเพื่อโรงเรียนทางบ้าน</div>
-                            <div><span class="bold_text_modal">ช่วงเวลา :</span> 20/2/2568 - 22/2/2568 (3 วัน)</div>
-                            <div><span class="bold_text_modal">รายละเอียด :</span> มหาลัยมหาสารคามออกค่ายเพื่อช่วงเหลือโรงเรียนทางบ้าน ร่วมเป็นส่วนหนึ่งกับเรา ค่าเดินทาง 0 บาท</div>
-                            <div><span class="bold_text_modal">จำนวนที่เปิดรับ :</span> 20</div>
-                        </div>
-                    </div>
-
                 </div>
-
             </div>
         </div>
     </div>
@@ -601,10 +520,81 @@
                 modal1.style.opacity = "1";
             });
         }
+        async function getDetailPost(id){
+            const myHeaders = new Headers();
+            myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+
+            const formdata = new FormData();
+            formdata.append("id_post", id);
+
+            const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow"
+            };
+
+            fetch("http://localhost/api/get/post", requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                console.log(result);
+                result = JSON.parse(result);
+                console.log(result);
+                setModal_Activity_1(result)
+            })
+            .catch((error) => console.error(error));
+        }
+        function setModal_Activity_1(result) {
+            if(result.status!=200){
+                return 
+            }
+            const data = result.data;
+            const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
+            const create_date = data.post_create; //วันที่ 25/2/68 19:25:40 น
+            const activity_date = data.post_start+" - "+data.post_end;//20/2/2568 - 22/2/2568 (3 วัน) 
+            let images = ""
+            for(let i = 0;i<data.images.length;i++){
+                images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`
+            }
+            let e = ""
+            e = `<div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div>
+                                    <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม</h5>
+                                    <p class="small-text">${create_date}</p>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row d-flex align-items-center mb-3">
+                                    <div class="col-2 text-start"><strong>ผู้สร้าง:</strong></div>
+                                    <div class="col-10 d-flex align-items-center">
+                                        <img src="${data.img}" 
+                                            style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์" loading="lazy">
+                                        <p class="d-inline-block ms-3 mb-0">${data.fname} ${data.lname}</p>
+                                    </div>
+                                </div>
+                                <div class="row d-flex align-items-center mb-3">
+                                <div class="col-12">
+                                        <div class="overflow-x d-flex">
+                                            ${images}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-start">
+                                    <p><strong>ชื่อกิจกรรม:</strong> ${data.post_name}</p>
+                                    <p><strong>ช่วงเวลา:</strong> ${activity_date}</p>
+                                    <p><strong>รายละเอียด:</strong> ${data.post_about}</p>
+                                    <p><strong>สถานที่:</strong> ${data.post_address}</p>
+                                    <p><strong>สิ่งที่ได้:</strong> ${data.post_give}</p>
+                                    <p><strong>จำนวนที่เปิดรับ:</strong> ${data.post_people} คน</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+            Modal_Activity_1.innerHTML = e;
+        }
     </script>
-
-
-
 </body>
-
 </html>

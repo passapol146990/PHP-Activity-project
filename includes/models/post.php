@@ -63,9 +63,36 @@
         $posts = $result->fetch_all(MYSQLI_ASSOC);
         return ["status"=>200,"message"=>"successfully.","data"=>$posts];
     };
-    function getPostUserCreate($id){
-        
-    }
+    function getPostUserCreate($id,$limit, $page){
+        global $conn;
+        $page = isset($page) ? (int)$page : 1;
+        $limit = isset($limit) ? (int)$limit : 10;
+        $offset = ($page - 1) * $limit;
+        $stmt = $conn->prepare("
+            SELECT 
+                post.*, 
+                (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image, 
+                COUNT(register.id) AS total_registers, 
+                SUM(CASE WHEN register.status = 'รอ' THEN 1 ELSE 0 END) AS pending_registers,
+                SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved_registers,
+                SUM(CASE WHEN register.status = 'ปฏิเสธ' THEN 1 ELSE 0 END) AS rejected_registers
+            FROM post
+            JOIN account ON post.p_aid = account.aid
+            LEFT JOIN register ON post.p_id = register.pid
+            WHERE account.aid = ?
+            GROUP BY post.p_id
+            ORDER BY post.p_datetime DESC
+            LIMIT ?, ?;
+
+        ");
+        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+        $stmt->bind_param("sii", $id,$offset, $limit);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        $result = $stmt->get_result();
+        if($result->num_rows === 0){return ["status"=>400,"message"=>"ไม่พบข้อมูล"];}
+        $posts = $result->fetch_all(MYSQLI_ASSOC);
+        return ["status"=>200,"message"=>"successfully.","data"=>$posts];
+    };
     function createPost($p_id,$p_aid,$p_name,$p_about,$p_max,$p_address,$p_date_start,$p_date_end,$p_give){
         global $conn;
         $sql = 'INSERT INTO post(p_id,p_aid,p_name,p_about,p_max,p_address,p_date_start,p_date_end,p_give) VALUES(?,?,?,?,?,?,?,?,?)';

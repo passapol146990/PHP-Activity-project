@@ -8,7 +8,6 @@
     <link rel="stylesheet" type="text/css" href="style/home.css">
     <title>หน้าแรก</title>
 </head>
-
 <body>
     <?php require_once '../app/component/navbar.php'; ?>
     <?php require_once '../app/component/slide.php'; ?>
@@ -35,7 +34,7 @@
                     </div>
                 <? } ?>
                 <div class="modal fade text-font" id="Modal_Activity_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <div>
@@ -102,9 +101,8 @@
                                 <div class="row d-flex align-items-center mb-3">
                                     <div class="col-2 text-start"><strong>ผู้สร้าง:</strong></div>
                                     <div class="col-10 d-flex align-items-center">
-                                        <img src="${data.img}" 
-                                            style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์" loading="lazy">
-                                        <p class="d-inline-block ms-3 mb-0">${data.fname} ${data.lname}</p>
+                                        <img src="${data.img}" style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์" loading="lazy">
+                                        <h1 class="d-inline-block ms-3 mb-0">${data.fname} ${data.lname}</h1>
                                     </div>
                                 </div>
                                 <div class="row d-flex align-items-center mb-3">

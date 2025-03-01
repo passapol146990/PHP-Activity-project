@@ -142,12 +142,15 @@ if($method=="GET"){
             break;
                     
         case '/activity/create':
-            // isLogin();
+            isLogin();
             require_once('../app/views/activity/create.php');
             exit();
             break;
         case '/activity/create/show':
-            // isLogin();
+            isLogin();
+            $id_user = $_SESSION["login_token"];
+            $page = $_GET['page'] ?? 1;
+            $data = getPostUserCreate($id_user,10,$page);
             require_once('../app/views/activity/show.php');
             exit();
             break;
