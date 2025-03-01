@@ -2,6 +2,7 @@
 require_once("models/accout.php");
 require_once("models/post.php");
 require_once("models/image.php");
+require_once ("models/register.php");
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($request, PHP_URL_PATH);
@@ -341,17 +342,26 @@ if($method=="GET"){
             echo json_encode($post,JSON_UNESCAPED_UNICODE);
             exit();
             break;
-        case '/api/register/post':
-            isLogin();
-            if(!isset($_POST["id_post"])||empty(isset($_POST["id_post"]))){
-                echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
+            case '/api/register/post':
+                isLogin(); // ตรวจสอบการเข้าสู่ระบบ
+            
+                if (!isset($_POST["id_post"]) || empty($_POST["id_post"])) {
+                    echo json_encode(["status" => 400, "message" => "id post is null!"], JSON_UNESCAPED_UNICODE);
+                    exit();
+                }
+            
+                $id_post = $_POST["id_post"];
+                $id = $_SESSION["login_token"]; // ใช้ค่า login_token จาก session
+            
+                $result = registerUser($id_post, $id); // เรียกใช้ฟังก์ชัน
+            
+                // ส่งค่ากลับเป็น JSON
+                echo json_encode($result, JSON_UNESCAPED_UNICODE);
                 exit();
-            }
-            $id_post = $_POST["id_post"];
-            $id_user = $_SESSION["login_token"];
-            echo json_encode($post,JSON_UNESCAPED_UNICODE);
-            exit();
-            break;
+                break;
+            
+            
+            
         default:
             header("Location:/");
             break;

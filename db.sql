@@ -125,7 +125,6 @@ CREATE TABLE `register` (
   `id` int NOT NULL,
   `datetime` datetime DEFAULT CURRENT_TIMESTAMP,
   `pid` varchar(255) NOT NULL,
-  `cid` varchar(255) NOT NULL,
   `aid` varchar(255) NOT NULL,
   `status` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -177,7 +176,6 @@ ALTER TABLE `post`
 ALTER TABLE `register`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_pid` (`pid`),
-  ADD KEY `fk_cid` (`cid`),
   ADD KEY `fk_aid` (`aid`);
 
 --
@@ -243,7 +241,6 @@ ALTER TABLE `post`
 --
 ALTER TABLE `register`
   ADD CONSTRAINT `fk_aid` FOREIGN KEY (`aid`) REFERENCES `account` (`aid`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_cid` FOREIGN KEY (`cid`) REFERENCES `account` (`aid`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_pid` FOREIGN KEY (`pid`) REFERENCES `post` (`p_id`) ON DELETE CASCADE;
 
 --
