@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(to right, #f77062, #fe5196);
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
@@ -40,13 +40,48 @@
             top: 20px;
             left: 20px;
         }
+        .btn-login {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(to right, #ff4500, black);
+            color: white;
+            border-radius: 50px;
+            font-weight: bold;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Slide effect */
+        .btn-login::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, #ff6347, black);
+            transition: 0.4s ease-in-out;
+        }
+
+        .btn-login:hover::before {
+            left: 0;
+        }
+
+        .btn-login span {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 
 <body>
     <a href="index.html" class="btn btn-primary back-btn">กลับหน้าหลัก</a>
     <div class="profile-container">
-        <img src="https://via.placeholder.com/120" alt="โปรไฟล์" class="profile-img">
+        <img src="https://wallpapers.com/images/hd/3000x3000-4et4lyqb490tdtyh.jpg" alt="โปรไฟล์" class="profile-img">
         <h2>พัสพล สุทธาธรรม</h2>
         <p>เข้าร่วมเมื่อ 14/11/2567 11:32:08</p>
         
@@ -67,7 +102,7 @@
                 <label class="form-label">วันเกิดของคุณ</label>
                 <input type="date" class="form-control" value="2000-06-06">
             </div>
-            <button type="submit" class="btn btn-success btn-save">บันทึก</button>
+            <button type="submit" class="btn w-100 mt-3 btn-login"><span>บันทึก</span></button>
         </form>
     </div>
 </body>
