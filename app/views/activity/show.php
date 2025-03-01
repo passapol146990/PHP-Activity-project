@@ -196,13 +196,21 @@
             font-weight: 200px;
 
         }
+
         /* modal ทับ modal */
-        .modal {
-            z-index: 1051 !important;
+        .modal-backdrop {
+            z-index: 1040 !important;
+            /* ป้องกัน backdrop ซ้อนทับ modal ตัวแรก */
         }
 
-        .modal-backdrop {
+        .modal {
             z-index: 1050 !important;
+            /* กำหนดให้ modal 1 อยู่ระดับกลาง */
+        }
+
+        #profileModal {
+            z-index: 1060 !important;
+            /* กำหนดให้ modal 2 อยู่ด้านบนสุด */
         }
     </style>
 </head>
@@ -332,7 +340,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal  มันคือ modal แรก-->
     <div class="modal fade text-font" id="Modal_Activity_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
@@ -407,7 +415,8 @@
                                 <div class="col-2 d-inline justify-content-center align-items-center">
                                     <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg"
                                         style="width: 55px; height: 55px; border-radius: 50%;" alt="รูปโปรไฟล์" class="ms-3">
-                                    <div style="font-size: small; color: blue; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#profileModal">
+                                                                                                <!-- modalซ้อนทับ -->
+                                    <div style="font-size: small; color: blue; cursor: pointer;" onclick="openModal2()">
                                         <img src="https://cdn-icons-png.flaticon.com/512/6388/6388049.png"
                                             style="width: 15px; height: 15px; border-radius: 0%;" alt="">
                                         ข้อมูลเพิ่มเติม
@@ -415,7 +424,7 @@
                                 </div>
 
                                 <div class="col-5 p-0">
-                                    <p>ชื่อ นฤพล ท่าสะอาด</p>
+                                    <p>ชื่อ ภานุมาศ ท่าสะอาด</p>
                                     <p>เพศ : ชาย</p>
                                     <p>อายุ : 19</p>
 
@@ -554,38 +563,52 @@
         </div>
     </div>
 
-    <!-- Modal Profile คนขอเข้าร่วม-->
-   <!-- Modal Profile คนขอเข้าร่วม -->
-<div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- ขยาย Modal -->
-        <div class="modal-content p-4 position-relative">
 
-            <!-- 🔹 หัวข้อด้านบนซ้าย -->
-            <div class="text-start mb-3">
-                <h5 class="fw-bold">ข้อมูลเพิ่มเติม : พัสพล สุทธาธรรม</h5>
-            </div>
-
-            <!-- ❌ ปุ่มปิด (กากบาท) มุมบนขวา -->
-            <button type="button" class="btn-close position-absolute end-0 top-0 m-3" data-bs-dismiss="modal"></button>
-
-            <!-- 🔹 โครงสร้างโปรไฟล์ -->
-            <div class="d-flex align-items-center">
-                <!-- 🔵 รูปโปรไฟล์ -->
-                <img src="https://via.placeholder.com/150" class="rounded-circle border me-4" width="150" height="150" alt="Profile Image">
-
-                <!-- 🔹 ข้อมูลผู้ใช้ -->
-                <div class="ms-5">
-                    <h2 class="mb-1"><strong>ชื่อ:</strong> พัสพล สุทธาธรรม</h2>
-                    <p class="mb-0">
-                        <strong>อายุ:</strong>20
-                    </p>
-                    <p><strong>เพศ:</strong> ชาย</p>
+    <!-- Modal Profile คนขอเข้าร่วม มันคือ modal2-->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-4 position-relative">
+                <div class="text-start mb-3">
+                    <h5 class="fw-bold">ข้อมูลเพิ่มเติม :ภานุมาศ ท่าสะอาด</h5>
                 </div>
-            </div>
+                <button type="button" class="btn-close position-absolute end-0 top-0 m-3" data-bs-dismiss="modal"></button>
 
+            
+                <div class="d-flex align-items-center">
+                    <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg" class="rounded-circle border me-4" width="150" height="150" alt="Profile Image">
+
+                    <!-- 🔹 ข้อมูลผู้ใช้ -->
+                    <div class="ms-5">
+                        <h2 class="mb-1"><strong>ชื่อ:</strong> ภานุมาศ ท่าสะอาด</h2>
+                        <p class="mb-0">
+                            <strong>อายุ:</strong>20
+                        </p>
+                        <p><strong>เพศ:</strong> ชาย</p>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-</div>
+
+    <script>
+        function openModal2() {
+            var modal1 = document.getElementById("req_activity_1");
+            var modal2 = new bootstrap.Modal(document.getElementById("profileModal"));
+
+            // ✅ ลดความสว่างของ modal 1 (ทำให้ดูเหมือนถูกบัง)
+            modal1.style.opacity = "0.5";
+
+            // ✅ เปิด modal 2
+            modal2.show();
+
+            // ✅ คืนค่า opacity กลับมาเมื่อ modal 2 ปิด
+            document.getElementById("profileModal").addEventListener("hidden.bs.modal", function() {
+                modal1.style.opacity = "1";
+            });
+        }
+    </script>
+
 
 
 </body>
