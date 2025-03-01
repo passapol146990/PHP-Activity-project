@@ -6,13 +6,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- <link rel="stylesheet" type="text/css" href="theam/home.css"> -->
-    <link rel="stylesheet" type="text/css" href="../home.css">
     <title>ระบบกิจกรรม</title>
 </head>
 <body>
     <?php require_once '../app/component/navbar.php'; ?>
     <!-- Slider -->
-    <div id="eventCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    <div style="display:none;" id="eventCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
         <!-- Indicators -->
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#eventCarousel" data-bs-slide-to="0" class="active"></button>
@@ -83,7 +82,7 @@
         </button>
     </div>
     <!-- กิจกรรมที่เปิดรับสมัคร -->
-    <div class="event-section">
+    <div style="display:none;" class="event-section">
         <h1 class="text-start">กิจกรรมที่เปิดรับสมัคร</h1>
         <div class="container">
             <div class="row">
@@ -300,16 +299,16 @@
             </div>
         </div>
     </div>
-            <script>
-                let currentIndex = 0;
+    <script>
+        let currentIndex = 0;
 
-                function nextSlide() {
-                    showSlide(currentIndex + 1);
-                }
+        function nextSlide() {
+            showSlide(currentIndex + 1);
+        }
 
-                function prevSlide() {
-                    showSlide(currentIndex - 1);
-                }
-            </script>
+        function prevSlide() {
+            showSlide(currentIndex - 1);
+        }
+    </script>
 </body>
 </html>
