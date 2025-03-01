@@ -103,16 +103,16 @@ if($method=="GET"){
             header("Location:{$url}");
             break;
         case '/':
-            isLogin();
-            $page = $_GET['page'] ?? 1;
-            $posts = getPost(10,$page);
+            // isLogin();
+            // $page = $_GET['page'] ?? 1;
+            // $posts = getPost(10,$page);
             // print_r($posts["data"]);
             // print_r($posts["data"][0]["image"]);
             // foreach($posts["data"] as $key => $post){
             //     echo $post["p_name"];
             //     echo $post["image"];
             // }
-            $postsTop = getPost(10,1); 
+            // $postsTop = getPost(10,1); 
             require_once('../app/views/home.php');
             exit();
             break;
@@ -157,10 +157,15 @@ if($method=="GET"){
             require_once('../app/views/req_activity.php');
             exit();
             break;
+            case '/setting':
+                require_once('../app/views/setting.php');
+                exit();
+                break;
         case '/activity/create':
             require_once('../app/views/activity_create.php');
             exit();
             break;
+        
         case '/activity_create':
             require_once('../app/views/show_activity_create.php');
             exit();
@@ -199,7 +204,7 @@ if($method=="GET"){
                 header("Location:/login?message=กรุณาใส่ password.");
                 exit();
             }
-            $login = login($_POST["username"],$_POST["password"]);
+            // $login = login($_POST["username"],$_POST["password"]);
             if($login["status"]!=200){
                 header("Location:/login?message=".$login["message"]);
                 exit();
