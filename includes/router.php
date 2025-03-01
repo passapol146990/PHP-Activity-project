@@ -95,7 +95,7 @@ if($method=="GET"){
                 header("location:/");
                 exit();
             }
-            login($id,$fname,$lname,$gmail,$image);
+            // login($id,$fname,$lname,$gmail,$image);
             header('location:/');
             exit();
             break;
@@ -104,9 +104,9 @@ if($method=="GET"){
             header("Location:{$url}");
             break;
         case '/':
-            isLogin();
-            $page = $_GET['page'] ?? 1;
-            $posts = getPost(10,$page);
+            // isLogin();
+            // $page = $_GET['page'] ?? 1;
+            // $posts = getPost(10,$page);
             // foreach($posts["data"] as $key => $post){
             //     echo $post["p_name"];
             //     echo $post["image"];
@@ -143,7 +143,7 @@ if($method=="GET"){
             exit();
             break;
         case '/user/setting':
-            isLogin();
+            // isLogin();
             require_once('../app/views/user/setting.php');
             exit();
             break;
