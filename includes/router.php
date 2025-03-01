@@ -105,7 +105,7 @@ if($method=="GET"){
         case '/':
             // isLogin();
             // $page = $_GET['page'] ?? 1;
-            // $posts = getPost(10,$page);
+            $posts = getPost(10,$page);
             // print_r($posts["data"]);
             // print_r($posts["data"][0]["image"]);
             // foreach($posts["data"] as $key => $post){
