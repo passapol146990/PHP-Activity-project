@@ -104,9 +104,9 @@ if($method=="GET"){
             header("Location:{$url}");
             break;
         case '/':
-            isLogin();
-            $page = $_GET['page'] ?? 1;
-            $posts = getPost(10,$page);
+            // isLogin();
+            // $page = $_GET['page'] ?? 1;
+            // $posts = getPost(10,$page);
             // foreach($posts["data"] as $key => $post){
             //     echo $post["p_name"];
             //     echo $post["image"];
@@ -158,12 +158,12 @@ if($method=="GET"){
             exit();
             break;
         case '/activity/create':
-            isLogin();
+            // isLogin();
             require_once('../app/views/activity/create.php');
             exit();
             break;
         case '/activity/create/show':
-            isLogin();
+            // isLogin();
             require_once('../app/views/activity/show.php');
             exit();
             break;
