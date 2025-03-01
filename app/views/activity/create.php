@@ -107,14 +107,11 @@
 </head>
 <body>
     <div class="p-2 ms-2">
-        <button class="btn btn-primary">&larr; กลับ</button>
+        <a class="btn btn-primary" href="/">&larr; กลับ</a>
     </div>
-
     <div class="d-flex justify-content-center">
         <form class="form-content">
-
             <h2 class="mb-3 ms-3">สร้างกิจกรรม</h2>
-
             <div class="mb-3">
                 <label for="image-upload" class="form-label">รูปภาพกิจกรรม</label>
                  <input type="file" class="form-control" id="image-upload" name="images[]" accept="image/*" multiple>
@@ -124,27 +121,25 @@
 
             <div class="p-2">
                 <label class="form-label ms-1"> ชื่อกิจกรรม :</label>
-                <input type="text" class="form-control mb-1" placeholder="ชื่อกิจกรรมของคุณ...">
+                <input type="text" class="form-control mb-1" placeholder="ชื่อกิจกรรมของคุณ..." name="title">
             </div>
-
             <div class="p-2">
                 <label class="form-label ms-1"> รายละเอียดกิจกรรม :</label>
-                <input type="text" class="form-control" placeholder="รายละเอียดกิจกรรมของคุณ...">
+                <input type="text" class="form-control" placeholder="รายละเอียดกิจกรรมของคุณ..." name="description">
             </div>
-
             <div class="p-2">
                 <label class="form-label ms-1"> จำนวนที่รับสมัคร :</label>
-                <input type="text" class="form-control" placeholder="จำนวนที่รับสมัครของคุณ...">
+                <input type="text" class="form-control" placeholder="จำนวนที่รับสมัครของคุณ..." name="max_count">
             </div>
 
             <div class="p-2">
                 <label class="form-label ms-1"> สถานที่จัดกิจกรรม :</label>
-                <input type="text" class="form-control" placeholder="สถานที่จัดกิจกรรมของคุณ...">
+                <input type="text" class="form-control" placeholder="สถานที่จัดกิจกรรมของคุณ..." name="location">
             </div>
 
             <div class="p-2">
                 <label class="form-label ms-1"> วันที่จัดกิจกรรม :</label>
-                <input type="date" class="form-control">
+                <input type="date" class="form-control" name="start_date">
             </div>
 
             <div class="p-2 d-flex justify-content-end mt-3">

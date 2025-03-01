@@ -21,7 +21,7 @@
                         <div class="card p-2 d-flex flex-column flex-grow-1">
                             <div class="text-end quota">18/20</div>
                             <div class="event-image">
-                                <img src="/get/image?img=/post/<?= htmlspecialchars($post["image"]) ?>" alt="Event Image" width="100%">
+                                <img src="/get/image?img=/post/<?= htmlspecialchars($post["image"]) ?>" alt="Event Image" width="100%" loading="lazy">
                             </div>
                             <div class="text-start event-info p-2 d-flex flex-column flex-grow-1">
                                 <label class="limited-text"><?= htmlspecialchars($post["p_name"]) ?></label>
@@ -69,6 +69,7 @@
             fetch("http://localhost/api/get/post", requestOptions)
             .then((response) => response.text())
             .then((result) => {
+                console.log(result);
                 result = JSON.parse(result);
                 console.log(result);
                 setModal_Activity_1(result)
@@ -102,7 +103,7 @@
                                     <div class="col-2 text-start"><strong>ผู้สร้าง:</strong></div>
                                     <div class="col-10 d-flex align-items-center">
                                         <img src="${data.img}" 
-                                            style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์">
+                                            style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์" loading="lazy">
                                         <p class="d-inline-block ms-3 mb-0">${data.fname} ${data.lname}</p>
                                     </div>
                                 </div>

@@ -129,7 +129,7 @@
         <div class="slider" id="slider">
             <? foreach($posts["data"] as $key => $post){ ?>
                 <div class="slide">
-                    <img src="/get/image?img=/post/<?= htmlspecialchars(($post["image"])??"") ?>" alt="<?= htmlspecialchars(($post["image"])??"") ?>">
+                    <img src="/get/image?img=/post/<?= htmlspecialchars(($post["image"])??"") ?>" alt="<?= htmlspecialchars(($post["image"])??"") ?> " loading="lazy">
                     <div class="slide-caption">วันที่รับสมัคร <?= htmlspecialchars($post["p_date_start"]." - ".$post["p_date_end"]) ?></div>
                 </div>
             <? } ?>

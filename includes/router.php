@@ -7,7 +7,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($request, PHP_URL_PATH);
 
 function isLogin(){
-    /*if (isset($_SESSION['login_time'])) {
+    if (isset($_SESSION['login_time'])) {
         $inactive = time() - $_SESSION['login_time'];
         if ($inactive > 600) {
             header('Location:/logout');
@@ -30,7 +30,7 @@ function isLogin(){
     } else {
         header('Location:/logout');
         exit();
-    }*/
+    }
 };
 function resizeImage($source, $destination, $width, $height) {
     $img = imagecreatefromstring(file_get_contents($source));
@@ -86,16 +86,15 @@ if($method=="GET"){
             $profile = json_decode($profile_response, true);
             $id = hash('sha256',$profile['id']);
             $verified_email = $profile['verified_email'];
-            $fname = $profile["given_name"];
-            $lname = $profile["family_name"];
-            $gmail = $profile["email"];
-            $image = $profile["picture"];
-            $fname = "";
-            $lname = "";
+            $fname = ($profile["given_name"])??"";
+            $lname = ($profile["family_name"])??"";
+            $gmail = ($profile["email"])??"";
+            $image = ($profile["picture"])??"";
             if($verified_email!=1){
                 header("location:/");
                 exit();
             }
+            // print_r($profile);
             login($id,$fname,$lname,$gmail,$image);
             header('location:/');
             exit();
@@ -108,10 +107,6 @@ if($method=="GET"){
             isLogin();
             $page = $_GET['page'] ?? 1;
             $posts = getPost(10,$page);
-            // foreach($posts["data"] as $key => $post){
-            //     echo $post["p_name"];
-            //     echo $post["image"];
-            // }
             $postsTop = getPost(10,1); 
             require_once('../app/views/home.php');
             exit();
@@ -136,15 +131,12 @@ if($method=="GET"){
                     session_destroy();
                     header("Location:/logout");
                     exit();
-                }else{
-                    header("Location:/");
-                    exit();
                 }
             }else{
                 header('Location:/logout');
                 exit();
             }
-            require_once('../app/views/form_user.php');
+            require_once('../app/views/user/update.php');
             exit();
             break;
         case '/logout':
@@ -167,7 +159,7 @@ if($method=="GET"){
             break;
                     
         case '/activity/create':
-            //isLogin();
+            isLogin();
             require_once('../app/views/activity/create.php');
             exit();
             break;
@@ -181,6 +173,7 @@ if($method=="GET"){
             exit();
             break;
         case '/get/image':
+            isLogin();
             $img = $_GET['img'] ?? '';
             $file = '../image/'.$img;
             if (file_exists($file)) {
@@ -340,6 +333,26 @@ if($method=="GET"){
             } else {
                 echo "อัปโหลดล้มเหลว!";
             }
+            break;
+        case '/api/get/post':
+            if(!isset($_POST["id_post"])||empty(isset($_POST["id_post"]))){
+                echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            $post = getPostById($_POST["id_post"]);
+            if($post['status']!=200){
+                echo json_encode($post,JSON_UNESCAPED_UNICODE);
+            }
+            if(empty($post["data"][0]["images"])){
+                echo json_encode(["status" => 400, "message" => $post["message"]],JSON_UNESCAPED_UNICODE);
+                exit();
+            }else{
+                $images = explode(',', $post["data"][0]["images"]);
+                $post["data"][0]["images"] = $images;
+            }
+            $post["data"] = $post["data"][0];
+            echo json_encode($post,JSON_UNESCAPED_UNICODE);
+            exit();
             break;
         default:
             header("Location:/");
