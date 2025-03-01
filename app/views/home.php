@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -96,7 +95,13 @@
                                     </div>
                                 </div>
                                 <div class="row d-flex align-items-center mb-3">
-                                    <div class="col-12">${images}</div>
+                                <div class="col-12">
+                                        <div class="overflow-x d-flex">
+                                            ${images.map(img => `
+                                                <img src="${img}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">
+                                            `).join('')}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="text-start">
                                     <p><strong>ชื่อกิจกรรม:</strong> ${data.post_name}</p>
