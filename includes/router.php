@@ -167,7 +167,7 @@ if($method=="GET"){
             break;
                     
         case '/activity/create':
-            isLogin();
+            //isLogin();
             require_once('../app/views/activity/create.php');
             exit();
             break;
