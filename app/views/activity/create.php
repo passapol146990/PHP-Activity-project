@@ -110,42 +110,45 @@
         <a class="btn btn-primary" href="/">&larr; กลับ</a>
     </div>
     <div class="d-flex justify-content-center">
-        <form class="form-content">
-            <h2 class="mb-3 ms-3">สร้างกิจกรรม</h2>
-            <div class="mb-3">
-                <label for="image-upload" class="form-label">รูปภาพกิจกรรม</label>
-                 <input type="file" class="form-control" id="image-upload" name="images[]" accept="image/*" multiple>
-                <div class="form-text">อัพโหลดได้หลายรูป (สูงสุด 5MB ต่อรูป, รองรับไฟล์ JPEG, PNG)</div>
-                <div id="image-preview" class="image-preview-container"></div>
-            </div>
-
-            <div class="p-2">
-                <label class="form-label ms-1"> ชื่อกิจกรรม :</label>
-                <input type="text" class="form-control mb-1" placeholder="ชื่อกิจกรรมของคุณ..." name="title">
-            </div>
-            <div class="p-2">
-                <label class="form-label ms-1"> รายละเอียดกิจกรรม :</label>
-                <input type="text" class="form-control" placeholder="รายละเอียดกิจกรรมของคุณ..." name="description">
-            </div>
-            <div class="p-2">
-                <label class="form-label ms-1"> จำนวนที่รับสมัคร :</label>
-                <input type="text" class="form-control" placeholder="จำนวนที่รับสมัครของคุณ..." name="max_count">
-            </div>
-
-            <div class="p-2">
-                <label class="form-label ms-1"> สถานที่จัดกิจกรรม :</label>
-                <input type="text" class="form-control" placeholder="สถานที่จัดกิจกรรมของคุณ..." name="location">
-            </div>
-
-            <div class="p-2">
-                <label class="form-label ms-1"> วันที่จัดกิจกรรม :</label>
-                <input type="date" class="form-control" name="start_date">
-            </div>
-
-            <div class="p-2 d-flex justify-content-end mt-3">
-                <button type="submit" class="btn btn-success">สร้างกิจกรรม</button>
-            </div>
-        </form>
+    <form class="p-3" action="/activity/create" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="image-upload" class="form-label">รูปภาพกิจกรรม</label>
+            <input type="file" class="form-control" id="image-upload" name="images[]" accept="image/*" multiple>
+            <div class="form-text">อัพโหลดได้หลายรูป (สูงสุด 5MB ต่อรูป, รองรับไฟล์ JPEG, PNG)</div>
+            <div id="image-preview" class="image-preview-container"></div>
+        </div>
+        <div class="mb-3">
+            <label for="title" class="form-label">ชื่อกิจกรรม</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="description" class="form-label">รายละเอียดกิจกรรม</label>
+            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="max-count" class="form-label">จำนวนคนที่รับสมัคร</label>
+            <input type="number" class="form-control" id="max-count" name="max_count" required>
+        </div>
+        <div class="mb-3">
+            <label for="start-date" class="form-label">วันที่กิจกรรม</label><br>
+            <input type="date" class="" id="start-date" name="start_date" required>
+            <label for="start-date" class="form-label">-</label>
+            <input type="date" class="" id="end-date" name="end_date" required>
+        </div>
+        <div class="mb-3">
+            <label for="location" class="form-label">สถานที่จัดกิจกรรม</label>
+            <input type="text" class="form-control" id="location" name="location" required>
+        </div>
+        <div class="mb-3">
+            <label for="location" class="form-label">สิ่งที่ผู้เข้าร่วมจะได้รับ</label>
+            <input type="text" class="form-control" id="p_give" name="p_give" required>
+        </div>
+        
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">บันทึกกิจกรรม</button>
+        </div>
+    </form>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

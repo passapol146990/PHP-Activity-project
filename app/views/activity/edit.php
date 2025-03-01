@@ -106,12 +106,12 @@
     </style>
 </head>
 <body>
+    <?= htmlspecialchars($id_post) ?>
     <div class="p-2 ms-2">
-        <button class="btn btn-primary">&larr; กลับ</button>
+        <a href="/" class="btn btn-primary">&larr; กลับ</a>
     </div>
-
     <div class="d-flex justify-content-center">
-        <form class="form-content">
+        <form class="form-content" action="/activity/edit" method="POST" enctype="multipart/form-data">
 
             <h2 class="mb-3 ms-3">แก้ไขกิจกรรม : c4c กิจกรรมค่ายเพื่อชุมชน</h2>
 

@@ -153,8 +153,11 @@ if($method=="GET"){
                 require_once('../app/views/setting.php');
                 exit();
                 break;
-        case '/edit':
-            require_once('../app/views/activity/edit_activity.php');
+        case '/activity/edit':
+            isLogin();
+            $id_post = $_GET["id_post"]??"";
+            $id_user = $_SESSION["login_token"];
+            require_once('../app/views/activity/edit.php');
             exit();
             break;
                     
