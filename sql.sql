@@ -37,11 +37,9 @@ CREATE TABLE register (
     id      INT AUTO_INCREMENT PRIMARY KEY,
     datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     pid     VARCHAR(255) NOT NULL,
-    cid     VARCHAR(255) NOT NULL, -- id user create
     aid     VARCHAR(255) NOT NULL, -- id user register
-    status  VARCHAR(255),
+    status  VARCHAR(255), -- รอ,อนุมัติ,ปฏิเสธ
     CONSTRAINT fk_pid FOREIGN KEY (pid) REFERENCES post(p_id) ON DELETE CASCADE,
-    CONSTRAINT fk_cid FOREIGN KEY (cid) REFERENCES account(aid) ON DELETE CASCADE,
     CONSTRAINT fk_aid FOREIGN KEY (aid) REFERENCES account(aid) ON DELETE CASCADE
 );
 
