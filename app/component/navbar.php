@@ -5,13 +5,12 @@
         box-sizing: border-box;
         font-family: 'Prompt', sans-serif;
     }
-
     body {
         height: 10000px;
         font-family: 'Prompt', sans-serif;
     }
-
     .navbar {
+        z-index: 100;
         position: sticky;
         top: 0;
         height: 80px;
