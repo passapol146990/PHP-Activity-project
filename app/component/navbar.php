@@ -49,7 +49,7 @@
                 }
             }
             .site-name {
-                font-size: 16px;
+                font-size: 12px;
                 color: #333;
             }
             .menu-user{
@@ -166,6 +166,12 @@
                 </div>
             </div>
             <div class="site-name"><?= htmlspecialchars($_SESSION["login_name"]) ?></div>
+            <script>
+                const name = document.querySelector(".site-name");
+                if(name.textContent.length > 15){
+                    name.textContent = name.textContent.substring(0, 15) + '...';
+                }
+            </script>
         </div>
         <div class="menu-user">
             <a class="menu" href="/user/setting">

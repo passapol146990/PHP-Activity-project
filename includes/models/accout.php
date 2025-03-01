@@ -37,7 +37,7 @@
         }
         $_SESSION['login_token'] = $id;
         $_SESSION['login_image'] = $image;
-        $_SESSION['login_name'] = $data["fname"]??""." ".$data["lname"]??"";
+        $_SESSION['login_name'] = ($data["fname"] ?? "") . " " . ($data["lname"] ?? "");
         $_SESSION['login_time'] = time();
     }
     function setBirthday($date,$id){
@@ -79,13 +79,4 @@
             return ["status" => 204, "message" => "No changes made."];
         }
     }
-    function addaccout($sid,$username, $password, $fname, $lname, $birthday, $phone) {
-        global $conn;
-
-        $sql = 'INSERT INTO user (sid, username,password, fname, lname, birthday, phone) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param('sssssss', $sid,$username, $password, $fname, $lname, $birthday,$phone);
-        $stmt->execute();
-    }
-    // addaccout(password_hash("a01"."123456",PASSWORD_DEFAULT),"a01",password_hash("123456",PASSWORD_DEFAULT),"พัสพล","สุทาธรรม","12/2/2568","0929029712");
 ?>

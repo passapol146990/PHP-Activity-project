@@ -95,7 +95,7 @@ if($method=="GET"){
                 header("location:/");
                 exit();
             }
-            // login($id,$fname,$lname,$gmail,$image);
+            login($id,$fname,$lname,$gmail,$image);
             header('location:/');
             exit();
             break;
@@ -104,9 +104,9 @@ if($method=="GET"){
             header("Location:{$url}");
             break;
         case '/':
-            // isLogin();
-            // $page = $_GET['page'] ?? 1;
-            // $posts = getPost(10,$page);
+            isLogin();
+            $page = $_GET['page'] ?? 1;
+            $posts = getPost(10,$page);
             // foreach($posts["data"] as $key => $post){
             //     echo $post["p_name"];
             //     echo $post["image"];
@@ -143,7 +143,10 @@ if($method=="GET"){
             exit();
             break;
         case '/user/setting':
-            // isLogin();
+            isLogin();
+            $login_token = $_SESSION["login_token"];
+            $getaccount = getAccountID($login_token);
+            $account = $getaccount['data']->fetch_assoc();
             require_once('../app/views/user/setting.php');
             exit();
             break;
@@ -338,8 +341,12 @@ if($method=="GET"){
                 exit();
             }
             $post = getPostById($_POST["id_post"]);
+            if($post['status']!=200){
+                echo json_encode($post,JSON_UNESCAPED_UNICODE);
+            }
             if(empty($post["data"][0]["images"])){
-                $post["data"][0]["images"] = [];
+                echo json_encode(["status" => 400, "message" => $post["message"]],JSON_UNESCAPED_UNICODE);
+                exit();
             }else{
                 $images = explode(',', $post["data"][0]["images"]);
                 $post["data"][0]["images"] = $images;

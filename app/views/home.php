@@ -35,7 +35,18 @@
                     </div>
                 <? } ?>
                 <div class="modal fade text-font" id="Modal_Activity_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <p>กำลังโหลดขอ้มูล...</p>
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div>
+                                    <h5 class="modal-title" id="exampleModalLabel">กำลังโหลดรายละเอียดกิจกรรม...</h5>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -113,7 +124,6 @@
                         </div>
                     </div>`
             Modal_Activity_1.innerHTML = e;
-            console.log(Modal_Activity_1)
         }
     </script>
 </body>

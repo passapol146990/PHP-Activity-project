@@ -59,6 +59,7 @@
         $stmt->bind_param("s", $id);
         if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
         $result = $stmt->get_result();
+        if($result->num_rows === 0){return ["status"=>400,"message"=>"ไม่พบข้อมูล"];}
         $posts = $result->fetch_all(MYSQLI_ASSOC);
         return ["status"=>200,"message"=>"successfully.","data"=>$posts];
     };
