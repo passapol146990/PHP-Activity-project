@@ -121,6 +121,7 @@ if($method=="GET"){
                 $posts = getPostBySearch(10,$page,$seach);
             }else{
                 $posts = getPost(10,$page);
+                print_r($posts);
             }
             require_once('../app/views/home.php');
             exit();

@@ -7,11 +7,16 @@
         $offset = ($page - 1) * $limit;
 
         $stmt = $conn->prepare("
-            SELECT post.*, 
-                (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image,
-                SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved_registers
+            SELECT 
+                post.*, 
+                (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image, 
+                COUNT(register.id) AS total_registers,
+                SUM(CASE WHEN register.status = 'รอการตรวจสอบ' THEN 1 ELSE 0 END) AS waiting,
+                SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved,
+                SUM(CASE WHEN register.status = 'ปฏิเสธ' THEN 1 ELSE 0 END) AS rejected
             FROM post
-            LEFT JOIN register ON post.p_id = register.pid
+            LEFT JOIN register ON register.pid = post.p_id
+            GROUP BY post.p_id
             ORDER BY post.p_datetime DESC
             LIMIT ?, ?;
         ");
