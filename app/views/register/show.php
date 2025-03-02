@@ -243,9 +243,11 @@
                         font-size: 30px;
                     }
                 }
-
-                .body {}
             }
+        }
+
+        .modal-backdrop {
+            display: none !important;
         }
 
         .show {
@@ -255,10 +257,6 @@
             .modal-content {
                 transform: translateY(0);
             }
-        }
-
-        .hidden {
-            display: none;
         }
     </style>
 </head>
@@ -318,6 +316,49 @@
             </div>
         </div>
     </div>
+    <!-- Modal_submit_picture -->
+    <div class="modal fade text-font" id="Modal_submit_pic_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม<br><small class="text-muted small-text">วันที่ 25/2/68 19:25:40 น.</small></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center">
+                    <label for="file-upload" class="custom-file-upload">
+                        <div class="image-upload-container ">
+
+                            <div id="image-preview" class="image-preview " style="width: 550px; height: 280px;">
+                                <img id="preview-img" src="#" alt="Image Preview" style="display: none; object-fit: contain;">
+                                <button id="upload-btn" class="btn btn-outline-secondary btn-lg" onclick="document.getElementById('file-upload').click()">อัพโหลดรูปภาพ</button>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center">
+                                <input id="file-upload" type="file" accept="image/*" onchange="previewImage(event)" style="display: none;">
+                            </div>
+                        </div>
+
+                        <script>
+                            function previewImage(event) {
+                                var reader = new FileReader();
+                                reader.onload = function() {
+                                    var output = document.getElementById('preview-img');
+                                    var uploadBtn = document.getElementById('upload-btn');
+
+                                    output.src = reader.result;
+                                    output.style.display = 'block';
+                                    uploadBtn.style.display = 'none';
+                                }
+                                reader.readAsDataURL(event.target.files[0]);
+                            }
+                        </script>
+                </div>
+                <div class="success-pad">
+                    <button type="button" class="btn btn-success" style="width: 100px; height: 50px">ส่งรูปภาพ</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         var modal = [];
 
@@ -361,8 +402,8 @@
             }
             const data = result.data;
             const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
-            const create_date = data.post_create; //วันที่ 25/2/68 19:25:40 น
-            const activity_date = data.post_start + " - " + data.post_end; //20/2/2568 - 22/2/2568 (3 วัน) 
+            const create_date = data.post_create;
+            const activity_date = data.post_start + " - " + data.post_end; 
             let images = ""
             for (let i = 0; i < data.images.length; i++) {
                 images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`
@@ -412,7 +453,7 @@
             switch ($status) {
                 case "อนุมัติเข้าร่วม":
                     return "<span class='text-success'>$status</span>
-                    <button class='btn btn-outline-primary btn-sm' onClick='uploadImage(\"$postId\")'>ส่งรูป</button>
+                     <button class='btn btn-outline-primary btn-sm'data-bs-toggle='modal'data-bs-target='#Modal_submit_pic_1'>ส่งรูป</button>
                     <button class='btn btn-outline-danger btn-sm' onClick='cancelParticipation(\"$postId\")'>ยกเลิก</button>";
                 case "รอการตรวจสอบ":
                     return "<span class='text-warning'>$status</span>
@@ -421,7 +462,7 @@
                     return "<span class='text-danger'>$status</span>";
                 case "รูปภาพไม่ถูกต้อง":
                     return "<span class='text-danger'>$status</span>
-                    <button class='btn btn-outline-primary btn-sm' onClick='uploadImage(\"$postId\")'>ส่งรูป</button>
+                    <button class='btn btn-outline-primary btn-sm'data-bs-toggle='modal'data-bs-target='#Modal_submit_pic_1'>ส่งรูป</button>
                     <button class='btn btn-outline-danger btn-sm' onClick='cancelParticipation(\"$postId\")'>ยกเลิก</button>";
                 case "รอตรวจสอบรูปภาพ":
                     return "<span class='text-warning'>$status</span>";
