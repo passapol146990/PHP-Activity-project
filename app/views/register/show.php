@@ -154,27 +154,22 @@ button {
                 </thead>
                 <tbody>
                     <?php
-                    // เรียกใช้ฟังก์ชันดึงข้อมูล
                     $account_id = $_SESSION["login_token"];
                     $activities = getRegisteredActivities($account_id);
 
-                    // วนลูปแสดงข้อมูล
                     foreach ($activities as $activity) {
                         $register_datetime = $activity["register_datetime"];
-                        $post_image = htmlspecialchars($activity["post_image"]); // ป้องกัน XSS
-                        $post_name = htmlspecialchars($activity["post_name"]); // ป้องกัน XSS
+                        $post_image = htmlspecialchars($activity["post_image"]);
+                        $post_name = htmlspecialchars($activity["post_name"]);
                         $post_date_start = $activity["post_date_start"];
                         $post_date_end = $activity["post_date_end"];
                         $registered_count = $activity["registered_count"];
                         $post_max = $activity["post_max"];
-                        $post_about = htmlspecialchars($activity["post_about"]); // ป้องกัน XSS
+                        $post_about = htmlspecialchars($activity["post_about"]);
                         $register_status = $activity["register_status"];
                         $post_id = $activity["post_id"];
-
-                        // สร้าง URL สำหรับรูปภาพ
                         $imageUrl = "/get/image?img=/post/" . urlencode($post_image);
 
-                        // สร้างปุ่มยกเลิกหรือส่งรูปภาพตามสถานะ
                         $action_button = '';
                         if ($register_status == 'pending') {
                             $action_button = '<button class="btn btn-danger btn-sm">ยกเลิก</button>';
@@ -209,15 +204,13 @@ button {
     <?php
     foreach ($activities as $activity) {
         $post_id = $activity["post_id"];
-        $post_name = htmlspecialchars($activity["post_name"]); // ป้องกัน XSS
+        $post_name = htmlspecialchars($activity["post_name"]);
         $post_date_start = $activity["post_date_start"];
         $post_date_end = $activity["post_date_end"];
-        $post_about = htmlspecialchars($activity["post_about"]); // ป้องกัน XSS
+        $post_about = htmlspecialchars($activity["post_about"]);
         $post_max = $activity["post_max"];
-        $post_image = htmlspecialchars($activity["post_image"]); // ป้องกัน XSS
+        $post_image = htmlspecialchars($activity["post_image"]);
         $register_datetime = $activity["register_datetime"];
-
-        // สร้าง URL สำหรับรูปภาพ
         $imageUrl = "/get/image?img=/post/" . urlencode($post_image);
 
         echo "
@@ -307,6 +300,6 @@ button {
             reader.readAsDataURL(event.target.files[0]);
         }
     </script>
-</body>
+</body> 
 </html>
 

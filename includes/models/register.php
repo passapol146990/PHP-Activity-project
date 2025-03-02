@@ -95,6 +95,5 @@ function getRegisteredActivities($account_id) {
     return $registered_activities;
 }
 // เรียกใช้ฟังก์ชัน
-$account_id = $_SESSION["login_token"]; // ใช้ค่า login_token จาก session
-$data["data"] = getRegisteredActivities($account_id);
+
 ?>
