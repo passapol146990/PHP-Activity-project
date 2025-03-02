@@ -140,60 +140,60 @@
 </head>
 
 <body>
-<?php require_once '../app/component/navbar.php'; ?>
-<div class="container" style="margin-top: 20px;">
-    <div class="text-head">
-        กิจกรรมที่ขอเข้าร่วม
-    </div>
-    <div class="mt-4">
-        <table class="table">
-            <thead>
-                <tr class="text-font">
-                    <th style="width: 9%;">วันที่ส่งคำขอ</th>
-                    <th style="width: 13%;">รูปกิจกรรม</th>
-                    <th style="width: 15%;">กิจกรรม</th>
-                    <th style="width: 15%;">ช่วงเวลากิจกรรม</th>
-                    <th style="width: 10%;">จำนวนคนสมัคร</th>
-                    <th style="width: 15%;">รายละเอียดเพิ่มเติม</th>
-                    <th style="width: 13%;">สถานะ</th>
-                    <th style="width: 10%;"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $account_id = $_SESSION["login_token"];
-                $activities = getRegisteredActivities($account_id);
+    <?php require_once '../app/component/navbar.php'; ?>
+    <div class="container" style="margin-top: 20px;">
+        <div class="text-head">
+            กิจกรรมที่ขอเข้าร่วม
+        </div>
+        <div class="mt-4">
+            <table class="table">
+                <thead>
+                    <tr class="text-font">
+                        <th style="width: 9%;">วันที่ส่งคำขอ</th>
+                        <th style="width: 13%;">รูปกิจกรรม</th>
+                        <th style="width: 15%;">กิจกรรม</th>
+                        <th style="width: 15%;">ช่วงเวลากิจกรรม</th>
+                        <th style="width: 10%;">จำนวนคนสมัคร</th>
+                        <th style="width: 15%;">รายละเอียดเพิ่มเติม</th>
+                        <th style="width: 13%;">สถานะ</th>
+                        <th style="width: 10%;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $account_id = $_SESSION["login_token"];
+                    $activities = getRegisteredActivities($account_id);
 
-                $status_mapping = [
-                    'pending' => 'รอการตรวจสอบ',
-                    'approved' => 'อนุมัติ',
-                    'rejected' => 'ปฏิเสธ',
-                    'cancelled' => 'ยกเลิก'
-                ];
+                    $status_mapping = [
+                        'pending' => 'รอการตรวจสอบ',
+                        'approved' => 'อนุมัติเข้าร่วม',
+                        'rejected' => 'ปฏิเสธ',
+                        'cancelled' => 'ยกเลิก'
+                    ];
 
-                foreach ($activities as $activity) {
-                    $register_datetime = $activity["register_datetime"];
-                    $post_image = htmlspecialchars($activity["post_image"]);
-                    $post_name = htmlspecialchars($activity["post_name"]);
-                    $post_date_start = $activity["post_date_start"];
-                    $post_date_end = $activity["post_date_end"];
-                    $registered_count = $activity["approved_registers"];
-                    $post_max = $activity["post_max"];
-                    $post_about = htmlspecialchars($activity["post_about"]);
-                    $register_status = $activity["register_status"];
-                    $post_id = $activity["post_id"];
-                    $register_id = $activity["register_id"];
-                    $imageUrl = $post_image ? "/get/image?img=/post/" . urlencode($post_image) : "/path/to/default/image.jpg";
-                    $register_status_th = $status_mapping[$register_status] ?? $register_status;
+                    foreach ($activities as $activity) {
+                        $register_datetime = $activity["register_datetime"];
+                        $post_image = htmlspecialchars($activity["post_image"]);
+                        $post_name = htmlspecialchars($activity["post_name"]);
+                        $post_date_start = $activity["post_date_start"];
+                        $post_date_end = $activity["post_date_end"];
+                        $registered_count = $activity["approved_registers"];
+                        $post_max = $activity["post_max"];
+                        $post_about = htmlspecialchars($activity["post_about"]);
+                        $register_status = $activity["register_status"];
+                        $post_id = $activity["post_id"];
+                        $register_id = $activity["register_id"];
+                        $imageUrl = $post_image ? "/get/image?img=/post/" . urlencode($post_image) : "/path/to/default/image.jpg";
+                        $register_status_th = $status_mapping[$register_status] ?? $register_status;
 
-                    $action_button = '';
-                    if ($register_status == 'รอการตรวจสอบ') {
-                        $action_button = '<button class="btn btn-danger btn-sm" onclick="cancelRegistration(' . $register_id . ')">ยกเลิก</button>';
-                    } elseif ($register_status == 'อนุมัติ') {
-                        $action_button = '<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#Modal_submit_pic_' . $post_id . '">ส่งรูปภาพ</button>';
-                    }
+                        $action_button = '';
+                        if ($register_status == 'รอการตรวจสอบ') {
+                            $action_button = '<button class="btn btn-danger btn-sm" onclick="cancelRegistration(' . $register_id . ')">ยกเลิก</button>';
+                        } elseif ($register_status == 'อนุมัติเข้าร่วม') {
+                            $action_button = '<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#Modal_submit_pic_' . $post_id . '">ส่งรูปภาพ</button>';
+                        }
 
-                    echo "
+                        echo "
                     <tr>
                         <td>$register_datetime</td>
                         <td><img src='$imageUrl' class='img-thumbnail' alt='กิจกรรม' style='width: 100px; height: auto;'></td>
@@ -209,14 +209,13 @@
                         <td>$action_button</td>
                     </tr>
                     ";
-                }
-                ?>
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Modal สำหรับแสดงรายละเอียดกิจกรรม -->
     <?php
     foreach ($activities as $activity) {
         $post_id = $activity["post_id"];
@@ -229,11 +228,24 @@
         $register_datetime = $activity["register_datetime"];
         $imageUrl = "/get/image?img=/post/" . urlencode($post_image);
 
-       
         $creator_fname = htmlspecialchars($activity["creator_fname"]);
         $creator_lname = htmlspecialchars($activity["creator_lname"]);
         $creator_image = htmlspecialchars($activity["creator_image"]);
         $creatorImageUrl = "/get/image?img=/profile/" . urlencode($creator_image);
+
+        // ตรวจสอบสถานะการสมัคร
+        $register_status = $activity["register_status"];
+        $register_id = $activity["register_id"];
+
+        $action_button = '';
+        if ($register_status == 'รอการตรวจสอบ') {
+            $action_button = '<button class="btn btn-danger btn-sm" onclick="cancelRegistration(' . $register_id . ')">ยกเลิก</button>';
+        } elseif ($register_status == 'อนุมัติเข้าร่วม') {
+            $action_button = '<button class="btn btn-success btn-md" data-bs-toggle="modal" data-bs-target="#Modal_submit_pic_' . $post_id . '">ส่งรูปภาพ</button>';
+        } elseif ($register_status == 'approved') {
+        } else {
+            $action_button = '<button class="btn btn-success btn-md" onclick="joinActivity(' . $post_id . ')">เข้าร่วม</button>';
+        }
 
         echo "
     <div class='modal fade text-font' id='Modal_Activity_$post_id' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
@@ -250,7 +262,7 @@
                             <div class='d-flex align-items-center'>
                                 <img src='$creatorImageUrl' alt='ผู้สร้าง' style='width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 10px;'>
                                 <div>
-                                     <div><span class='bold_text_modal'>ชื่อผู้สร้าง :</span> $creator_fname $creator_lname</div>
+                                    <div><span class='bold_text_modal'>ชื่อผู้สร้าง :</span> $creator_fname $creator_lname</div>
                                 </div>
                             </div>
                         </div>
@@ -270,10 +282,10 @@
                             <div><span class='bold_text_modal'>จำนวนที่เปิดรับ :</span> $post_max</div>
                         </div>
                     </div>
-                   
                 </div>
-                <div class='success-pad'>
-                    <button type='button' class='btn btn-success btn-md'>เข้าร่วม</button>
+                <div class='modal-footer'>
+                    $action_button
+                    <button type='button' class='btn btn-secondary btn-md' data-bs-dismiss='modal'>ปิด</button>
                 </div>
             </div>
         </div>
@@ -331,6 +343,28 @@
                 uploadBtn.style.display = 'none'; // ซ่อนปุ่มอัพโหลดหลังจากอัพโหลดไฟล์
             }
             reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function cancelRegistration(register_id) {
+            if (confirm("คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการสมัครนี้?")) {
+                fetch('/api/cancel/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `register_id=${register_id}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        if (data.status === 200) {
+                            location.reload(); // รีเฟรชหน้าเมื่อยกเลิกสำเร็จ
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
+            }
         }
     </script>
 </body>

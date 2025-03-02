@@ -67,7 +67,7 @@ function getRegisteredActivities($account_id) {
             a.fname AS creator_fname,
             a.lname AS creator_lname,
             a.image AS creator_image,
-            (SELECT COUNT(*) FROM register WHERE pid = p.p_id AND status = 'อนุมัติ') AS approved_registers
+            (SELECT COUNT(*) FROM register WHERE pid = p.p_id AND status = 'อนุมัติการเข้าร่วม') AS approved_registers
         FROM 
             register r
         JOIN 
@@ -90,5 +90,28 @@ function getRegisteredActivities($account_id) {
     }
 
     return $registered_activities;
+}
+function cancelRegistration($register_id) {
+    global $conn;
+
+    if (!$conn) {
+        return ["status" => 500, "message" => "Database connection error"];
+    }
+
+    $stmt = $conn->prepare("DELETE FROM register WHERE id = ?");
+    if (!$stmt) {
+        return ["status" => 500, "message" => "Prepare statement error"];
+    }
+
+    $stmt->bind_param("i", $register_id);
+    if (!$stmt->execute()) {
+        return ["status" => 500, "message" => "Execute statement error"];
+    }
+
+    if ($stmt->affected_rows > 0) {
+        return ["status" => 200, "message" => "ยกเลิกการสมัครสำเร็จ"];
+    } else {
+        return ["status" => 404, "message" => "ไม่พบข้อมูลการสมัคร"];
+    }
 }
 ?>
