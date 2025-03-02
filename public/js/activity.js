@@ -1,6 +1,8 @@
 var modal = [];
 function openPopUp(id){
-    modal.push(document.getElementById(id));
+    const mx = document.getElementById(id);
+    mx.innerHTML = defaltModel;
+    modal.push(mx);
     modal[modal.length-1].classList.add("show");
 }
 function closePopUp(){
@@ -13,6 +15,18 @@ window.addEventListener("click", (e) => {
         }
     }catch{}
 });
+const  defaltModel = `<div class="modal-dialog modal-dialog-centered modal-lg">
+<div class="modal-content">
+    <div class="modal-header">
+        <div>
+            <h5 class="modal-title" id="exampleModalLabel">กำลังโหลดรายละเอียดกิจกรรม...</h5>
+        </div>
+        <button type="button" class="btn-close" onClick="closePopUp()"></button>
+    </div>
+    <div class="modal-body">
+    </div>
+</div>
+</div>`
 function calculateAge(birthday) {
     const birthDate = new Date(birthday);
     const today = new Date();
@@ -41,11 +55,11 @@ async function getDetailPost(id){
     res = await res.json();
     setModal_Activity_1(res)
 }function setModal_Activity_1(result) {
+    const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
     if(result.status!=200){
         return 
     }
     const data = result.data;
-    const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
     const create_date = data.post_create; //วันที่ 25/2/68 19:25:40 น
     const activity_date = data.post_start+" - "+data.post_end;//20/2/2568 - 22/2/2568 (3 วัน) 
     let images = ""
@@ -174,7 +188,7 @@ async function getRegisterPost(id){
                 <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
             </div>
             <div class="body">
-                <div>
+                <div>   
                     <table class="table">
                         <tr style="font-size: meduim;">
                             <td style="width: 15%;">${numberpeople}</td>
@@ -182,7 +196,10 @@ async function getRegisterPost(id){
                             <td style="width: 15%;">อนุมัติ : ${approved}</td>
                             <td style="width: 15%;">ปฏิเสธ : ${rejected}</td>
                         </tr>
-                    </table>${user}
+                    </table>
+                    <div style="overflow-y: auto; max-height:300px;">
+                        ${user}
+                    </div>
                 </div>
             </div>
         </div>`
@@ -197,6 +214,7 @@ async function SelectDtailUser(pid,uid) {
     const formdata = new FormData();
     formdata.append("pid", pid);
     formdata.append("uid", uid);
+    formdata.append("status", uid);
 
     const requestOptions = {
         method: "POST",
@@ -207,7 +225,8 @@ async function SelectDtailUser(pid,uid) {
 
     let res = await fetch("/api/get/userdetail", requestOptions);
     res = await res.json();
-    setModal_user_data_1(res)
+    console.log(res)
+    // setModal_user_data_1(res)
 }function setModal_user_data_1(result){
     const Modal_user_data_1 = document.getElementById('Modal_user_data_1');
     if(result.status!=200){

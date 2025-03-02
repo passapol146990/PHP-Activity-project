@@ -4,20 +4,22 @@ function registerUser($pid, $aid) {
     global $conn;
     $status = 'รอการตรวจสอบ';
     $checkPostStmt = $conn->prepare("SELECT p_id FROM post WHERE p_id = ?");
+    if(!$checkPostStmt){return ["status"=>400,"message"=>"prepare post error!"];}
     $checkPostStmt->bind_param("s", $pid);
-    $checkPostStmt->execute();
+    if(!$checkPostStmt->execute()){return ["status"=>400,"message"=>"execute post error!"];}
     $checkPostStmt->store_result();
-    if ($checkPostStmt->num_rows == 0) {
-        return ["status" => 404, "message" => "Post not found"];
-    }
+    if($checkPostStmt->num_rows === 0){return ["status"=>201,"message"=>"post ไม่พบข้อมูล"];}
+
     $checkRegisterStmt = $conn->prepare("SELECT pid FROM register WHERE pid = ? AND aid = ?");
+    if(!$checkRegisterStmt){return ["status"=>400,"message"=>"prepare register error!"];}
     $checkRegisterStmt->bind_param("ss", $pid, $aid);
-    $checkRegisterStmt->execute();
+    if(!$checkRegisterStmt->execute()){return ["status"=>400,"message"=>"execute register error!"];}
     $checkRegisterStmt->store_result();
     if ($checkRegisterStmt->num_rows > 0) {
         return ["status" => 400, "message" => "คุณสมัครกิจกรรมนี้แล้ว"];
     }
     $stmt = $conn->prepare("INSERT INTO register (pid, aid, status) VALUES (?, ?, ?)");
+    if(!$stmt){return ["status"=>400,"message"=>"prepare register error!"];}
     $stmt->bind_param("sss", $pid, $aid, $status);
     if ($stmt->execute()) {
         return ["status" => 200, "message" => "ลงทะเบียนสำเร็จ"];

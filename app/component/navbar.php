@@ -203,7 +203,7 @@
         <a href="/activity/create/show" class="nav-item">กิจกรรมที่สร้าง<span class="notification-badge">1</span></a>
         <a href="/activity/register/show" class="nav-item">กิจกรรมที่เข้าร่วม<span class="notification-badge">1</span></a>
     </div>
-    <form action="/" method="get" class="search-container">
+    <form action="<?= htmlspecialchars($path) ?>" method="get" class="search-container">
         <div class="search-box">
             <? if(isset($_GET["search"])) { ?>
                 <input type="search" class="search-input" name="search" placeholder="ค้นหากิจกรรม..." value="<?= htmlspecialchars($_GET["search"]??"") ?>">
