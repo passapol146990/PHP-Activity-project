@@ -226,7 +226,7 @@ async function SelectDtailUser(pid,uid) {
     }
     const data = result.data[0];
     let e = '';
-    e = `<div class="content" style="width:50%;height:30%;">
+    e = `<div class="content" style="width:50%;min-height:30%;">
             <div class="header">
                 <div>
                     <label class="title-header">ข้อมูลเพิ่มเติม</label>:<label> <h5>${data.fname} ${data.lname}</h5></label><br>
