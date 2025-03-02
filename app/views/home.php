@@ -20,7 +20,7 @@
                 <? foreach ($posts["data"] as $key => $post) { ?>
                     <div class="col-md-4 mb-4 d-flex">
                         <div class="card p-2 d-flex flex-column flex-grow-1">
-                            <div class="text-end quota">18/20</div>
+                            <div class="text-end quota"><?= htmlspecialchars($post["approved"]."/".$post["p_max"]) ?></div>
                             <div class="event-image">
                                 <img src="/get/image?img=/post/<?= htmlspecialchars($post["image"]) ?>" alt="Event Image" width="100%" loading="lazy">
                             </div>
