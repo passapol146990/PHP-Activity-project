@@ -390,6 +390,16 @@
                 }
             }catch{}
         });
+        function calculateAge(birthday) {
+            const birthDate = new Date(birthday);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+            }
+            return age;
+        }
         async function getDetailPost(id){
             openPopUp("Modal_Activity_1");
             const myHeaders = new Headers();
@@ -407,8 +417,7 @@
             let res = await fetch("http://localhost/api/get/post", requestOptions);
             res = await res.json();
             setModal_Activity_1(res)
-        }
-        function setModal_Activity_1(result) {
+        }function setModal_Activity_1(result) {
             console.log(result)
             if(result.status!=200){
                 return 
@@ -479,18 +488,7 @@
             let res = await fetch("http://localhost/api/get/register", requestOptions);
             res = await res.json();
             setReq_activity_1(res,id)
-        }
-        function calculateAge(birthday) {
-            const birthDate = new Date(birthday);
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-            }
-            return age;
-        }
-        function setReq_activity_1(result,pid){
+        }function setReq_activity_1(result,pid){
             const req_activity_1 = document.getElementById('req_activity_1');
             if(result.status!=200){
                 return req_activity_1.innerHTML = `

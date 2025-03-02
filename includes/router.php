@@ -450,7 +450,23 @@ if($method=="GET"){
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
             break;
-                break;
+        case '/api/update/register':
+            isLogin();
+            if(!isset($_POST["pid"])||empty(isset($_POST["pid"]))){
+                echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            if(!isset($_POST["uid"])||empty(isset($_POST["uid"]))){
+                echo json_encode(["status" => 400, "message" => "id user is null!"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            $pid = $_POST["pid"];
+            $uid = $_POST["uid"];
+            $aid = $_SESSION["login_token"];
+            $data = getUserByIdPostAndIdUser($aid,$pid,$uid);
+            echo json_encode($data,JSON_UNESCAPED_UNICODE);
+            exit();
+            break;
         case '/api/get/userdetail':
             isLogin();
             if(!isset($_POST["pid"])||empty(isset($_POST["pid"]))){
@@ -468,7 +484,6 @@ if($method=="GET"){
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
             break;
-                break;
         default:
             header("Location:/");
             break;
