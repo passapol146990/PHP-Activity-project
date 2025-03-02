@@ -2,20 +2,13 @@
 require_once '../includes/db.php';
 function registerUser($pid, $aid) {
     global $conn;
-    $status = 'รอการตรวจสอบ'
+    $status = 'รอการตรวจสอบ';
     $checkPostStmt = $conn->prepare("SELECT p_id FROM post WHERE p_id = ?");
     $checkPostStmt->bind_param("s", $pid);
     $checkPostStmt->execute();
     $checkPostStmt->store_result();
     if ($checkPostStmt->num_rows == 0) {
         return ["status" => 404, "message" => "Post not found"];
-    }
-    $checkAccountStmt = $conn->prepare("SELECT aid FROM account WHERE aid = ?");
-    $checkAccountStmt->bind_param("s", $aid);
-    $checkAccountStmt->execute();
-    $checkAccountStmt->store_result();
-    if ($checkAccountStmt->num_rows == 0) {
-        return ["status" => 404, "message" => "Account not found"];
     }
     $checkRegisterStmt = $conn->prepare("SELECT id FROM register WHERE pid = ? AND aid = ?");
     $checkRegisterStmt->bind_param("ss", $pid, $aid);
