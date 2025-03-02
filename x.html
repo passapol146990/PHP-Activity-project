@@ -1,36 +1,112 @@
-<style>
-    .silde{
-        width: 100%;
-        height: 200px;
-        background: black;
-        .item{
-            width: 100%;
-            .box-item{
-                width: 350px;
-                height: 300px;
-                background: red;
-                &:hover{
-                    transform: scale(1.5);
-                    text-decoration: none;
-                    color: black;
-                    position: fixed;
-                    width: 100vw;
-                    width: 100vh;
-                }
-            }
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Modal</title>
+    <style>
+        /* ======= BASIC STYLES ======= */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
         }
-    }
-    
-</style>
-<div class="slide">
-    <div class="item">
-        <div class="box-item"></div>
-        <a target="_blank" href=""></a>
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* ======= MODAL STYLES ======= */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #555;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+        .close-btn:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="openModalBtn">เปิด Modal</button>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModalBtn">&times;</button>
+            <h2>ยินดีต้อนรับ!</h2>
+            <p>นี่คือตัวอย่าง Modal ที่สวยงาม</p>
+        </div>
     </div>
-    <div class="page">
-        <img src="" alt="" loading="lazy">
-        <script>
-            document.querySelector(".site-name")
-        </script>
-    </div>
-</div>
+
+    <script>
+        const modal = document.getElementById("myModal");
+        const openModalBtn = document.getElementById("openModalBtn");
+        const closeModalBtn = document.getElementById("closeModalBtn");
+
+        openModalBtn.addEventListener("click", () => {
+            modal.classList.add("show");
+        });
+
+        closeModalBtn.addEventListener("click", () => {
+            modal.classList.remove("show");
+        });
+
+        window.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.classList.remove("show");
+            }
+        });
+    </script>
+
+</body>
+</html>

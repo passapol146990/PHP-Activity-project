@@ -202,11 +202,6 @@
             font-weight: 200px;
 
         }
-
-        .modal-backdrop {
-            z-index: 1040 !important;
-        }
-
         .modal {
             z-index: 1050 !important;
         }
@@ -251,7 +246,7 @@
                         <td>
                             <lable id="numberpeople:<?= htmlspecialchars($doc["p_id"]) ?>"><?= htmlspecialchars($doc['approved_registers']."/".$doc["p_max"]) ?></lable><br>
                             <div class="position-relative d-inline-block">
-                                <button onClick="getRegisterPost('<?= htmlspecialchars($doc['approved_registers']."/".$doc["p_max"]) ?>')" class="btn btn-outline-secondary btn-sm raduis btn_secondary"
+                                <button onClick="getRegisterPost('<?= htmlspecialchars($doc['p_id']) ?>')" class="btn btn-outline-secondary btn-sm raduis btn_secondary"
                                     data-bs-toggle="modal" data-bs-target="#req_activity_1">คำขอเข้าร่วม
                                 </button>
                                 <span class="badge-notification">3</span>
@@ -291,13 +286,13 @@
         </div>
     </div>
     <!-- Modal show people req activity-->
-    <div class="modal fade text-font" id="req_activity_1" tabindex="-1" aria-labelledby="req_activity_1">
+    <!-- <div class="modal fade text-font" id="req_activity_1" aria-labelledby="req_activity_1">
         <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">คำขอเข้าร่วมกิจกรรม : </h5>
+                    <h5 class="modal-title">คำขอเข้าร่วมกิจกรรม : </h5>
                     <p>C4C ค่ายมหาลัยสู่โรงเรียนในชุมชน</p>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div>
@@ -311,11 +306,62 @@
                         </table>
                         <div class="container">
                             <div class="row d-flex justify-content-start align-items-center text-left text_show_data">
-                                <!-- วันที่และเวลา (2 ส่วน) -->
                                 <div class="col-1 p-0">
                                     <div class="d-inline text-left" style="font-size: 16px;">1/2/2568 12:3:44</div>
                                 </div>
-                                <!-- รูปโปรไฟล์ (1 ส่วน) -->
+                                <div class="col-2 d-inline justify-content-center align-items-center">
+                                    <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg"
+                                        style="width: 55px; height: 55px; border-radius: 50%;" alt="รูปโปรไฟล์" class="ms-3">
+                                    <div style="font-size: small; color: blue; cursor: pointer;" onclick="openModal2()">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/6388/6388049.png"
+                                            style="width: 15px; height: 15px; border-radius: 0%;" alt="">
+                                        ข้อมูลเพิ่มเติม
+                                    </div>
+                                </div>
+                                <div class="col-5 p-0">
+                                    <p>ชื่อ ภานุมาศ ท่าสะอาด</p>
+                                    <p>เพศ : ชาย</p>
+                                    <p>อายุ : 19</p>
+                                </div>
+                                <div class="col-2 text-center">
+                                    <button class="btn btn-success bt_pri btn-sm">อนุมัติ</button>
+                                    <div class="mb-2"></div>
+                                    <button class="btn btn-danger bt_pri btn-sm mb-2">ปฏิเสธ</button>
+                                </div>
+                                <div class="col-2 p-0 text-warning">⏳ยังไม่ดำเนินการ</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <style>
+        
+    </style>
+    <div class="modal fade text-font" id="req_activity_1" aria-labelledby="req_activity_1">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">คำขอเข้าร่วมกิจกรรม : </h5>
+                    <p>C4C ค่ายมหาลัยสู่โรงเรียนในชุมชน</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <table class="table">
+                            <tr style="font-size: meduim;">
+                                <td style="width: 15%;">3/20</td>
+                                <td style="width: 55%;">ยังไม่ได้ดำเนินการ : 1</td>
+                                <td style="width: 15%;">อนุมัติ : 1 </td>
+                                <td style="width: 15%;">ปฏิเสธ : 1</td>
+                            </tr>
+                        </table>
+                        <div class="container">
+                            <div class="row d-flex justify-content-start align-items-center text-left text_show_data">
+                                <div class="col-1 p-0">
+                                    <div class="d-inline text-left" style="font-size: 16px;">1/2/2568 12:3:44</div>
+                                </div>
                                 <div class="col-2 d-inline justify-content-center align-items-center">
                                     <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg"
                                         style="width: 55px; height: 55px; border-radius: 50%;" alt="รูปโปรไฟล์" class="ms-3">
@@ -520,30 +566,20 @@
             };
 
             let res = await fetch("http://localhost/api/get/register", requestOptions);
-            res = res.text();
-            console.log(res);
-            res = JSON.parse(res);
-            console.log(res);
-            setModal_Activity_1(res,id)
-            // .then((response) => response.text())
-            // .then((result) => {
-            //     result = JSON.parse(result);
-            //     console.log(result);
-            //     setModal_Activity_1(result,id)
-            // })
-            // .catch((error) => console.error(error));
+            res = await res.json();
+            setReq_activity_1(res,id)
         }
         function setReq_activity_1(result,pid){
-            // if(result.status!=200){
-            //     return 
-            // }
-            const data = result.data;
+            if(result.status!=200){
+                return 
+            }
+            const data = result.data[0];
             const req_activity_1 = document.getElementById('req_activity_1');
-            const title = req_activity_1.querySelector(`title:${pid}`).textContent;
-            const numberpeople = req_activity_1.querySelector(`numberpeople:${pid}`).textContent;
-            const pending = req_activity_1.querySelector(`pending:${pid}`).textContent;
-            const approved = req_activity_1.querySelector(`approved:${pid}`).textContent;
-            const rejected = req_activity_1.querySelector(`rejected:${pid}`).textContent;
+            const title = document.getElementById(`title:${pid}`).textContent;
+            const numberpeople = document.getElementById(`numberpeople:${pid}`).textContent;
+            const pending = document.getElementById(`pending:${pid}`).textContent;
+            const approved = document.getElementById(`approved:${pid}`).textContent;
+            const rejected = document.getElementById(`rejected:${pid}`).textContent;
             console.log(title)
             let e = '';
             e = `<div class="modal-dialog modal-dialog-scrollable modal-lg">
@@ -596,7 +632,7 @@
                         </div>
                     </div>
                 </div>`
-            // req_activity_1.innerHTML = e;
+            req_activity_1.innerHTML = e;
         }
     </script>
 </body>
