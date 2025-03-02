@@ -114,17 +114,24 @@ if($method=="GET"){
         case '/':
             isLogin();
             $page = $_GET['page'] ?? 1;
-            $postsTop = getPost(10,1); //ห้ามยุ่งบรรทัดนี้
+            $postsTop = getPost(10, 1); // ห้ามยุ่งบรรทัดนี้
             $posts = "";
-            if(isset($_GET['s'])||!empty($_GET['s'])){
-                $seach = $_GET['s'];
-                $posts = getPostBySearch(10,$page,$seach);
-            }else{
-                $posts = getPost(10,$page);
+                
+            // ตรวจสอบค่าของ search, start_date, end_date
+            $search = $_GET['search'] ?? "";
+            $startDate = $_GET['start_date'] ?? "";
+            $endDate = $_GET['end_date'] ?? "";
+                
+            // ถ้ามีการค้นหาและเลือกวันที่
+            if (!empty($search) || (!empty($startDate) && !empty($endDate))) {
+                $posts = getPostBySearch(10, $page, $search, $startDate, $endDate);
+            } else {
+                $posts = getPost(10, $page);
             }
+                
             require_once('../app/views/home.php');
             exit();
-            break;
+                
         case '/login':
             if(isset($_SESSION["login_token"])){
                 header("Location:/");
@@ -443,6 +450,23 @@ if($method=="GET"){
             exit();
             break;
         case '/api/update/register':
+            isLogin();
+            if(!isset($_POST["pid"])||empty(isset($_POST["pid"]))){
+                echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            if(!isset($_POST["uid"])||empty(isset($_POST["uid"]))){
+                echo json_encode(["status" => 400, "message" => "id user is null!"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            $pid = $_POST["pid"];
+            $uid = $_POST["uid"];
+            $aid = $_SESSION["login_token"];
+            $data = getUserByIdPostAndIdUser($aid,$pid,$uid);
+            echo json_encode($data,JSON_UNESCAPED_UNICODE);
+            exit();
+            break;
+        case '/api/get/userdetail':
             isLogin();
             if(!isset($_POST["pid"])||empty(isset($_POST["pid"]))){
                 echo json_encode(["status" => 400, "message" => "pid is null!"],JSON_UNESCAPED_UNICODE);
