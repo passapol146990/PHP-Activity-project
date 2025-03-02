@@ -121,7 +121,6 @@ if($method=="GET"){
                 $posts = getPostBySearch(10,$page,$seach);
             }else{
                 $posts = getPost(10,$page);
-                print_r($posts);
             }
             require_once('../app/views/home.php');
             exit();
@@ -188,7 +187,6 @@ if($method=="GET"){
             $id_user = $_SESSION["login_token"];
             $page = $_GET['page'] ?? 1;
             $data = getPostUserCreate($id_user,10,$page);
-            print_r($data);
             if($data["status"]!=200){
                 $data["data"] = [];
             }
