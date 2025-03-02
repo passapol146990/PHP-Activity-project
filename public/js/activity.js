@@ -225,8 +225,7 @@ async function SelectDtailUser(pid,uid) {
 
     let res = await fetch("/api/get/userdetail", requestOptions);
     res = await res.json();
-    console.log(res)
-    // setModal_user_data_1(res)
+    setModal_user_data_1(res)
 }function setModal_user_data_1(result){
     const Modal_user_data_1 = document.getElementById('Modal_user_data_1');
     if(result.status!=200){
@@ -245,7 +244,7 @@ async function SelectDtailUser(pid,uid) {
     }
     const data = result.data[0];
     let e = '';
-    e = `<div class="content" style="width:50%;height:30%;">
+    e = `<div class="content" style="width:50%;max-height:80%;">
             <div class="header">
                 <div>
                     <label class="title-header">ข้อมูลเพิ่มเติม</label>:<label> <h5>${data.fname} ${data.lname}</h5></label><br>
