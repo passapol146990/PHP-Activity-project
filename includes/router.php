@@ -108,7 +108,7 @@ if($method=="GET"){
             header("Location:{$url}");
             break;
         case '/x':
-            $data = getRegister("x","x","x",1);
+            // $data = getRegister("x","x","x",1);
             print_r($data);
             break;
         case '/':
@@ -483,12 +483,21 @@ if($method=="GET"){
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
             break;
-        case '/':
-            break;
+        case '/api/cancel/register':
+            isLogin();
+            if (!isset($_POST["register_id"]) || empty($_POST["register_id"])) {
+                echo json_encode(["status" => 400, "message" => "Register ID is required"], JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            $register_id = $_POST["register_id"];
+            $result = cancelRegistration($register_id);
+            echo json_encode($result, JSON_UNESCAPED_UNICODE);
             exit();
+            break;                
         default:
             header("Location:/");
             break;
+        
     }
 }else{
     header("Location:/");
