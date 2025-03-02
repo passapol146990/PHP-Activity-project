@@ -73,7 +73,7 @@
                 post.*, 
                 (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image, 
                 COUNT(register.id) AS total_registers, 
-                SUM(CASE WHEN register.status = 'รอ' THEN 1 ELSE 0 END) AS pending_registers,
+                SUM(CASE WHEN register.status = 'รอการตรวจสอบ' THEN 1 ELSE 0 END) AS pending_registers,
                 SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved_registers,
                 SUM(CASE WHEN register.status = 'ปฏิเสธ' THEN 1 ELSE 0 END) AS rejected_registers
             FROM post

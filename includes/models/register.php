@@ -50,8 +50,6 @@ function getRegisterByIdPostAndIdUser($pid,$aid,$limit,$page){
 };
 function getRegisteredActivities($account_id) {
     global $conn;
-
-    // คำสั่ง SQL เพื่อดึงข้อมูล
     $sql = "
         SELECT 
             r.id AS register_id,
@@ -65,28 +63,27 @@ function getRegisteredActivities($account_id) {
             p.p_about AS post_about,
             p.p_give AS post_give,
             p.p_datetime AS post_datetime,
-            i.image AS post_image, -- ดึงรูปภาพจากตาราง image
-            (SELECT COUNT(*) FROM register WHERE pid = p.p_id) AS registered_count,
-            (SELECT COUNT(*) FROM register WHERE pid = p.p_id AND status = 'approved') AS approved_registers,
-            (SELECT COUNT(*) FROM register WHERE pid = p.p_id AND status = 'rejected') AS rejected_registers,
-            (SELECT COUNT(*) FROM register WHERE pid = p.p_id AND status = 'pending') AS pending_registers
+            i.image AS post_image, 
+            a.fname AS creator_fname,
+            a.lname AS creator_lname,
+            a.image AS creator_image,
+            (SELECT COUNT(*) FROM register WHERE pid = p.p_id AND status = 'อนุมัติ') AS approved_registers
         FROM 
             register r
         JOIN 
             post p ON r.pid = p.p_id
         LEFT JOIN 
-            image i ON p.p_id = i.pid -- เชื่อมกับตาราง image
+            image i ON p.p_id = i.pid
+        LEFT JOIN 
+            account a ON p.p_aid = a.aid
         WHERE 
-            r.aid = ? -- ใช้ Account ID ของคุณ
+            r.aid = ?
     ";
-
-    // เตรียมคำสั่ง SQL
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $account_id);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // เก็บผลลัพธ์ในอาร์เรย์
     $registered_activities = [];
     while ($row = $result->fetch_assoc()) {
         $registered_activities[] = $row;
@@ -94,6 +91,4 @@ function getRegisteredActivities($account_id) {
 
     return $registered_activities;
 }
-// เรียกใช้ฟังก์ชัน
-
 ?>
