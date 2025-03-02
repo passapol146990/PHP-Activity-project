@@ -128,7 +128,7 @@
         <button class="nav-button prev">❮</button>
         <div class="slider" id="slider">
             <? foreach($posts["data"] as $key => $post){ ?>
-                <div class="slide">
+                <div class="slide" onClick="getDetailPost('<?= htmlspecialchars($post["p_id"]) ?>')" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
                     <img src="/get/image?img=/post/<?= htmlspecialchars(($post["image"])??"") ?>" alt="<?= htmlspecialchars(($post["image"])??"") ?> " loading="lazy">
                     <div class="slide-caption">วันที่รับสมัคร <?= htmlspecialchars($post["p_date_start"]." - ".$post["p_date_end"]) ?></div>
                 </div>
@@ -136,31 +136,21 @@
         </div>
         <button class="nav-button next">❯</button>
     </div>
-    
-    <div class="dots-container" id="dots-container"></div>
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const slider = document.getElementById('slider');
         const slides = document.querySelectorAll('.slide');
         const prevButton = document.querySelector('.prev');
         const nextButton = document.querySelector('.next');
-        const dotsContainer = document.getElementById('dots-container');
-
-        // จัดการปุ่มเลื่อนไปข้างหน้า
         nextButton.addEventListener('click', () => {
-            slider.scrollLeft += 310; // ขนาดของสไลด์บวกช่องว่าง
+            slider.scrollLeft += 310;
             updateDots();
         });
-        
-        // จัดการปุ่มเลื่อนไปข้างหลัง
         prevButton.addEventListener('click', () => {
-            slider.scrollLeft -= 310; // ขนาดของสไลด์บวกช่องว่าง
+            slider.scrollLeft -= 310;
             updateDots();
         });
-        
-        // เลื่อนไปยังสไลด์ที่ต้องการ
         function goToSlide(index) {
             const slideWidth = slides[0].offsetWidth;
             const slideMargin = 10; // ช่องว่างระหว่างสไลด์
@@ -169,18 +159,13 @@
             slider.scrollLeft = scrollPosition;
             updateActiveDot(index);
         }
-        
-        // อัพเดทจุดนำทางตามตำแหน่งการเลื่อน
         function updateDots() {
             const slideWidth = slides[0].offsetWidth;
             const slideMargin = 10;
             const scrollPosition = slider.scrollLeft;
             const activeIndex = Math.round(scrollPosition / (slideWidth + slideMargin));
-            
             updateActiveDot(activeIndex);
         }
-        
-        // ตรวจจับการเลื่อนด้วยเมาส์หรือการกด
         slider.addEventListener('scroll', () => {
             updateDots();
         });

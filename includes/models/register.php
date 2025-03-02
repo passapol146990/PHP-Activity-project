@@ -15,7 +15,7 @@ function registerUser($pid, $aid) {
     $checkRegisterStmt->execute();
     $checkRegisterStmt->store_result();
     if ($checkRegisterStmt->num_rows > 0) {
-        return ["status" => 400, "message" => "User already registered for this post"];
+        return ["status" => 400, "message" => "คุณสมัครกิจกรรมนี้แล้ว"];
     }
     $stmt = $conn->prepare("INSERT INTO register (pid, aid, status) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $pid, $aid, $status);

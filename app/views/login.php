@@ -101,32 +101,23 @@
 
 <body>
     <nav id="navbar"></nav>
-    <!-- กล่อง Login -->
     <div class="login-box text-center">
         <h1>Login</h1>
-        <p>Please Login with MSU email</p>
+        <p>Please Login with Google account</p>
     </div>
-
-    <!-- ส่วนของปุ่ม Login -->
     <div class="login-form">
         <a href="/auth/google" class="btn btn-light w-100 btn-google mb-3">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png"
                 alt="Google Logo" width="30" class="me-2">
             Sign in with Google
         </a>
-
-        <div class="form-check d-flex justify-content-start">
-            <input type="checkbox" id="remember" class="form-check-input me-2">
-            <label for="remember" class="form-check-label text-white">Remember</label>
-        </div>
-        <? if (isset($_GET["message"])) { ?>
-            <div class="text-danger">
-                <p>*<?= $_GET["message"] ?></p>
-            </div>
-        <? } ?>
-        <button class="btn w-100 mt-3 btn-login">
+        <!-- <div class="form-check d-flex justify-content-start"> -->
+            <!-- <input type="checkbox" id="remember" class="form-check-input me-2"> -->
+            <!-- <label for="remember" class="form-check-label text-white">Remember</label> -->
+        <!-- </div> -->
+        <!-- <button class="btn w-100 mt-3 btn-login">
             <span>Login now →</span>
-        </button>
+        </button> -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

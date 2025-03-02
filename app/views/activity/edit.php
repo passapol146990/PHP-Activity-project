@@ -11,8 +11,8 @@
     <title>แก้ไขกิจกรรม</title>
     <style>
         body {
+            background: linear-gradient(to right, #f77062, #fe5196);
             font-family: Arial, sans-serif;
-            background-color: rgb(251, 235, 235);
         }
 
         .form-content {
@@ -114,11 +114,11 @@
 </head>
 <body>
     <div class="d-flex justify-content-center p-5">
-        <div class="p-2 ms-2">
-            <a href="/" class="btn btn-primary">&larr; กลับ</a>
-        </div>
-        <form class="form-content" action="/activity/edit" method="POST" enctype="multipart/form-data">
-            <h2 class="mb-3 ms-3">แก้ไขกิจกรรม : <?= htmlspecialchars($result['post_name'] ?? '') ?></h2>
+        <form class="form-content bg-white" action="/activity/edit" method="POST" enctype="multipart/form-data">
+            <div class="p-2 mb-3">
+                <a href="/activity/create/show" class="btn btn-primary">&larr; กลับ</a>
+            </div>
+            <h2 class="mb-3">แก้ไขกิจกรรม : <?= htmlspecialchars($result['post_name'] ?? '') ?></h2>
             <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($p_id); ?>">
             <div class="mb-3">
                 <label for="image-upload" class="form-label">รูปภาพกิจกรรม</label>

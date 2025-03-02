@@ -36,6 +36,7 @@
                 exit();
             }
         }
+        $getaccount = getAccountID($id);
         $data = $getaccount["data"]->fetch_assoc();
         $_SESSION['login_token'] = $id;
         $_SESSION['login_image'] = $data["image"];
