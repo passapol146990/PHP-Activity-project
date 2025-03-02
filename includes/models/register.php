@@ -63,7 +63,7 @@ function upadteResgister($pid,$aid,$uid,$status){
     if (!$stmt->execute()) {return ["status" => 400, "message" => "Execute error: " . $stmt->error];}
     return ["status" => 200, "message" => "อัพเดทคำขอเข้าร่วมสำเร็จ"];
 }
-function getRegisteredActivities($account_id) {
+function getRegisteredActivities($aid,$limit,$page) {
     global $conn;
     $sql = "
         SELECT 
@@ -95,16 +95,13 @@ function getRegisteredActivities($account_id) {
             r.aid = ?
     ";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $account_id);
-    $stmt->execute();
+    if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+    $stmt->bind_param("s",$aid);
+    if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
     $result = $stmt->get_result();
-
-    $registered_activities = [];
-    while ($row = $result->fetch_assoc()) {
-        $registered_activities[] = $row;
-    }
-
-    return $registered_activities;
+    if($result->num_rows === 0){return ["status"=>201,"message"=>"ไม่พบข้อมูล","data"=>[]];}
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    return ["status"=>200,"message"=>"successfully.","data"=>$data];
 }
 function cancelRegistration($register_id) {
     global $conn;

@@ -128,6 +128,80 @@
             cursor: pointer;
             font-size: 16px;
         }
+        .modal-passapol {
+            z-index: 111;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease;
+            .content {
+                background: white;
+                padding: 5px 20px;
+                border-radius: 10px;
+                max-width: 90%;
+                min-width: 30%;
+                max-height:90%;
+                overflow: hidden;
+                text-align: center;
+                box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+                transform: translateY(-20px);
+                transition: transform 0.3s ease;
+                .close-btn {
+                    background: none;
+                    border: none;
+                    font-size: 20px;
+                    cursor: pointer;
+                    color: #555;
+                    position: absolute;
+                    top: 15px;
+                    right: 15px;
+                    &:hover {
+                        color: #000;
+                    }
+                }
+                .header{
+                    display: flex;
+                    justify-items: center;
+                    justify-content: space-between;
+                    text-align: start;
+                    .title-header{
+                        font-size: 30px;
+                    }
+                }
+                .body{
+
+                }
+            }
+        }
+        .show {
+            display: flex;
+            opacity: 1;
+            .modal-content {
+                transform: translateY(0);
+            }
+        }
+        .link-about-user-passpol{
+            user-select: none;
+            display: flex;
+            justify-items: center;
+            justify-content: center;
+            font-size: small; 
+            color: blue; 
+            cursor: pointer;
+            img{
+                width: 15px;
+                height:15px;
+            }
+            &:hover{
+                transform: scale(1.02);
+            }
+        }
     </style>
 </head>
 
@@ -152,225 +226,121 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    $account_id = $_SESSION["login_token"];
-                    $activities = getRegisteredActivities($account_id);
-
-                    $status_mapping = [
-                        'approved' => 'อนุมัติเข้าร่วม',
-                        'pending' => 'รอการตรวจสอบ',
-                        'rejected' => 'ถูกปฏิเสธเข้าร่วม',
-                        'invalid_image' => 'รูปภาพไม่ถูกต้อง',
-                        'pending_image_review' => 'รอตรวจสอบรูปภาพ',
-                        'completed' => 'เสร็จสิ้น'
-                    ];
-
-                    foreach ($activities as $activity) {
-                        $register_datetime = $activity["register_datetime"];
-                        $post_image = htmlspecialchars($activity["post_image"]);
-                        $post_name = htmlspecialchars($activity["post_name"]);
-                        $post_date_start = $activity["post_date_start"];
-                        $post_date_end = $activity["post_date_end"];
-                        $registered_count = $activity["approved_registers"];
-                        $post_max = $activity["post_max"];
-                        $post_about = htmlspecialchars($activity["post_about"]);
-                        $register_status = $activity["register_status"];
-                        $post_id = $activity["post_id"];
-                        $register_id = $activity["register_id"];
-                        $imageUrl = $post_image ? "/get/image?img=/post/" . urlencode($post_image) : "/path/to/default/image.jpg";
-                        $register_status_th = $status_mapping[$register_status] ?? $register_status;
-
-                        $action_button = '';
-                        $status_color = '';
-
-                        switch ($register_status) {
-                            case 'อนุมัติเข้าร่วม':
-                                $status_color = 'color: green;';
-                                $action_button = '<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#Modal_submit_pic_' . $post_id . '">ส่งรูปภาพ</button>
-                                                 <button class="btn btn-danger btn-sm" onclick="cancelRegistration(' . $register_id . ')">ยกเลิก</button>';
-                                break;
-                            case 'รอการตรวจสอบ':
-                                $status_color = 'color: yellow;';
-                                $action_button = '<button class="btn btn-danger btn-sm" onclick="cancelRegistration(' . $register_id . ')">ยกเลิก</button>';
-                                break;
-                            case 'ถูกปฏิเสธเข้าร่วม':
-                                $status_color = 'color: red;';
-                                $action_button = '';
-                                break;
-                            case 'รูปภาพไม่ถูกต้อง':
-                                $status_color = 'color: red;';
-                                $action_button = '<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#Modal_submit_pic_' . $post_id . '">ส่งรูปภาพ</button>
-                                                 <button class="btn btn-danger btn-sm" onclick="cancelRegistration(' . $register_id . ')">ยกเลิก</button>';
-                                break;
-                            case 'รอตรวจสอบรูปภาพ':
-                                $status_color = 'color: yellow;';
-                                $action_button = '';
-                                break;
-                            case 'เสร็จสิ้น':
-                                $status_color = 'color: green;';
-                                $action_button = '';
-                                break;
-                        }
-
-                        echo "
-                        <tr>
-                            <td>$register_datetime</td>
-                            <td><img src='$imageUrl' class='img-thumbnail' alt='กิจกรรม' style='width: 100px; height: auto;'></td>
-                            <td>$post_name</td>
-                            <td>$post_date_start - $post_date_end</td>
-                            <td>$registered_count / $post_max</td>
-                            <td>
-                                <button class='btn btn-outline-primary btn-sm raduis' data-bs-toggle='modal' data-bs-target='#Modal_Activity_$post_id'>
-                                    รายละเอียดกิจกรรม
-                                </button>
-                            </td>
-                            <td style='$status_color'>$register_status_th</td>
-                            <td>$action_button</td>
-                        </tr>
-                        ";
-                    }
-                    ?>
+                <? foreach($myactivities["data"] as $key => $doc){ ?>
+                    <tr>
+                        <td><?= htmlspecialchars($doc["register_datetime"]) ?></td>
+                        <td><img src='/get/image?img=/post/<?= htmlspecialchars($doc['post_image']) ?>' class='img-thumbnail' alt='กิจกรรม' style='width: 200px; height: auto;'></td>
+                        <td>$post_name</td>
+                        <td>$post_date_start - $post_date_end</td>
+                        <td>$registered_count / $post_max</td>
+                        <td>
+                            <button class='btn btn-outline-primary btn-sm raduis' onClick="getDetailPost('<?= htmlspecialchars($doc["post_id"]) ?>')">
+                                รายละเอียดกิจกรรม
+                            </button>
+                        </td>
+                        <td style='$status_color'>$register_status_th</td>
+                        <td>$action_button</td>
+                    </tr>
+                <? } ?>
                 </tbody>
             </table>
         </div>
     </div>
+    <div class="modal-passapol" id="Modal_Activity_1">
+        <div class="content">
+            <div class="header">
+                <div>
+                    <h5 class="modal-title" id="exampleModalLabel">กำลังโหลดรายละเอียดกิจกรรม...</h5>
+                </div>
+                <button type="button" class="btn-close" style="margin-top:-10px;" onClick="closePopUp()"></button>
+            </div>
+            <div class="body">
+            </div>
+        </div>
+    </div>
+    <script>
+        var modal = [];
+        function openPopUp(id){
+            modal.push(document.getElementById(id));
+            modal[modal.length-1].classList.add("show");
+        }
+        function closePopUp(){
+            modal.pop().classList.remove("show");
+        }
+        window.addEventListener("click", (e) => {
+            try{
+                if (e.target === modal[modal.length-1]) {
+                    modal.pop().classList.remove("show");
+                }
+            }catch{}
+        });
+        async function getDetailPost(id){
+            openPopUp("Modal_Activity_1");
+            const myHeaders = new Headers();
+            myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
 
-    <?php
-    foreach ($activities as $activity) {
-        $post_id = $activity["post_id"];
-        $post_name = htmlspecialchars($activity["post_name"]);
-        $post_date_start = $activity["post_date_start"];
-        $post_date_end = $activity["post_date_end"];
-        $post_about = htmlspecialchars($activity["post_about"]);
-        $post_max = $activity["post_max"];
-        $post_image = htmlspecialchars($activity["post_image"]);
-        $register_datetime = $activity["register_datetime"];
-        $imageUrl = "/get/image?img=/post/" . urlencode($post_image);
+            const formdata = new FormData();
+            formdata.append("id_post", id);
 
-        $creator_fname = htmlspecialchars($activity["creator_fname"]);
-        $creator_lname = htmlspecialchars($activity["creator_lname"]);
-        $creator_image = htmlspecialchars($activity["creator_image"]);
-        $creatorImageUrl = "/get/image?img=/profile/" . urlencode($creator_image);
-
-        echo "
-        <div class='modal fade text-font' id='Modal_Activity_$post_id' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
-            <div class='modal-dialog modal-dialog-scrollable modal-lg'>
-                <div class='modal-content'>
-                    <div class='modal-header'>
-                        <h5 class='modal-title' id='exampleModalLabel'>รายละเอียดกิจกรรม<br><small class='text-muted small-text'>วันที่ $register_datetime</small></h5>
-                        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+            const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow"
+            };
+            let res = await fetch("/api/get/post", requestOptions);
+            res = await res.json();
+            setModal_Activity_1(res)
+        }function setModal_Activity_1(result) {
+            if(result.status!=200){
+                return 
+            }
+            const data = result.data;
+            const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
+            const create_date = data.post_create; //วันที่ 25/2/68 19:25:40 น
+            const activity_date = data.post_start+" - "+data.post_end;//20/2/2568 - 22/2/2568 (3 วัน) 
+            let images = ""
+            for(let i = 0;i<data.images.length;i++){
+                images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`
+            }
+            let e = ""
+            e = `
+                <div class="content" style="width:50%;">
+                    <div class="header mb-3">
+                        <div>
+                            <label class="title-header">รายละเอียดกิจกรรม</label>:<label> <h5 class="card-title">${data.post_name}</h5></label><br>
+                            <label class="small-text">${create_date}</label>
+                        </div>
+                        <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
                     </div>
-                    <div class='modal-body'>
-                        <div class='row d-flex align-items-center mb-3'>
-                            <div class='col-3 text-end'>ผู้สร้างกิจกรรม :</div>
-                            <div class='col-9'>
-                                <div class='d-flex align-items-center'>
-                                    <img src='$creatorImageUrl' alt='ผู้สร้าง' style='width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 10px;'>
-                                    <div>
-                                        <div><span class='bold_text_modal'>ชื่อผู้สร้าง :</span> $creator_fname $creator_lname</div>
+                    <div class="body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="col-12">
+                                    <div class="overflow-x d-flex">
+                                        ${images}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="card">
+                                    <div class="card-body" style="overflow-y: auto; max-height:300px;">
+                                        <h5 class="card-title">${data.post_name}</h5>
+                                        <p class="card-text">
+                                        <b>ชื่อกิจกรรม:</b> ${data.post_name}<br>
+                                        <b>ช่วงเวลา:</b> ${activity_date}<br>
+                                        <b>รายละเอียด:</b> ${data.post_about}<br>
+                                        <b>สถานที่:</b> ${data.post_address}<br>
+                                        <b>สิ่งที่ได้:</b> ${data.post_give}<br>
+                                        <b>จำนวนที่เปิดรับ:</b> ${data.post_people} คน<br>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class='row d-flex align-items-center mb-3'>
-                            <div class='col-3 text-end'>กิจกรรม :</div>
-                            <div class='col-9'>
-                                <img src='$imageUrl' alt='กิจกรรม' style='width: 350px; height: 230px; object-fit: cover;'>
-                            </div>
-                        </div>
-                        <div class='row d-flex align-items-center mb-2'>
-                            <div class='col-3 text-end'></div>
-                            <div class='col-9'>
-                                <div><span class='bold_text_modal'>ชื่อกิจกรรม :</span> $post_name</div>
-                                <div><span class='bold_text_modal'>ช่วงเวลา :</span> $post_date_start - $post_date_end</div>
-                                <div><span class='bold_text_modal'>รายละเอียด :</span> $post_about</div>
-                                <div><span class='bold_text_modal'>จำนวนที่เปิดรับ :</span> $post_max</div>
-                            </div>
-                        </div>
                     </div>
-                    <div class='modal-footer'>
-                        <td>$action_button</td>
-                        <button type='button' class='btn btn-secondary btn-md' data-bs-dismiss='modal'>ปิด</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        ";
-    }
-    ?>
-
-    <?php
-    foreach ($activities as $activity) {
-        $post_id = $activity["post_id"];
-        $register_datetime = $activity["register_datetime"];
-
-        echo "
-        <div class='modal fade text-font' id='Modal_submit_pic_$post_id' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
-            <div class='modal-dialog modal-dialog-scrollable modal-lg'>
-                <div class='modal-content'>
-                    <div class='modal-header'>
-                        <h5 class='modal-title' id='exampleModalLabel'>รายละเอียดกิจกรรม<br><small class='text-muted small-text'>วันที่ $register_datetime</small></h5>
-                        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
-                    </div>
-                    <div class='modal-body d-flex justify-content-center'>
-                        <label for='file-upload-$post_id' class='custom-file-upload'>
-                            <div class='image-upload-container'>
-                                <div id='image-preview-$post_id' class='image-preview' style='width: 550px; height: 280px;'>
-                                    <img id='preview-img-$post_id' src='#' alt='Image Preview' style='display: none; object-fit: contain;'>
-                                    <button id='upload-btn-$post_id' class='btn btn-outline-secondary btn-lg' onclick=\"document.getElementById('file-upload-$post_id').click()\">อัพโหลดรูปภาพ</button>
-                                </div>
-                                <div class='d-flex flex-column align-items-center'>
-                                    <input id='file-upload-$post_id' type='file' accept='image/*' onchange=\"previewImage(event, '$post_id')\" style='display: none;'>
-                                </div>
-                            </div>
-                        </label>
-                    </div>
-                    <div class='success-pad'>
-                        <button type='button' class='btn btn-success' style='width: 100px; height: 50px'>ส่งรูปภาพ</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        ";
-    }
-    ?>
-
-    <script>
-        function previewImage(event, postId) {
-            var reader = new FileReader();
-            reader.onload = function() {
-                var output = document.getElementById('preview-img-' + postId);
-                var uploadBtn = document.getElementById('upload-btn-' + postId);
-
-                output.src = reader.result;
-                output.style.display = 'block';
-                uploadBtn.style.display = 'none';
-            }
-            reader.readAsDataURL(event.target.files[0]);
-        }
-
-        function cancelRegistration(register_id) {
-            if (confirm("คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการสมัครนี้?")) {
-                fetch('/api/cancel/register', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `register_id=${register_id}`
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert(data.message);
-                        if (data.status === 200) {
-                            location.reload();
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                    });
-            }
+                </div>`
+            Modal_Activity_1.innerHTML = e;
         }
     </script>
 </body>
-
 </html>

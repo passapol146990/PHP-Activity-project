@@ -141,6 +141,10 @@ if($method=="GET"){
             break;
         case '/activity/register/show':
             isLogin();
+            $aid = $_SESSION["login_token"];
+            $page = $_GET['page'] ?? 1;
+            $myactivities = getRegisteredActivities($aid,10,$page);
+            print_r($myactivities);
             require_once('../app/views/register/show.php');
             exit();
             break;
