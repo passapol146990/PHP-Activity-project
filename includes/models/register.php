@@ -10,7 +10,7 @@ function registerUser($pid, $aid) {
     if ($checkPostStmt->num_rows == 0) {
         return ["status" => 404, "message" => "Post not found"];
     }
-    $checkRegisterStmt = $conn->prepare("SELECT id FROM register WHERE pid = ? AND aid = ?");
+    $checkRegisterStmt = $conn->prepare("SELECT pid FROM register WHERE pid = ? AND aid = ?");
     $checkRegisterStmt->bind_param("ss", $pid, $aid);
     $checkRegisterStmt->execute();
     $checkRegisterStmt->store_result();

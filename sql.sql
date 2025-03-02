@@ -24,6 +24,7 @@ CREATE TABLE post (
 );
 
 CREATE TABLE image (
+    id            int AUTO_INCREMENT PRIMARY KEY
     datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     image   TEXT,
     pid     VARCHAR(255) NOT NULL,
@@ -31,6 +32,7 @@ CREATE TABLE image (
 );
 
 CREATE TABLE register (
+    id            int AUTO_INCREMENT PRIMARY KEY,
     datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     pid             VARCHAR(255) NOT NULL,
     aid             VARCHAR(255) NOT NULL, -- id user register
