@@ -161,15 +161,18 @@ button {
                     // วนลูปแสดงข้อมูล
                     foreach ($activities as $activity) {
                         $register_datetime = $activity["register_datetime"];
-                        $post_image = $activity["post_image"];
-                        $post_name = $activity["post_name"];
+                        $post_image = htmlspecialchars($activity["post_image"]); // ป้องกัน XSS
+                        $post_name = htmlspecialchars($activity["post_name"]); // ป้องกัน XSS
                         $post_date_start = $activity["post_date_start"];
                         $post_date_end = $activity["post_date_end"];
                         $registered_count = $activity["registered_count"];
                         $post_max = $activity["post_max"];
-                        $post_about = $activity["post_about"];
+                        $post_about = htmlspecialchars($activity["post_about"]); // ป้องกัน XSS
                         $register_status = $activity["register_status"];
                         $post_id = $activity["post_id"];
+
+                        // สร้าง URL สำหรับรูปภาพ
+                        $imageUrl = "/get/image?img=/post/" . urlencode($post_image);
 
                         // สร้างปุ่มยกเลิกหรือส่งรูปภาพตามสถานะ
                         $action_button = '';
@@ -182,7 +185,7 @@ button {
                         echo "
                         <tr>
                             <td>$register_datetime</td>
-                            <td><img src='$post_image' class='img-thumbnail' alt='กิจกรรม'></td>
+                            <td><img src='$imageUrl' class='img-thumbnail' alt='กิจกรรม' style='width: 100px; height: auto;'></td>
                             <td>$post_name</td>
                             <td>$post_date_start - $post_date_end</td>
                             <td>$registered_count / $post_max</td>
@@ -206,13 +209,16 @@ button {
     <?php
     foreach ($activities as $activity) {
         $post_id = $activity["post_id"];
-        $post_name = $activity["post_name"];
+        $post_name = htmlspecialchars($activity["post_name"]); // ป้องกัน XSS
         $post_date_start = $activity["post_date_start"];
         $post_date_end = $activity["post_date_end"];
-        $post_about = $activity["post_about"];
+        $post_about = htmlspecialchars($activity["post_about"]); // ป้องกัน XSS
         $post_max = $activity["post_max"];
-        $post_image = $activity["post_image"];
+        $post_image = htmlspecialchars($activity["post_image"]); // ป้องกัน XSS
         $register_datetime = $activity["register_datetime"];
+
+        // สร้าง URL สำหรับรูปภาพ
+        $imageUrl = "/get/image?img=/post/" . urlencode($post_image);
 
         echo "
         <div class='modal fade text-font' id='Modal_Activity_$post_id' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
@@ -226,7 +232,7 @@ button {
                         <div class='row d-flex align-items-center mb-3'>
                             <div class='col-3 text-end'>กิจกรรม : </div>
                             <div class='col-9'>
-                                <img src='$post_image' alt='กิจกรรม' style='width: 350px; height: 230px; object-fit: cover;'>
+                                <img src='$imageUrl' alt='กิจกรรม' style='width: 350px; height: 230px; object-fit: cover;'>
                             </div>
                         </div>
                         <div class='row d-flex align-items-center mb-2'>
