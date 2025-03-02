@@ -9,7 +9,7 @@ $path = parse_url($request, PHP_URL_PATH);
 function isLogin(){
     if (isset($_SESSION['login_time'])) {
         $inactive = time() - $_SESSION['login_time'];
-        if ($inactive > 600) {
+        if ($inactive > 720) {
             header('Location:/logout');
             exit();
         }
@@ -153,13 +153,24 @@ if($method=="GET"){
                 require_once('../app/views/setting.php');
                 exit();
                 break;
+        
         case '/activity/edit':
             isLogin();
-            $id_post = $_GET["id_post"]??"";
-            $id_user = $_SESSION["login_token"];
-            require_once('../app/views/activity/edit.php');
-            exit();
-            break;
+            if (!isset($_GET["pid"]) || empty($_GET["pid"])) {
+                header("location:/");
+                exit();
+            }
+            $p_id = $_GET["pid"];
+            $p_aid = $_SESSION["login_token"];
+            $data = getPosttoedit($p_id,$p_aid);
+            if ($data["status"] != 200) {
+                header("Location: /");
+                exit();
+            }
+            $result = $data['data']; 
+        require_once('../app/views/activity/edit.php');
+        exit();
+        break;
                     
         case '/activity/create':
             isLogin();
@@ -282,6 +293,22 @@ if($method=="GET"){
             header("Location:/");
             exit();
             break;
+            case '/activity/edit':
+                isLogin();
+                $aid = $_SESSION["login_token"];
+                $title = $_POST["title"];
+                $p_id = $_POST["p_id"]; // ใช้ค่าเดิมจากฟอร์ม
+                $description = $_POST["description"];
+                $max_count = (int)$_POST["max_count"];
+                $start_date = $_POST["start_date"];
+                $end_date = $_POST["end_date"];
+                $location = $_POST["location"];
+                $p_give = $_POST["p_give"] ?? "";
+                $data = updatePost($p_id, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
+                require_once('../app/views/activity/show.php');
+                exit();
+                break;
+            
         case '/update/user/data':
             if (isset($_SESSION['login_time'])) {
                 $inactive = time() - $_SESSION['login_time'];
