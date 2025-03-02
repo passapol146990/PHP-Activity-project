@@ -48,4 +48,19 @@ function getRegisterByIdPostAndIdUser($pid,$aid,$limit,$page){
     $data = $result->fetch_all(MYSQLI_ASSOC);
     return ["status"=>200,"message"=>"successfully.","data"=>$data];
 };
+function upadteResgister($pid,$aid,$uid,$status){
+    global $conn;
+    $sql = 'UPDATE register 
+            JOIN post ON post.p_id = register.pid
+            SET register.status = ?
+            WHERE register.pid = ?
+            AND register.aid = ?
+            AND post.p_aid = ?;
+    ';
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {return ["status" => 400, "message" => "Prepare error: " . $conn->error];}
+    $stmt->bind_param('ssss',$status, $pid,$uid,$aid);
+    if (!$stmt->execute()) {return ["status" => 400, "message" => "Execute error: " . $stmt->error];}
+    return ["status" => 200, "message" => "อัพเดทคำขอเข้าร่วมสำเร็จ"];
+}
 ?>

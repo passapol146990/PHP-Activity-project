@@ -393,18 +393,6 @@ if($method=="GET"){
                 echo "อัปโหลดล้มเหลว!";
             }
             break;
-        // case '/save/image/post':
-        //     isLogin();
-        //     if ($_FILES['image']['error'] == UPLOAD_ERR_OK) {
-        //         $name = date('Ymd').$_SESSION["login_token"].'_'.uniqid().'.png';
-        //         $fileTmp = $_FILES['image']['tmp_name'];
-        //         $destination = '../image/post/'.$name;
-        //         resizeImage($fileTmp, $destination, 300, 300);
-        //         echo "อัปโหลดสำเร็จ!";
-        //     } else {
-        //         echo "อัปโหลดล้มเหลว!";
-        //     }
-        //     break;
         case '/api/get/post':
             if(!isset($_POST["id_post"])||empty(isset($_POST["id_post"]))){
                 echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
@@ -453,37 +441,51 @@ if($method=="GET"){
         case '/api/update/register':
             isLogin();
             if(!isset($_POST["pid"])||empty(isset($_POST["pid"]))){
-                echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
+                echo json_encode(["status" => 400, "message" => "pid is null!"],JSON_UNESCAPED_UNICODE);
                 exit();
             }
             if(!isset($_POST["uid"])||empty(isset($_POST["uid"]))){
-                echo json_encode(["status" => 400, "message" => "id user is null!"],JSON_UNESCAPED_UNICODE);
+                echo json_encode(["status" => 400, "message" => "uid is null!"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            if(!isset($_POST["status"])||empty(isset($_POST["status"]))){
+                echo json_encode(["status" => 400, "message" => "status is null!"],JSON_UNESCAPED_UNICODE);
                 exit();
             }
             $pid = $_POST["pid"];
-            $uid = $_POST["uid"];
+            $pstatus = $_POST["status"];
             $aid = $_SESSION["login_token"];
-            $data = getUserByIdPostAndIdUser($aid,$pid,$uid);
+            $uid = $_POST["uid"];
+            $status = "รอการตรวจสอบ";
+            if($pstatus==1){
+                $status = "อนุมัติ";
+            }else{
+                $status = "ปฏิเสธ";
+            }
+            $data = upadteResgister($pid,$aid,$uid,$status);
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
             break;
         case '/api/get/userdetail':
             isLogin();
             if(!isset($_POST["pid"])||empty(isset($_POST["pid"]))){
-                echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
+                echo json_encode(["status" => 400, "message" => "pid is null!"],JSON_UNESCAPED_UNICODE);
                 exit();
             }
             if(!isset($_POST["uid"])||empty(isset($_POST["uid"]))){
-                echo json_encode(["status" => 400, "message" => "id user is null!"],JSON_UNESCAPED_UNICODE);
+                echo json_encode(["status" => 400, "message" => "uid is null!"],JSON_UNESCAPED_UNICODE);
                 exit();
             }
             $pid = $_POST["pid"];
             $uid = $_POST["uid"];
             $aid = $_SESSION["login_token"];
-            $data = getUserByIdPostAndIdUser($aid,$pid,$uid);
+            $data = upadteResgister($aid,$pid,$uid);
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
             break;
+        case '/':
+            break;
+            exit();
         default:
             header("Location:/");
             break;

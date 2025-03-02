@@ -9,7 +9,7 @@ async function registerPost(id) {
         body: formdata,
         redirect: "follow"
     };
-    let res = await  fetch("http://localhost/api/register/post", requestOptions);
+    let res = await  fetch("/api/register/post", requestOptions);
     res = await res.json();
     if(res.status==200){
         Swal.fire({
@@ -39,7 +39,7 @@ async function getDetailPost(id) {
         redirect: "follow"
     };
 
-    fetch("http://localhost/api/get/post", requestOptions)
+    fetch("/api/get/post", requestOptions)
     .then((response) => response.text())
     .then((result) => {
         result = JSON.parse(result);
