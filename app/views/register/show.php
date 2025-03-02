@@ -11,10 +11,11 @@
     <title>req Activity</title>
 
     <style>
-        .text-font {
+       .text-font {
             font-family: 'Mitr';
             font-size: 18px;
-            font-weight: 300;
+            font-weight: 400;
+
         }
 
         table {
@@ -56,12 +57,6 @@
             border-radius: 15px;
         }
 
-        tr:first-child th,
-        tr:first-child td {
-            border-top: 2px solid black;
-            border-bottom: 2px solid black;
-        }
-
         h5 {
             font-weight: 300;
             justify-content: center;
@@ -70,6 +65,7 @@
         .bold_text_modal {
             font-weight: 500;
         }
+
 
         .small-text {
             font-size: 0.8rem;
@@ -127,6 +123,72 @@
             padding: 10px 20px;
             cursor: pointer;
             font-size: 16px;
+        }
+
+        .bt_pri {
+            width: 90px;
+        }
+
+        p {
+            font-size: small;
+            margin: 0px;
+            text-align: left;
+            padding-left: 3%;
+
+        }
+
+
+
+        .btn_secondary {
+            width: 100px;
+            margin-top: 10%;
+        }
+
+        .badge-notification {
+            position: absolute;
+            top: 1px;
+            right: 0px;
+            background-color: red;
+            color: white;
+            font-size: 10px;
+            font-weight: 500;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.8;
+
+        }
+
+        .badge-notification:empty {
+            display: none;
+        }
+
+        .btn-warning {
+            margin-top: 10px;
+            width: 124px;
+            color: rgb(255, 255, 255);
+        }
+
+        .modal-header p {
+            margin-top: auto;
+            margin-bottom: 3px;
+        }
+
+        .text_show_data {
+            font-family: 'Mitr', sans-serif;
+            font-size: 16px;
+            font-weight: 200px;
+
+        }
+        .modal {
+            z-index: 1050 !important;
+        }
+
+        #profileModal {
+            z-index: 1060 !important;
         }
         .modal-passapol {
             z-index: 111;
@@ -186,31 +248,13 @@
                 transform: translateY(0);
             }
         }
-        .link-about-user-passpol{
-            user-select: none;
-            display: flex;
-            justify-items: center;
-            justify-content: center;
-            font-size: small; 
-            color: blue; 
-            cursor: pointer;
-            img{
-                width: 15px;
-                height:15px;
-            }
-            &:hover{
-                transform: scale(1.02);
-            }
-        }
     </style>
 </head>
 
 <body>
     <?php require_once '../app/component/navbar.php'; ?>
-    <div class="container" style="margin-top: 20px;">
-        <div class="text-head">
-            กิจกรรมที่ขอเข้าร่วม
-        </div>
+    <div class="container bg-white pt-2 rounded" style="margin-top: 20px;">
+        <div class="text-head">กิจกรรมที่ขอเข้าร่วม</div>
         <div class="mt-4">
             <table class="table">
                 <thead>
@@ -230,15 +274,15 @@
                     <tr>
                         <td><?= htmlspecialchars($doc["register_datetime"]) ?></td>
                         <td><img src='/get/image?img=/post/<?= htmlspecialchars($doc['post_image']) ?>' class='img-thumbnail' alt='กิจกรรม' style='width: 200px; height: auto;'></td>
-                        <td>$post_name</td>
-                        <td>$post_date_start - $post_date_end</td>
-                        <td>$registered_count / $post_max</td>
+                        <td id="title:<?= htmlspecialchars($doc["post_id"]) ?>"><?= htmlspecialchars($doc['post_name']??"") ?></td>
+                        <td style="font-size:14px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['post_date_start']) ?> - <?= htmlspecialchars($doc['post_date_end']) ?></td>
+                        <td id="numberpeople:<?= htmlspecialchars($doc["post_id"]) ?>"><?= htmlspecialchars($doc['approved_registers']."/".$doc["post_max"]) ?></td>
                         <td>
                             <button class='btn btn-outline-primary btn-sm raduis' onClick="getDetailPost('<?= htmlspecialchars($doc["post_id"]) ?>')">
                                 รายละเอียดกิจกรรม
                             </button>
                         </td>
-                        <td style='$status_color'>$register_status_th</td>
+                        <td><?= htmlspecialchars($doc["register_status"]) ?></td>
                         <td>$action_button</td>
                     </tr>
                 <? } ?>
@@ -247,14 +291,16 @@
         </div>
     </div>
     <div class="modal-passapol" id="Modal_Activity_1">
-        <div class="content">
-            <div class="header">
-                <div>
-                    <h5 class="modal-title" id="exampleModalLabel">กำลังโหลดรายละเอียดกิจกรรม...</h5>
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title" id="exampleModalLabel">กำลังโหลดรายละเอียดกิจกรรม...</h5>
+                    </div>
+                    <button type="button" class="btn-close" onClick="closePopUp()"></button>
                 </div>
-                <button type="button" class="btn-close" style="margin-top:-10px;" onClick="closePopUp()"></button>
-            </div>
-            <div class="body">
+                <div class="modal-body">
+                </div>
             </div>
         </div>
     </div>

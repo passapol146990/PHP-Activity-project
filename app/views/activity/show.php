@@ -202,12 +202,12 @@
             font-weight: 200px;
 
         }
-        .modal {
-            z-index: 1050 !important;
-        }
-
+        
         #profileModal {
             z-index: 1060 !important;
+        }
+        .modal {
+            z-index: 1050 !important;
         }
         .modal-passapol {
             z-index: 111;
@@ -260,6 +260,7 @@
                 }
             }
         }
+        
         .show {
             display: flex;
             opacity: 1;

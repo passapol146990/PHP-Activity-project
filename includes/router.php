@@ -142,7 +142,6 @@ if($method=="GET"){
             $aid = $_SESSION["login_token"];
             $page = $_GET['page'] ?? 1;
             $myactivities = getRegisteredActivities($aid,10,$page);
-            print_r($myactivities);
             require_once('../app/views/register/show.php');
             exit();
             break;
@@ -495,10 +494,21 @@ if($method=="GET"){
                 echo json_encode(["status" => 400, "message" => "uid is null!"],JSON_UNESCAPED_UNICODE);
                 exit();
             }
+            if(!isset($_POST["status"])||empty(isset($_POST["status"]))){
+                echo json_encode(["status" => 400, "message" => "status is null!"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
             $pid = $_POST["pid"];
-            $uid = $_POST["uid"];
+            $pstatus = $_POST["status"];
             $aid = $_SESSION["login_token"];
-            $data = upadteResgister($aid,$pid,$uid);
+            $uid = $_POST["uid"];
+            $status = "รอการตรวจสอบ";
+            if($pstatus==1){
+                $status = "อนุมัติ";
+            }else{
+                $status = "ปฏิเสธ";
+            }
+            $data = upadteResgister($pid,$aid,$uid,$status);
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
             break;
