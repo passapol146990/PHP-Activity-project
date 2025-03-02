@@ -114,15 +114,18 @@ if($method=="GET"){
         case '/':
             isLogin();
             $page = $_GET['page'] ?? 1;
-            $postsTop = getPost(10, 1); // ห้ามยุ่งบรรทัดนี้
-            $posts = ["status"=>0,"message"=>"set","data"=>[]];
-            $keyword = $_GET['search'] ?? "";
-            $date_start = $_GET['start_date'] ?? "";
-            $date_end = $_GET['end_date'] ?? "";
-            $posts = getPostx(10, $page,$keyword,$date_start,$date_end);
+            $postsTop = getPost(10,1); //ห้ามยุ่งบรรทัดนี้
+            $posts = "";
+            if(isset($_GET['s'])||!empty($_GET['s'])){
+                $seach = $_GET['s'];
+                $posts = getPostBySearch(10,$page,$seach);
+            }else{
+                $posts = getPost(10,$page);
+                print_r($posts);
+            }
             require_once('../app/views/home.php');
             exit();
-                
+            break;
         case '/login':
             if(isset($_SESSION["login_token"])){
                 header("Location:/");
@@ -142,6 +145,7 @@ if($method=="GET"){
             $aid = $_SESSION["login_token"];
             $page = $_GET['page'] ?? 1;
             $myactivities = getRegisteredActivities($aid,10,$page);
+            print_r($myactivities);
             require_once('../app/views/register/show.php');
             exit();
             break;
@@ -184,6 +188,7 @@ if($method=="GET"){
             $id_user = $_SESSION["login_token"];
             $page = $_GET['page'] ?? 1;
             $data = getPostUserCreate($id_user,10,$page);
+            print_r($data);
             if($data["status"]!=200){
                 $data["data"] = [];
             }
