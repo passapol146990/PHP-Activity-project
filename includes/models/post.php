@@ -134,4 +134,56 @@
         $data = $stmt->get_result();
         return ["status"=>200,"message"=>"successfuly.","data"=>$data];
     }
+
+    function updatePost($p_id, $p_aid, $p_name, $p_about, $p_max, $p_address, $p_date_start, $p_date_end, $p_give) {
+        global $conn;
+        $sql = 'UPDATE post 
+                SET p_name = ?, p_about = ?, p_max = ?, p_address = ?, p_date_start = ?, p_date_end = ?, p_give = ? 
+                WHERE p_id = ? AND p_aid = ?';
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {return ["status" => 400, "message" => "Prepare error: " . $conn->error];}
+        $stmt->bind_param('ssissssss', $p_name, $p_about, $p_max, $p_address, $p_date_start, $p_date_end, $p_give, $p_id, $p_aid);
+        if (!$stmt->execute()) {return ["status" => 400, "message" => "Execute error: " . $stmt->error];}    
+        if ($stmt->affected_rows === 0) {return ["status" => 204, "message" => "No changes made."];}
+        return ["status" => 200, "message" => "Updated successfully."];
+    }
+   
+    function getPosttoedit($p_id, $p_aid) {
+    global $conn;
+    
+        $stmt = $conn->prepare("SELECT 
+            post.p_id AS post_id,
+            post.p_name AS post_name,
+            post.p_about AS post_about,
+            post.p_max AS post_max,
+            post.p_address AS post_address,
+            post.p_date_start AS post_start, 
+            post.p_date_end AS post_end,
+            post.p_give AS post_give,
+            post.p_datetime AS post_create,
+            IFNULL(GROUP_CONCAT(image.image SEPARATOR ', '), '') AS images
+        FROM post
+        JOIN account ON account.aid = post.p_aid
+        LEFT JOIN image ON image.pid = post.p_id
+        WHERE post.p_id = ? AND post.p_aid = ?
+        GROUP BY 
+            post.p_id, 
+            post.p_name, 
+            post.p_about, 
+            post.p_max, 
+            post.p_address, 
+            post.p_date_start, 
+            post.p_date_end, 
+            post.p_give, 
+            post.p_datetime;"
+    );
+    if (!$stmt) {return ["status" => 400, "message" => "Prepare error!"];}
+    $stmt->bind_param("ss", $p_id, $p_aid);
+    if (!$stmt->execute()){return ["status" => 400, "message" => "Execute error!"];}
+    $data = $stmt->get_result();
+    if ($data->num_rows === 0) {return ["status" => 400, "message" => "ไม่พบข้อมูล"];}
+    $result = $data->fetch_assoc(); // ดึงแค่ 1 แถว
+    return ["status" => 200, "message" => "Successfully.", "data" => $result];
+}
+
 ?>
