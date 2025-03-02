@@ -8,8 +8,10 @@
 
         $stmt = $conn->prepare("
             SELECT post.*, 
-                (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image
+                (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image,
+                SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved_registers
             FROM post
+            LEFT JOIN register ON post.p_id = register.pid
             ORDER BY post.p_datetime DESC
             LIMIT ?, ?;
         ");
@@ -133,8 +135,7 @@
         if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
         $data = $stmt->get_result();
         return ["status"=>200,"message"=>"successfuly.","data"=>$data];
-    }
-
+    };
     function updatePost($p_id, $p_aid, $p_name, $p_about, $p_max, $p_address, $p_date_start, $p_date_end, $p_give) {
         global $conn;
         $sql = 'UPDATE post 
@@ -146,7 +147,7 @@
         if (!$stmt->execute()) {return ["status" => 400, "message" => "Execute error: " . $stmt->error];}    
         if ($stmt->affected_rows === 0) {return ["status" => 204, "message" => "No changes made."];}
         return ["status" => 200, "message" => "Updated successfully."];
-    }
+    };
     function getPosttoedit($p_id, $p_aid) {
         global $conn;
         $stmt = $conn->prepare("SELECT 
@@ -181,6 +182,5 @@
         if ($data->num_rows === 0) {return ["status" => 400, "message" => "ไม่พบข้อมูล"];}
         $result = $data->fetch_assoc();
         return ["status" => 200, "message" => "Successfully.", "data" => $result];
-    }
-
+    };
 ?>

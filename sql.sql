@@ -36,22 +36,14 @@ CREATE TABLE image (
 CREATE TABLE register (
     id      INT AUTO_INCREMENT PRIMARY KEY,
     datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
-    pid     VARCHAR(255) NOT NULL,
-    aid     VARCHAR(255) NOT NULL, -- id user register
-    status  VARCHAR(255), -- รอ,อนุมัติ,ปฏิเสธ
+    pid             VARCHAR(255) NOT NULL,
+    aid             VARCHAR(255) NOT NULL, -- id user register
+    status          VARCHAR(255), -- รอ,อนุมัติ,ปฏิเสธ
+    datetime_submit date,
+    image_submit    TEXT,
+    status_submit   VARCHAR(255), -- ผ่าน,ไม่ผ่าน
     CONSTRAINT fk_pid FOREIGN KEY (pid) REFERENCES post(p_id) ON DELETE CASCADE,
     CONSTRAINT fk_aid FOREIGN KEY (aid) REFERENCES account(aid) ON DELETE CASCADE
-);
-
-CREATE TABLE submit (
-    id      INT AUTO_INCREMENT PRIMARY KEY,
-    datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
-    image   VARCHAR(1000),
-    pid     VARCHAR(255) NOT NULL,
-    aid     VARCHAR(255) NOT NULL,
-    status  VARCHAR(255),
-    CONSTRAINT fk_post_pid FOREIGN KEY (pid) REFERENCES post(p_id) ON DELETE CASCADE, 
-    CONSTRAINT fk_submit_aid FOREIGN KEY (aid) REFERENCES account(aid) ON DELETE CASCADE 
 );
 
 
