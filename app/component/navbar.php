@@ -177,7 +177,7 @@
         <div>
             <div class="box-logo">
                 <div class="logo">
-                    <img src="<?= htmlspecialchars($_SESSION["login_image"]) ?>" alt="Logo">
+                <img src="/get/image?img=/user/<?= htmlspecialchars($_SESSION["login_image"]) ?>" alt="Logo">
                 </div>
             </div>
             <div class="site-name"><?= htmlspecialchars($_SESSION["login_name"]) ?></div>
@@ -203,47 +203,48 @@
         <a href="/activity/create/show" class="nav-item">กิจกรรมที่สร้าง<span class="notification-badge">1</span></a>
         <a href="/activity/register/show" class="nav-item">กิจกรรมที่เข้าร่วม<span class="notification-badge">1</span></a>
     </div>
-    <form action="#" method="get" class="search-container">
+    <form action="/" method="get" class="search-container">
         <div class="search-box">
-            <input type="search" class="search-input" name="search" placeholder="ค้นหากิจกรรม...">
+            <? if(isset($_GET["search"])) { ?>
+                <input type="search" class="search-input" name="search" placeholder="ค้นหากิจกรรม..." value="<?= htmlspecialchars($_GET["search"]??"") ?>">
+            <? }else{ ?>
+                <input type="search" class="search-input" name="search" placeholder="ค้นหากิจกรรม..." >
+            <? } ?>
         </div>
-        
-
-            <!-- ฟิลเตอร์ -->
-            <select class="filter-button me-2" name="filter" id="filter">
-                <option class="filter-text" value="none">ฟิวเตอร์</option>
-                <option class="filter-text" value="all">เลือกวันที่</option>
-            </select>
-
-            <!-- ฟิลเตอร์วันที่ -->
-            <div class="filter-container" id="dateFilter" style="display: none;">
+        <select class="filter-button me-2" id="filter">
+            <option class="filter-text" value="none">ฟิวเตอร์</option>
+            <option class="filter-text" value="all">เลือกวันที่</option>
+        </select>
+        <div class="filter-container" id="dateFilter" style="display: none;">
+            <? if(isset($_GET["start_date"])) { ?>
+                <script>document.getElementById("dateFilter").style.display='block';</script>
                 <label for="start_date">วันที่:</label>
-                <input type="date" name="start_date" id="start_date">
-
+                <input type="date" name="start_date" id="start_date" value="<?= htmlspecialchars($_GET['start_date']) ?>">
                 <label for="end_date">ถึง:</label>
-                <input type="date" name="start_date" id="end_date" >
-            </div>
-
-            <button type="submit" class="search-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                </svg>
-            </button>
-        </form>
-
-        <script>
-        document.getElementById("filter").addEventListener("change", function() {
-            var filterValue = this.value;
-            var dateFilter = document.getElementById("dateFilter");
-
-            if (filterValue === "all") {
-                dateFilter.style.display = "block"; // แสดงช่องเลือกวันที่
-            } else {
-                dateFilter.style.display = "none"; // ซ่อนช่องเลือกวันที่
-            }
-        });
-        </script>
-
-       
+                <input type="date" name="end_date" id="end_date" value="<?= htmlspecialchars($_GET['end_date']) ?>">
+            <? } ?>
+        </div>
+        <button type="submit" class="search-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
+        </button>
     </form>
 </nav>
+<script>
+    document.getElementById("filter").addEventListener("change", function() {
+        var filterValue = this.value;
+        var dateFilter = document.getElementById("dateFilter");
+        if (filterValue === "all") {
+            const e = `<label for="start_date">วันที่:</label>
+            <input type="date" name="start_date" id="start_date">
+            <label for="end_date">ถึง:</label>
+            <input type="date" name="end_date" id="end_date" >`
+            dateFilter.innerHTML = e;
+            dateFilter.style.display = "block";
+        } else {
+            dateFilter.style.display = "none";
+            dateFilter.innerHTML = "";
+        }
+    });
+</script>

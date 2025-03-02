@@ -1,6 +1,5 @@
 CREATE TABLE account (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    aid         VARCHAR(255) UNIQUE NOT NULL,
+    aid         VARCHAR(255) PRIMARY KEY,
     fname       VARCHAR(255) NOT NULL,
     lname       VARCHAR(255),
     birthday    DATE,
@@ -11,8 +10,7 @@ CREATE TABLE account (
 );
 
 CREATE TABLE post (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    p_id        VARCHAR(255) UNIQUE NOT NULL,
+    p_id        VARCHAR(255) PRIMARY KEY,
     p_aid       VARCHAR(255) NOT NULL,
     p_name      TEXT,
     p_about     TEXT,
@@ -26,7 +24,6 @@ CREATE TABLE post (
 );
 
 CREATE TABLE image (
-    id      INT AUTO_INCREMENT PRIMARY KEY,
     datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     image   TEXT,
     pid     VARCHAR(255) NOT NULL,
@@ -34,7 +31,6 @@ CREATE TABLE image (
 );
 
 CREATE TABLE register (
-    id      INT AUTO_INCREMENT PRIMARY KEY,
     datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     pid             VARCHAR(255) NOT NULL,
     aid             VARCHAR(255) NOT NULL, -- id user register

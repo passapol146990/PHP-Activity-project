@@ -67,7 +67,6 @@ function getRegisteredActivities($aid,$limit,$page) {
     global $conn;
     $sql = "
         SELECT 
-            r.id AS register_id,
             r.datetime AS register_datetime,
             r.status AS register_status,
             p.p_id AS post_id,

@@ -115,20 +115,11 @@ if($method=="GET"){
             isLogin();
             $page = $_GET['page'] ?? 1;
             $postsTop = getPost(10, 1); // ห้ามยุ่งบรรทัดนี้
-            $posts = "";
-                
-            // ตรวจสอบค่าของ search, start_date, end_date
-            $search = $_GET['search'] ?? "";
-            $startDate = $_GET['start_date'] ?? "";
-            $endDate = $_GET['end_date'] ?? "";
-                
-            // ถ้ามีการค้นหาและเลือกวันที่
-            if (!empty($search) || (!empty($startDate) && !empty($endDate))) {
-                $posts = getPostBySearch(10, $page, $search, $startDate, $endDate);
-            } else {
-                $posts = getPost(10, $page);
-            }
-                
+            $posts = ["status"=>0,"message"=>"set","data"=>[]];
+            $keyword = $_GET['search'] ?? "";
+            $date_start = $_GET['start_date'] ?? "";
+            $date_end = $_GET['end_date'] ?? "";
+            $posts = getPostx(10, $page,$keyword,$date_start,$date_end);
             require_once('../app/views/home.php');
             exit();
                 

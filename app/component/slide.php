@@ -127,7 +127,7 @@
     <div class="slider-container">
         <button class="nav-button prev">❮</button>
         <div class="slider" id="slider">
-            <? foreach($posts["data"] as $key => $post){ ?>
+            <? foreach($postsTop["data"] as $key => $post){ ?>
                 <div class="slide" onClick="getDetailPost('<?= htmlspecialchars($post["p_id"]) ?>')" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
                     <img src="/get/image?img=/post/<?= htmlspecialchars(($post["image"])??"") ?>" alt="<?= htmlspecialchars(($post["image"])??"") ?> " loading="lazy">
                     <div class="slide-caption">วันที่รับสมัคร <?= htmlspecialchars($post["p_date_start"]." - ".$post["p_date_end"]) ?></div>

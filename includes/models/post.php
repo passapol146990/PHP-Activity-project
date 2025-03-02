@@ -1,16 +1,60 @@
 <?php
     require_once '../includes/db.php';
+    function getPostx($limit, $page, $keyword = '', $date_start = '', $date_end = '') {
+        global $conn;
+        $page = isset($page) ? (int)$page : 1;
+        $limit = isset($limit) ? (int)$limit : 10;
+        $offset = ($page - 1) * $limit;
+        $where = "1=1";
+        $params = [];
+        if (!empty($keyword)) {
+            $where .= " AND post.p_name LIKE ?";
+            $params[] = "%$keyword%";
+        }
+        if (!empty($date_start) && !empty($date_end)) {
+            $where .= " AND (post.p_date_start >= ? AND post.p_date_end <= ?)";
+            $params[] = $date_start;
+            $params[] = $date_end;
+        }
+        $sql = "SELECT 
+                    post.*, 
+                    (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image, 
+                    COUNT(register.pid) AS total_registers,
+                    SUM(CASE WHEN register.status = 'รอการตรวจสอบ' THEN 1 ELSE 0 END) AS waiting,
+                    SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved,
+                    SUM(CASE WHEN register.status = 'ปฏิเสธ' THEN 1 ELSE 0 END) AS rejected
+                FROM post
+                LEFT JOIN register ON register.pid = post.p_id
+                WHERE $where
+                GROUP BY post.p_id
+                ORDER BY post.p_datetime DESC
+                LIMIT ?, ?";
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("Error preparing statement: " . $conn->error);
+        }
+        $param_types = str_repeat("s", count($params)) . "ii";
+        $params[] = $offset;
+        $params[] = $limit;
+        $stmt->bind_param($param_types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        return ["status"=>200,"message"=>"successfully.","data"=>$data];
+    }
     function getPost($limit, $page){
         global $conn;
         $page = isset($page) ? (int)$page : 1;
         $limit = isset($limit) ? (int)$limit : 10;
         $offset = ($page - 1) * $limit;
-
         $stmt = $conn->prepare("
-            SELECT 
+            SELECT
                 post.*, 
                 (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image, 
-                COUNT(register.id) AS total_registers,
+                COUNT(register.pid) AS total_registers,
                 SUM(CASE WHEN register.status = 'รอการตรวจสอบ' THEN 1 ELSE 0 END) AS waiting,
                 SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved,
                 SUM(CASE WHEN register.status = 'ปฏิเสธ' THEN 1 ELSE 0 END) AS rejected
@@ -27,43 +71,6 @@
         $posts = $result->fetch_all(MYSQLI_ASSOC);
         return ["status"=>200,"message"=>"successfully.","data"=>$posts];
     };
-    function getPostBySearch($limit, $page, $search) {
-        global $conn;
-        $page = isset($page) ? (int)$page : 1;
-        $limit = isset($limit) ? (int)$limit : 10;
-        $offset = ($page - 1) * $limit;
-        if (empty($search)) {
-            return getPost($limit, $page); // ถ้าค้นหาว่าง ให้ดึงโพสต์ทั้งหมดแทน
-        }
-    
-        // เพิ่มเงื่อนไขค้นหาผ่าน title หรือ description
-        $stmt = $conn->prepare("
-            SELECT post.*, 
-                (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image
-            FROM post
-            WHERE (post.p_name LIKE ?) 
-            ORDER BY post.p_datetime DESC
-            LIMIT ?, ?;
-        ");
-    
-        if (!$stmt) {
-            return ["status" => 400, "message" => "prepare error!"];
-        }
-    
-        // ใช้ wildcard '%' เพื่อค้นหาคำที่คล้ายกัน
-        $searchTerm = "%$search%";
-        $stmt->bind_param("sii", $searchTerm, $offset, $limit);
-    
-        if (!$stmt->execute()) {
-            return ["status" => 400, "message" => "execute error!"];
-        }
-    
-        $result = $stmt->get_result();
-        $posts = $result->fetch_all(MYSQLI_ASSOC);
-        
-        return ["status" => 200, "message" => "successfully.", "data" => $posts];
-    }
-    
     function getPostDetailById($id){
         global $conn;
         $stmt = $conn->prepare("
@@ -116,7 +123,7 @@
             SELECT 
                 post.*, 
                 (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image, 
-                COUNT(register.id) AS total_registers, 
+                COUNT(register.pid) AS total_registers, 
                 SUM(CASE WHEN register.status = 'รอการตรวจสอบ' THEN 1 ELSE 0 END) AS pending_registers,
                 SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved_registers,
                 SUM(CASE WHEN register.status = 'ปฏิเสธ' THEN 1 ELSE 0 END) AS rejected_registers
