@@ -114,8 +114,14 @@ if($method=="GET"){
         case '/':
             isLogin();
             $page = $_GET['page'] ?? 1;
-            $posts = getPost(10,$page);
-            $postsTop = getPost(10,1); 
+            $postsTop = getPost(10,1); //ห้ามยุ่งบรรทัดนี้
+            $posts = "";
+            if(isset($_GET['s'])||!empty($_GET['s'])){
+                $seach = $_GET['s'];
+                $posts = getPostBySearch(10,$page,$seach);
+            }else{
+                $posts = getPost(10,$page);
+            }
             require_once('../app/views/home.php');
             exit();
             break;
