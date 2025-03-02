@@ -309,7 +309,7 @@
                             <img src="/get/image?img=/post/<?= htmlspecialchars($doc['image']) ?>" class="img-thumbnail" alt="กิจกรรม"><br>
                             <lable style="font-size:12px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['p_datetime']) ?> </lable>
                         </td>
-                        <td id="title:<?= htmlspecialchars($doc["p_id"]) ?>"><?= htmlspecialchars($doc['p_name']) ?></td>
+                        <td id="title:<?= htmlspecialchars($doc["p_id"]) ?>"><?= htmlspecialchars($doc['p_name']??"") ?></td>
                         <td>
                             <button onClick="getDetailPost('<?= htmlspecialchars($doc["p_id"]) ?>')" class="btn btn-outline-primary btn-sm raduis">รายละเอียดกิจกรรม</button>
                         </td>
@@ -328,7 +328,7 @@
                             <lable id="pending:<?= htmlspecialchars($doc["p_id"]) ?>" style="display:none;"><?= htmlspecialchars($doc['pending_registers']) ?></lable>
                         </td>
                         <td>
-                            <button class="btn btn-primary bt_pri btn-sm">แก้ไข</button>
+                            <a href="/activity/edit?pid=<?= htmlspecialchars($doc["p_id"]) ?>" class="btn btn-primary bt_pri btn-sm">แก้ไข</a>
                             <div class="mb-3"></div>
                             <a href="/activity/delete?pid=<?= htmlspecialchars($doc["p_id"]) ?>" class="btn btn-danger bt_pri btn-sm">ลบ</a>
                         </td>

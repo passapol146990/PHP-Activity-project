@@ -164,7 +164,7 @@
         Swal.fire({
             position: "top-end",
             icon: '<?= htmlspecialchars($_GET["status"]) ?>',
-            title: <?= json_encode(isset($_GET["message"])??"") ?>,
+            title: <?= json_encode(isset($_GET["message"])?$_GET["message"]:"") ?>,
             showConfirmButton: false,
             timer: 1500
         }).then((result) => {
