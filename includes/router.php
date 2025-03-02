@@ -484,34 +484,6 @@ if($method=="GET"){
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
             break;
-        case '/api/get/userdetail':
-            isLogin();
-            if(!isset($_POST["pid"])||empty(isset($_POST["pid"]))){
-                echo json_encode(["status" => 400, "message" => "pid is null!"],JSON_UNESCAPED_UNICODE);
-                exit();
-            }
-            if(!isset($_POST["uid"])||empty(isset($_POST["uid"]))){
-                echo json_encode(["status" => 400, "message" => "uid is null!"],JSON_UNESCAPED_UNICODE);
-                exit();
-            }
-            if(!isset($_POST["status"])||empty(isset($_POST["status"]))){
-                echo json_encode(["status" => 400, "message" => "status is null!"],JSON_UNESCAPED_UNICODE);
-                exit();
-            }
-            $pid = $_POST["pid"];
-            $pstatus = $_POST["status"];
-            $aid = $_SESSION["login_token"];
-            $uid = $_POST["uid"];
-            $status = "รอการตรวจสอบ";
-            if($pstatus==1){
-                $status = "อนุมัติ";
-            }else{
-                $status = "ปฏิเสธ";
-            }
-            $data = upadteResgister($pid,$aid,$uid,$status);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-            exit();
-            break;
         case '/api/cancel/register':
             isLogin();
             if (!isset($_POST["register_id"]) || empty($_POST["register_id"])) {
