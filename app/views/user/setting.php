@@ -19,7 +19,7 @@
     <div class="container text-center">
         <div class="mt-3 card p-4 shadow-sm" style="max-width: 500px; margin: auto;border-radus:50%;">
             <div class="mb-3 ">
-                <img class="rounded-circle" id="profileImage" src="<?= $_SESSION['login_image'] ?>" width="150px" class="profile-pic mb-2" alt="Profile">
+                <img class="rounded-circle" id="profileImage" src="/get/image?img=/user/<?= $_SESSION['login_image'] ?>" width="150px" class="profile-pic mb-2" alt="Profile">
             </div>
             <h2 class="mt-3"><?= htmlspecialchars($account["fname"]." ".$account["lname"]) ?></h2>
             <h4>เข้าร่วมเมื่อ <?= htmlspecialchars($account["datetime"]) ?></h4>

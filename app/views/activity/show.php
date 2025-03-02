@@ -209,9 +209,82 @@
         #profileModal {
             z-index: 1060 !important;
         }
+        .modal-passapol {
+            z-index: 111;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease;
+            .content {
+                background: white;
+                padding: 5px 20px;
+                border-radius: 10px;
+                max-width: 90%;
+                min-width: 30%;
+                max-height:90%;
+                overflow: hidden;
+                text-align: center;
+                box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+                transform: translateY(-20px);
+                transition: transform 0.3s ease;
+                .close-btn {
+                    background: none;
+                    border: none;
+                    font-size: 20px;
+                    cursor: pointer;
+                    color: #555;
+                    position: absolute;
+                    top: 15px;
+                    right: 15px;
+                    &:hover {
+                        color: #000;
+                    }
+                }
+                .header{
+                    display: flex;
+                    justify-items: center;
+                    justify-content: space-between;
+                    text-align: start;
+                    .title-header{
+                        font-size: 30px;
+                    }
+                }
+                .body{
+
+                }
+            }
+        }
+        .show {
+            display: flex;
+            opacity: 1;
+            .modal-content {
+                transform: translateY(0);
+            }
+        }
+        .link-about-user-passpol{
+            user-select: none;
+            display: flex;
+            justify-items: center;
+            justify-content: center;
+            font-size: small; 
+            color: blue; 
+            cursor: pointer;
+            img{
+                width: 15px;
+                height:15px;
+            }
+            &:hover{
+                transform: scale(1.02);
+            }
+        }
     </style>
 </head>
-
 <body>
     <?php require_once '../app/component/navbar.php'; ?>
     <div class="container bg-white pt-2 rounded" style="margin-top: 20px;">
@@ -238,18 +311,14 @@
                         </td>
                         <td id="title:<?= htmlspecialchars($doc["p_id"]) ?>"><?= htmlspecialchars($doc['p_name']) ?></td>
                         <td>
-                            <button onClick="getDetailPost('<?= htmlspecialchars($doc["p_id"]) ?>')" class="btn btn-outline-primary btn-sm raduis" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
-                                รายละเอียดกิจกรรม
-                            </button>
+                            <button onClick="getDetailPost('<?= htmlspecialchars($doc["p_id"]) ?>')" class="btn btn-outline-primary btn-sm raduis">รายละเอียดกิจกรรม</button>
                         </td>
                         <td style="font-size:14px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['p_date_start']) ?> - <?= htmlspecialchars($doc['p_date_end']) ?></td>
                         <td>
                             <lable id="numberpeople:<?= htmlspecialchars($doc["p_id"]) ?>"><?= htmlspecialchars($doc['approved_registers']."/".$doc["p_max"]) ?></lable><br>
                             <div class="position-relative d-inline-block">
-                                <button onClick="getRegisterPost('<?= htmlspecialchars($doc['p_id']) ?>')" class="btn btn-outline-secondary btn-sm raduis btn_secondary"
-                                    data-bs-toggle="modal" data-bs-target="#req_activity_1">คำขอเข้าร่วม
-                                </button>
-                                <span class="badge-notification">3</span>
+                                <button onClick="getRegisterPost('<?= htmlspecialchars($doc['p_id']) ?>')" class="btn btn-outline-secondary btn-sm raduis btn_secondary">คำขอเข้าร่วม</button>
+                                <span class="badge-notification"><?= htmlspecialchars(($doc["pending_registers"]>0)?$doc["pending_registers"]:"") ?></span>
                             </div>
                         </td>
                         <td>
@@ -261,7 +330,7 @@
                         <td>
                             <button class="btn btn-primary bt_pri btn-sm">แก้ไข</button>
                             <div class="mb-3"></div>
-                            <button class="btn btn-danger bt_pri btn-sm">ลบ</button>
+                            <a href="/activity/delete?pid=<?= htmlspecialchars($doc["p_id"]) ?>" class="btn btn-danger bt_pri btn-sm">ลบ</a>
                         </td>
                     </tr>
                 <? } ?>
@@ -269,128 +338,53 @@
             </table>
         </div>
     </div>
-
-    <!-- Modal  มันคือ modal แรก-->
-    <div class="modal fade text-font" id="Modal_Activity_1" tabindex="-1" aria-labelledby="Modal_Activity_1">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div>
-                        <h5 class="modal-title" id="exampleModalLabel">กำลังโหลดรายละเอียดกิจกรรม...</h5>
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-passapol" id="Modal_Activity_1">
+        <div class="content">
+            <div class="header">
+                <div>
+                    <h5 class="modal-title" id="exampleModalLabel">กำลังโหลดรายละเอียดกิจกรรม...</h5>
                 </div>
-                <div class="modal-body">
-                </div>
+                <button type="button" class="btn-close" style="margin-top:-10px;" onClick="closePopUp()"></button>
+            </div>
+            <div class="body">
             </div>
         </div>
     </div>
-    <!-- Modal show people req activity-->
-    <!-- <div class="modal fade text-font" id="req_activity_1" aria-labelledby="req_activity_1">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">คำขอเข้าร่วมกิจกรรม : </h5>
-                    <p>C4C ค่ายมหาลัยสู่โรงเรียนในชุมชน</p>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-passapol" id="req_activity_1">
+        <div class="content">
+            <div class="header mb-3">
+                <div>
+                    <label class="title-header">คำขอเข้าร่วมกิจกรรม</label>:<br>
                 </div>
-                <div class="modal-body">
-                    <div>
-                        <table class="table">
-                            <tr style="font-size: meduim;">
-                                <td style="width: 15%;">3/20</td>
-                                <td style="width: 55%;">ยังไม่ได้ดำเนินการ : 1</td>
-                                <td style="width: 15%;">อนุมัติ : 1 </td>
-                                <td style="width: 15%;">ปฏิเสธ : 1</td>
-                            </tr>
-                        </table>
-                        <div class="container">
-                            <div class="row d-flex justify-content-start align-items-center text-left text_show_data">
-                                <div class="col-1 p-0">
-                                    <div class="d-inline text-left" style="font-size: 16px;">1/2/2568 12:3:44</div>
-                                </div>
-                                <div class="col-2 d-inline justify-content-center align-items-center">
-                                    <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg"
-                                        style="width: 55px; height: 55px; border-radius: 50%;" alt="รูปโปรไฟล์" class="ms-3">
-                                    <div style="font-size: small; color: blue; cursor: pointer;" onclick="openModal2()">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/6388/6388049.png"
-                                            style="width: 15px; height: 15px; border-radius: 0%;" alt="">
-                                        ข้อมูลเพิ่มเติม
-                                    </div>
-                                </div>
-                                <div class="col-5 p-0">
-                                    <p>ชื่อ ภานุมาศ ท่าสะอาด</p>
-                                    <p>เพศ : ชาย</p>
-                                    <p>อายุ : 19</p>
-                                </div>
-                                <div class="col-2 text-center">
-                                    <button class="btn btn-success bt_pri btn-sm">อนุมัติ</button>
-                                    <div class="mb-2"></div>
-                                    <button class="btn btn-danger bt_pri btn-sm mb-2">ปฏิเสธ</button>
-                                </div>
-                                <div class="col-2 p-0 text-warning">⏳ยังไม่ดำเนินการ</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
             </div>
+            <div class="body"></div>
         </div>
-    </div> -->
-    <style>
-        
-    </style>
-    <div class="modal fade text-font" id="req_activity_1" aria-labelledby="req_activity_1">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">คำขอเข้าร่วมกิจกรรม : </h5>
-                    <p>C4C ค่ายมหาลัยสู่โรงเรียนในชุมชน</p>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-passapol" id="Modal_user_data_1">
+        <div class="content" style="width:50%;height:30%;">
+            <div class="header">
+                <div>
+                    <label class="title-header">ข้อมูลเพิ่มเติม</label>:<label> <h5 class="">${name}</h5></label><br>
                 </div>
-                <div class="modal-body">
-                    <div>
-                        <table class="table">
-                            <tr style="font-size: meduim;">
-                                <td style="width: 15%;">3/20</td>
-                                <td style="width: 55%;">ยังไม่ได้ดำเนินการ : 1</td>
-                                <td style="width: 15%;">อนุมัติ : 1 </td>
-                                <td style="width: 15%;">ปฏิเสธ : 1</td>
-                            </tr>
-                        </table>
-                        <div class="container">
-                            <div class="row d-flex justify-content-start align-items-center text-left text_show_data">
-                                <div class="col-1 p-0">
-                                    <div class="d-inline text-left" style="font-size: 16px;">1/2/2568 12:3:44</div>
-                                </div>
-                                <div class="col-2 d-inline justify-content-center align-items-center">
-                                    <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg"
-                                        style="width: 55px; height: 55px; border-radius: 50%;" alt="รูปโปรไฟล์" class="ms-3">
-                                    <div style="font-size: small; color: blue; cursor: pointer;" onclick="openModal2()">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/6388/6388049.png"
-                                            style="width: 15px; height: 15px; border-radius: 0%;" alt="">
-                                        ข้อมูลเพิ่มเติม
-                                    </div>
-                                </div>
-                                <div class="col-5 p-0">
-                                    <p>ชื่อ ภานุมาศ ท่าสะอาด</p>
-                                    <p>เพศ : ชาย</p>
-                                    <p>อายุ : 19</p>
-                                </div>
-                                <div class="col-2 text-center">
-                                    <button class="btn btn-success bt_pri btn-sm">อนุมัติ</button>
-                                    <div class="mb-2"></div>
-                                    <button class="btn btn-danger bt_pri btn-sm mb-2">ปฏิเสธ</button>
-                                </div>
-                                <div class="col-2 p-0 text-warning">⏳ยังไม่ดำเนินการ</div>
-                            </div>
-                        </div>
+                <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
+            </div>
+            <div class="body">
+                <div class="d-flex align-items-center">
+                    <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg" class="rounded-circle border me-4" width="150" height="150" alt="Profile Image">
+                    <div class="ms-5">
+                        <h2 class="mb-1"><strong>ชื่อ:</strong> ภานุมาศ ท่าสะอาด</h2>
+                        <p class="mb-0">
+                            <strong>อายุ : </strong>20
+                        </p>
+                        <p><strong>เพศ : </strong> ชาย</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Modal_submit_picture -->
-    <div class="modal fade text-font" id="Modal_submit_pic_1" tabindex="-1" aria-labelledby="Modal_submit_pic_1">
+    <!-- <div class="modal fade text-font" id="Modal_submit_pic_1" tabindex="-1" aria-labelledby="Modal_submit_pic_1">
         <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -400,19 +394,15 @@
                 <div class="modal-body d-flex justify-content-center">
                     <label for="file-upload" class="custom-file-upload">
                         <div class="image-upload-container ">
-                            <!-- แสดงรูปภาพเป็นสี่เหลี่ยม -->
                             <div id="image-preview" class="image-preview " style="width: 550px; height: 280px;">
                                 <img id="preview-img" src="#" alt="Image Preview" style="display: none; object-fit: contain;">
                                 <button id="upload-btn" class="btn btn-outline-secondary btn-lg" onclick="document.getElementById('file-upload').click()">อัพโหลดรูปภาพ</button>
                             </div>
 
                             <div class="d-flex flex-column align-items-center">
-                                <!-- input สำหรับเลือกไฟล์ -->
                                 <input id="file-upload" type="file" accept="image/*" onchange="previewImage(event)" style="display: none;">
                             </div>
                         </div>
-
-                        <!-- show picture -->
                         <script>
                             function previewImage(event) {
                                 var reader = new FileReader();
@@ -421,7 +411,7 @@
                                     var uploadBtn = document.getElementById('upload-btn');
 
                                     output.src = reader.result;
-                                    output.style.display = 'block'; // แสดงภาพเมื่อเลือกไฟล์
+                                    output.style.display = 'block';
                                     uploadBtn.style.display = 'none';
                                 }
                                 reader.readAsDataURL(event.target.files[0]);
@@ -436,9 +426,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
-
+    </div> -->
     <!-- Modal Profile คนขอเข้าร่วม มันคือ modal2-->
     <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModal">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -447,12 +435,8 @@
                     <h5 class="fw-bold">ข้อมูลเพิ่มเติม :ภานุมาศ ท่าสะอาด</h5>
                 </div>
                 <button type="button" class="btn-close position-absolute end-0 top-0 m-3" data-bs-dismiss="modal"></button>
-
-            
                 <div class="d-flex align-items-center">
                     <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg" class="rounded-circle border me-4" width="150" height="150" alt="Profile Image">
-
-                    <!-- 🔹 ข้อมูลผู้ใช้ -->
                     <div class="ms-5">
                         <h2 class="mb-1"><strong>ชื่อ:</strong> ภานุมาศ ท่าสะอาด</h2>
                         <p class="mb-0">
@@ -461,22 +445,39 @@
                         <p><strong>เพศ:</strong> ชาย</p>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
-
+    <div id="myModal" class="modal-passapol">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModalBtn">&times;</button>
+            <h2>ยินดีต้อนรับ!</h2>
+            <p>นี่คือตัวอย่าง Modal ที่สวยงาม</p>
+        </div>
+    </div>
     <script>
-        function openModal2() {
-            var modal1 = document.getElementById("req_activity_1");
-            var modal2 = new bootstrap.Modal(document.getElementById("profileModal"));
-            modal1.style.opacity = "0.5";
-            modal2.show();
-            document.getElementById("profileModal").addEventListener("hidden.bs.modal", function() {
-                modal1.style.opacity = "1";
-            });
+        var modal = [];
+        // console.log(modal[modal.length-1])
+        // console.log(modal.pop())
+        // console.log(modal.pop())
+        function openPopUp(id){
+            modal.push(document.getElementById(id));
+            modal[modal.length-1].classList.add("show");
         }
+        function closePopUp(){
+            modal.pop().classList.remove("show");
+        }
+        window.addEventListener("click", (e) => {
+            try{
+                if (e.target === modal[modal.length-1]) {
+                    modal.pop().classList.remove("show");
+                }
+            }catch{}
+        });
+    </script>
+    <script>
         async function getDetailPost(id){
+            openPopUp("Modal_Activity_1");
             const myHeaders = new Headers();
             myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
 
@@ -489,16 +490,12 @@
             body: formdata,
             redirect: "follow"
             };
-
-            fetch("http://localhost/api/get/post", requestOptions)
-            .then((response) => response.text())
-            .then((result) => {
-                result = JSON.parse(result);
-                setModal_Activity_1(result)
-            })
-            .catch((error) => console.error(error));
+            let res = await fetch("http://localhost/api/get/post", requestOptions);
+            res = await res.json();
+            setModal_Activity_1(res)
         }
         function setModal_Activity_1(result) {
+            console.log(result)
             if(result.status!=200){
                 return 
             }
@@ -511,46 +508,46 @@
                 images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`
             }
             let e = ""
-            e = `<div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <div>
-                                    <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม</h5>
-                                    <p class="small-text">${create_date}</p>
+            e = `
+                <div class="content" style="width:50%;">
+                    <div class="header mb-3">
+                        <div>
+                            <label class="title-header">รายละเอียดกิจกรรม</label>:<label> <h5 class="card-title">${data.post_name}</h5></label><br>
+                            <label class="small-text">${create_date}</label>
+                        </div>
+                        <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
+                    </div>
+                    <div class="body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="col-12">
+                                    <div class="overflow-x d-flex">
+                                        ${images}
+                                    </div>
                                 </div>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body">
-                                <div class="row d-flex align-items-center mb-3">
-                                    <div class="col-2 text-start"><strong>ผู้สร้าง:</strong></div>
-                                    <div class="col-10 d-flex align-items-center">
-                                        <img src="${data.img}" 
-                                            style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์" loading="lazy">
-                                        <p class="d-inline-block ms-3 mb-0">${data.fname} ${data.lname}</p>
+                            <div class="container">
+                                <div class="card">
+                                    <div class="card-body" style="overflow-y: auto; max-height:300px;">
+                                        <h5 class="card-title">${data.post_name}</h5>
+                                        <p class="card-text">
+                                        <b>ชื่อกิจกรรม:</b> ${data.post_name}<br>
+                                        <b>ช่วงเวลา:</b> ${activity_date}<br>
+                                        <b>รายละเอียด:</b> ${data.post_about}<br>
+                                        <b>สถานที่:</b> ${data.post_address}<br>
+                                        <b>สิ่งที่ได้:</b> ${data.post_give}<br>
+                                        <b>จำนวนที่เปิดรับ:</b> ${data.post_people} คน<br>
+                                        </p>
                                     </div>
-                                </div>
-                                <div class="row d-flex align-items-center mb-3">
-                                <div class="col-12">
-                                        <div class="overflow-x d-flex">
-                                            ${images}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-start">
-                                    <p><strong>ชื่อกิจกรรม:</strong> ${data.post_name}</p>
-                                    <p><strong>ช่วงเวลา:</strong> ${activity_date}</p>
-                                    <p><strong>รายละเอียด:</strong> ${data.post_about}</p>
-                                    <p><strong>สถานที่:</strong> ${data.post_address}</p>
-                                    <p><strong>สิ่งที่ได้:</strong> ${data.post_give}</p>
-                                    <p><strong>จำนวนที่เปิดรับ:</strong> ${data.post_people} คน</p>
                                 </div>
                             </div>
                         </div>
-                    </div>`
+                    </div>
+                </div>`
             Modal_Activity_1.innerHTML = e;
         }
         // 
         async function getRegisterPost(id){
+            openPopUp("req_activity_1");
             const myHeaders = new Headers();
             myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
 
@@ -569,70 +566,152 @@
             res = await res.json();
             setReq_activity_1(res,id)
         }
-        function setReq_activity_1(result,pid){
-            if(result.status!=200){
-                return 
+        function calculateAge(birthday) {
+            const birthDate = new Date(birthday);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
             }
-            const data = result.data[0];
+            return age;
+        }
+        function setReq_activity_1(result,pid){
             const req_activity_1 = document.getElementById('req_activity_1');
+            if(result.status!=200){
+                return req_activity_1.innerHTML = `
+                <div class="content">
+                    <div class="header mb-3">
+                        <div>
+                            <label class="title-header">คำขอเข้าร่วมกิจกรรม</label>:<br>
+                        </div>
+                        <button class="close-btn" onClick="closePopUp()">&times;</button>
+                    </div>
+                    <div class="body text-center p-5">
+                        <h5>ไม่พบคำขอร่วมในกิจกรรมนี้</h5>
+                    </div>
+                </div>`
+            }
+            const data = result.data;
             const title = document.getElementById(`title:${pid}`).textContent;
             const numberpeople = document.getElementById(`numberpeople:${pid}`).textContent;
             const pending = document.getElementById(`pending:${pid}`).textContent;
             const approved = document.getElementById(`approved:${pid}`).textContent;
             const rejected = document.getElementById(`rejected:${pid}`).textContent;
-            console.log(title)
-            let e = '';
-            e = `<div class="modal-dialog modal-dialog-scrollable modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">คำขอเข้าร่วมกิจกรรม : </h5>
-                            <p>${title}</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div>
-                                <table class="table">
-                                    <tr style="font-size: meduim;">
-                                        <td style="width: 15%;">${numberpeople}</td>
-                                        <td style="width: 55%;">ยังไม่ได้ดำเนินการ : ${pending}</td>
-                                        <td style="width: 15%;">อนุมัติ : ${approved}</td>
-                                        <td style="width: 15%;">ปฏิเสธ : ${rejected}</td>
-                                    </tr>
-                                </table>
-                                <div class="container">
-                                    <div class="row d-flex justify-content-start align-items-center text-left text_show_data">
-                                        <!-- วันที่และเวลา (2 ส่วน) -->
-                                        <div class="col-1 p-0">
-                                            <div class="d-inline text-left" style="font-size: 16px;">1/2/2568 12:3:44</div>
-                                        </div>
-                                        <!-- รูปโปรไฟล์ (1 ส่วน) -->
-                                        <div class="col-2 d-inline justify-content-center align-items-center">
-                                            <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg"
-                                                style="width: 55px; height: 55px; border-radius: 50%;" alt="รูปโปรไฟล์" class="ms-3">
-                                            <div style="font-size: small; color: blue; cursor: pointer;" onclick="openModal2()">
-                                                <img src="https://cdn-icons-png.flaticon.com/512/6388/6388049.png"
-                                                    style="width: 15px; height: 15px; border-radius: 0%;" alt="">
-                                                ข้อมูลเพิ่มเติม
-                                            </div>
-                                        </div>
-                                        <div class="col-5 p-0">
-                                            <p>ชื่อ ภานุมาศ ท่าสะอาด</p>
-                                            <p>เพศ : ชาย</p>
-                                            <p>อายุ : 19</p>
-                                        </div>
-                                        <div class="col-2 text-center">
-                                            <button class="btn btn-success bt_pri btn-sm">อนุมัติ</button>
-                                            <div class="mb-2"></div>
-                                            <button class="btn btn-danger bt_pri btn-sm mb-2">ปฏิเสธ</button>
-                                        </div>
-                                        <div class="col-2 p-0 text-warning">⏳ยังไม่ดำเนินการ</div>
-                                    </div>
+            let user = ""
+            data.forEach(doc => {
+                const status = (doc.status=="รอการตรวจสอบ")?`<div class="text-warning">${doc.status}</div>`:((doc.status=="อนุมัติ")?`<div class="text-success">${doc.status}</div>`:`<div class="text-danger">${doc.status}</div>`);
+                user += `<div class="container">
+                            <div class="d-flex justify-content-between align-items-center" style="width:100%;">
+                                <div class="col-2">
+                                    <label>${doc.datetime}</label>
+                                </div>
+                                <div class="col-2 justify-content-center align-items-center">
+                                    <img src="/get/image?img=/user/${doc.image}" style="width: 50px; height: 50px; border-radius: 50%;" alt=".">
+                                    <buttom class="link-about-user-passpol" onClick="SelectDtailUser('${doc.aid}')">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/6388/6388049.png" alt=".">
+                                        ข้อมูลเพิ่มเติม
+                                    </buttom>
+                                </div>
+                                <div class="col-3">
+                                    <p>ชื่อ ${doc.fname} ${doc.lname}</p>
+                                    <p>เพศ : ${doc.gender}</p>
+                                    <p>อายุ : ${calculateAge(doc.birthday)}</p>
+                                </div>
+                                <div class="col-2 text-center">
+                                    <button class="btn btn-success bt_pri btn-sm" onClick="setStatusUser('${doc.aid}','1')">อนุมัติ</button>
+                                    <div class="mb-2"></div>
+                                    <button class="btn btn-danger bt_pri btn-sm mb-2" onClick="setStatusUser('${doc.aid}','0')">ปฏิเสธ</button>
+                                </div>
+                                <div class="d-flex justify-content-center align-items-center w-100" style="height:100px">
+                                    ${status}
                                 </div>
                             </div>
+                        </div>`
+            });
+            let e = '';
+            e = `
+                <div class="content" style="width:50%;">
+                    <div class="header">
+                        <div>
+                            <label class="title-header">คำขอเข้าร่วมกิจกรรม</label>:<label> <h5 class="card-title">${title}</h5></label><br>
+                        </div>
+                        <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
+                    </div>
+                    <div class="body">
+                        <div>
+                            <table class="table">
+                                <tr style="font-size: meduim;">
+                                    <td style="width: 15%;">${numberpeople}</td>
+                                    <td style="width: 55%;">ยังไม่ได้ดำเนินการ : ${pending}</td>
+                                    <td style="width: 15%;">อนุมัติ : ${approved}</td>
+                                    <td style="width: 15%;">ปฏิเสธ : ${rejected}</td>
+                                </tr>
+                            </table>${user}
                         </div>
                     </div>
                 </div>`
             req_activity_1.innerHTML = e;
+        }
+        // 
+        async function SelectDtailUser(id) {
+            openPopUp("Modal_user_data_1");
+            const myHeaders = new Headers();
+            myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+
+            const formdata = new FormData();
+            formdata.append("id_post", id);
+            formdata.append("page", 1);
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: formdata,
+                redirect: "follow"
+            };
+
+            // let res = await fetch("http://localhost/api/get/userdetail", requestOptions);
+            // res = await res.json();
+            // setModal_user_data_1(res)
+        }function setModal_user_data_1(result){
+            const Modal_user_data_1 = document.getElementById('Modal_user_data_1');
+            if(result.status!=200){
+                return req_activity_1.innerHTML = `
+                <div class="content">
+                    <div class="header mb-3">
+                        <div>
+                            <label class="title-header">คำขอเข้าร่วมกิจกรรม</label>:<br>
+                        </div>
+                        <button class="close-btn" onClick="closePopUp()">&times;</button>
+                    </div>
+                    <div class="body text-center p-5">
+                        <h5>ไม่พบข้อมูลของผู้ใช้</h5>
+                    </div>
+                </div>`
+            }
+            const data = result.data;
+            let e = '';
+            e = `<div class="content" style="width:50%;height:30%;">
+                    <div class="header">
+                        <div>
+                            <label class="title-header">ข้อมูลเพิ่มเติม</label>:<label> <h5 class="">${data.name}</h5></label><br>
+                        </div>
+                        <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
+                    </div>
+                    <div class="body">
+                        <div class="d-flex align-items-center">
+                            <img src="/get/image?img=/user/${data.image}" class="rounded-circle border me-4" width="150" height="150" alt="Profile Image">
+                            <div class="ms-5">
+                                <h2 class="mb-1"><strong>ชื่อ:</strong> ${data.fname}</h2>
+                                <h2 class="mb-1"><strong>นามสกุล:</strong> ${data.lname}</h2>
+                                <h2 class="mb-1"><strong>วันเกิด:</strong> ${data.birthday}</h2>
+                                <h2 class="mb-1"><strong>อายุ:</strong> ${calculateAge(data.birthday)}</h2>
+                                <h2 class="mb-1"><strong>เพศ:</strong> ${data.gender}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+            Modal_user_data_1.innerHTML = e;
         }
     </script>
 </body>

@@ -23,6 +23,10 @@ function isLogin(){
             exit();
         }
         $getaccount = getAccountID($login_token);
+        if($getaccount["data"]->num_rows==0){
+            header('Location:/logout');
+            exit();
+        }
         $account = $getaccount['data']->fetch_assoc();
         if(empty($account['birthday'])||empty($account['gender'])){
             require_once('../app/views/user/update.php');
@@ -36,7 +40,7 @@ function isLogin(){
 function resizeImage($source, $destination, $width, $height) {
     $img = imagecreatefromstring(file_get_contents($source));
     $newImg = imagescale($img, $width, $height);
-    imagepng($newImg, $destination); // บันทึกเป็น PNG
+    imagepng($newImg, $destination);
     imagedestroy($img);
     imagedestroy($newImg);
 }
@@ -95,7 +99,6 @@ if($method=="GET"){
                 header("location:/");
                 exit();
             }
-            // print_r($profile);
             login($id,$fname,$lname,$gmail,$image);
             header('location:/');
             exit();
@@ -152,11 +155,22 @@ if($method=="GET"){
             require_once('../app/views/activity/create.php');
             exit();
             break;
+        case '/activity/delete':
+            isLogin();
+            $aid = $_SESSION["login_token"];
+            $pid = $_GET["pid"];
+            deletePostByIdPostAndIdUser($pid,$aid);
+            header("location:/activity/create/show?status=success&message=ลบกิจกรรมสำเร็จ");
+            exit();
+            break;
         case '/activity/create/show':
             isLogin();
             $id_user = $_SESSION["login_token"];
             $page = $_GET['page'] ?? 1;
             $data = getPostUserCreate($id_user,10,$page);
+            if($data["status"]!=200){
+                $data["data"] = [];
+            }
             require_once('../app/views/activity/show.php');
             exit();
             break;
@@ -169,7 +183,6 @@ if($method=="GET"){
             exit();
             break;
         case '/get/image':
-            isLogin();
             $img = $_GET['img'] ?? '';
             $file = '../image/'.$img;
             if (file_exists($file)) {
@@ -318,30 +331,30 @@ if($method=="GET"){
                 echo "อัปโหลดล้มเหลว!";
             }
             break;
-        case '/save/image/post':
-            isLogin();
-            if ($_FILES['image']['error'] == UPLOAD_ERR_OK) {
-                $name = date('Ymd').$_SESSION["login_token"].'_'.uniqid().'.png';
-                $fileTmp = $_FILES['image']['tmp_name'];
-                $destination = '../image/post/'.$name;
-                resizeImage($fileTmp, $destination, 300, 300);
-                echo "อัปโหลดสำเร็จ!";
-            } else {
-                echo "อัปโหลดล้มเหลว!";
-            }
-            break;
+        // case '/save/image/post':
+        //     isLogin();
+        //     if ($_FILES['image']['error'] == UPLOAD_ERR_OK) {
+        //         $name = date('Ymd').$_SESSION["login_token"].'_'.uniqid().'.png';
+        //         $fileTmp = $_FILES['image']['tmp_name'];
+        //         $destination = '../image/post/'.$name;
+        //         resizeImage($fileTmp, $destination, 300, 300);
+        //         echo "อัปโหลดสำเร็จ!";
+        //     } else {
+        //         echo "อัปโหลดล้มเหลว!";
+        //     }
+        //     break;
         case '/api/get/post':
             if(!isset($_POST["id_post"])||empty(isset($_POST["id_post"]))){
                 echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
                 exit();
             }
-            $post = getPostById($_POST["id_post"]);
+            $post = getPostDetailById($_POST["id_post"]);
             if($post['status']!=200){
                 echo json_encode($post,JSON_UNESCAPED_UNICODE);
+                exit();
             }
             if(empty($post["data"][0]["images"])){
-                echo json_encode(["status" => 400, "message" => $post["message"]],JSON_UNESCAPED_UNICODE);
-                exit();
+                $post["data"][0]["images"] = [];
             }else{
                 $images = explode(',', $post["data"][0]["images"]);
                 $post["data"][0]["images"] = $images;
@@ -373,6 +386,23 @@ if($method=="GET"){
             $id_user = $_SESSION["login_token"];
             $data = getRegisterByIdPostAndIdUser($id_post,$id_user,100,$page);
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
+            exit();
+            break;
+                break;
+        case '/api/get/userdetail':
+            isLogin();
+            if(!isset($_POST["pid"])||empty(isset($_POST["pid"]))){
+                echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            if(!isset($_POST["uid"])||empty(isset($_POST["uid"]))){
+                echo json_encode(["status" => 400, "message" => "id user is null!"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            $pid = $_POST["pid"];
+            $uid = $_POST["uid"];
+            $aid = $_SESSION["login_token"];
+            // echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
             break;
                 break;

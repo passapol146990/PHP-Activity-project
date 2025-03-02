@@ -158,12 +158,26 @@
         }
     }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?php if(isset($_GET["status"])){?>
+    <script>
+        Swal.fire({
+            position: "top-end",
+            icon: '<?= htmlspecialchars($_GET["status"]) ?>',
+            title: <?= json_encode(isset($_GET["message"])??"") ?>,
+            showConfirmButton: false,
+            timer: 1500
+        }).then((result) => {
+            window.location.href = "/activity/create/show"
+        });
+    </script>
+<?php } ?>
 <nav class="navbar-component">
     <div class="logo-container">
         <div>
             <div class="box-logo">
                 <div class="logo">
-                    <img src="<?= htmlspecialchars($_SESSION["login_image"]) ?>" alt="Logo">
+                    <img src="/get/image?img=/user/<?= htmlspecialchars($_SESSION["login_image"]) ?>" alt="Logo">
                 </div>
             </div>
             <div class="site-name"><?= htmlspecialchars($_SESSION["login_name"]) ?></div>

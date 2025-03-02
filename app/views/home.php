@@ -86,8 +86,8 @@
             }
             const data = result.data;
             const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
-            const create_date = data.post_create; //วันที่ 25/2/68 19:25:40 น
-            const activity_date = data.post_start + " - " + data.post_end; //20/2/2568 - 22/2/2568 (3 วัน) 
+            const create_date = data.post_create;
+            const activity_date = data.post_start + " - " + data.post_end;
             let images = ""
             for (let i = 0; i < data.images.length; i++) {
                 images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`
@@ -106,8 +106,8 @@
                                 <div class="row d-flex align-items-center mb-3">
                                     <div class="col-2 text-start"><strong>ผู้สร้าง:</strong></div>
                                     <div class="col-10 d-flex align-items-center">
-                                        <img src="${data.img}" style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์" loading="lazy">
-                                        <h1 class="d-inline-block ms-3 mb-0">${data.fname} ${data.lname}</h1>
+                                        <img src="/get/image?img=/user/${data.img}" style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์" loading="lazy">
+                                        <h3 class="d-inline-block ms-3 mb-0">${data.fname} ${data.lname}</h3>
                                     </div>
                                 </div>
                                 <div class="row d-flex align-items-center mb-3">

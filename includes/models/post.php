@@ -20,7 +20,7 @@
         $posts = $result->fetch_all(MYSQLI_ASSOC);
         return ["status"=>200,"message"=>"successfully.","data"=>$posts];
     };
-    function getPostById($id){
+    function getPostDetailById($id){
         global $conn;
         $stmt = $conn->prepare("
             SELECT 
@@ -40,7 +40,7 @@
             FROM post
             JOIN account ON account.aid = post.p_aid
             LEFT JOIN image ON image.pid = post.p_id
-            WHERE post.p_id = ?
+            WHERE post.p_id = ? 
             GROUP BY 
                 post.p_id, 
                 account.image, 
@@ -73,7 +73,7 @@
                 post.*, 
                 (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image, 
                 COUNT(register.id) AS total_registers, 
-                SUM(CASE WHEN register.status = 'รอ' THEN 1 ELSE 0 END) AS pending_registers,
+                SUM(CASE WHEN register.status = 'รอการตรวจสอบ' THEN 1 ELSE 0 END) AS pending_registers,
                 SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved_registers,
                 SUM(CASE WHEN register.status = 'ปฏิเสธ' THEN 1 ELSE 0 END) AS rejected_registers
             FROM post
@@ -103,4 +103,14 @@
         $data = $stmt->get_result();
         return ["status"=>200,"message"=>"successfuly.","data"=>$data];
     };
+    function deletePostByIdPostAndIdUser($pid,$aid){
+        global $conn;
+        $sql = 'DELETE FROM post WHERE post.p_id = ? AND post.p_aid = ?;';
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+        $stmt->bind_param('ss',$pid,$aid);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        $data = $stmt->get_result();
+        return ["status"=>200,"message"=>"successfuly.","data"=>$data];
+    }
 ?>

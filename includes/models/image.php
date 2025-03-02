@@ -20,4 +20,20 @@
         $data = $stmt->get_result();
         return ["status"=>200,"message"=>"successfuly.","data"=>$data];
     };
+    function saveGoogleProfileImage($google_image_url, $user_id) {
+        if (filter_var($google_image_url, FILTER_VALIDATE_URL) === false) {
+            return false;
+        }
+        $upload_dir = '../image/user/';
+        $filename = $user_id . '_' . time() . '.jpg';
+        $file_path = $upload_dir . $filename;
+        $image_data = @file_get_contents($google_image_url);
+        if ($image_data === false) {
+            return false;
+        }
+        if (file_put_contents($file_path, $image_data)) {
+            return $filename;
+        }
+        return false;
+    }
 ?>

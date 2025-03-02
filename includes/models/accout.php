@@ -1,5 +1,6 @@
 <?php
     require_once '../includes/db.php';
+    require_once 'image.php';
     
     function getAccountID($id){
         global $conn;
@@ -23,20 +24,21 @@
     };
     function login($id,$fname,$lname,$gmail,$image) {
         $getaccount = getAccountID($id);
-        $data = $getaccount["data"]->fetch_assoc();
         if($getaccount['status']!=200){
             header('location:/login?message='.$getaccount["message"]);
             exit();
         }
         if($getaccount['data']->num_rows === 0){
+            $image = saveGoogleProfileImage($image, $id);
             $create = createAccount($id,$fname,$lname,$gmail,$image);
             if($getaccount['status']!=200){
                 header('location:/login?message='.$getaccount["message"]);
                 exit();
             }
         }
+        $data = $getaccount["data"]->fetch_assoc();
         $_SESSION['login_token'] = $id;
-        $_SESSION['login_image'] = $image;
+        $_SESSION['login_image'] = $data["image"];
         $_SESSION['login_name'] = ($data["fname"] ?? "") . " " . ($data["lname"] ?? "");
         $_SESSION['login_time'] = time();
     }

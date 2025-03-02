@@ -44,7 +44,7 @@ function getRegisterByIdPostAndIdUser($pid,$aid,$limit,$page){
     $stmt->bind_param("ss", $pid,$aid);
     if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
     $result = $stmt->get_result();
-    if($result->num_rows === 0){return ["status"=>400,"message"=>"ไม่พบข้อมูล"];}
+    if($result->num_rows === 0){return ["status"=>201,"message"=>"ไม่พบข้อมูล"];}
     $data = $result->fetch_all(MYSQLI_ASSOC);
     return ["status"=>200,"message"=>"successfully.","data"=>$data];
 };

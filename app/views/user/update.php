@@ -30,8 +30,7 @@
             </div>
             <h4 class="mb-2">กรอกข้อมูลผู้ใช้</h4>
             <div class="mb-3">
-                <img id="profileImage" src="<?= htmlspecialchars($_SESSION['login_image']) ?>" width="100px" class="profile-pic mb-2" alt="Profile"><br>
-                <a target="_blank" href="<?= htmlspecialchars($_SESSION['login_image']) ?>">กดเพื่อโหลดรูป</a>
+                <img id="profileImage" src="/get/image?img=/user/<?= htmlspecialchars($_SESSION['login_image']) ?>" width="100px" class="profile-pic mb-2" alt="Profile"><br>
             </div>
             <div class="mb-3 text-start">
                 <label class="form-label">ชื่อ</label>
