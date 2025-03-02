@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,7 @@
         <div class="container">
             <h1 class="title text-start">กิจกรรมที่เปิดรับสมัคร</h1>
             <div class="row">
-                <? foreach($posts["data"] as $key => $post){ ?>
+                <? foreach ($posts["data"] as $key => $post) { ?>
                     <div class="col-md-4 mb-4 d-flex">
                         <div class="card p-2 d-flex flex-column flex-grow-1">
                             <div class="text-end quota">18/20</div>
@@ -26,7 +27,10 @@
                                 <label class="limited-text"><?= htmlspecialchars($post["p_name"]) ?></label>
                                 <p class="limited-text"><?= $post["p_date_start"] ?> - <?= $post["p_date_end"] ?></p>
                                 <div class="mt-auto d-flex justify-content-between gap-2">
-                                    <button class="btn btn-success col-6">เข้าร่วม</button>
+                                    <form class="btn btn-success col-6" action="/api/register/post" method="POST">
+                                        <input type="hidden" name="id_post" value="<?php echo $post['p_id']; ?>">
+                                        <button type="submit" class="btn btn-success col-6">เข้าร่วม</button>
+                                    </form>
                                     <button class="btn btn-primary col-6" onClick="getDetailPost('<?= htmlspecialchars($post["p_id"]) ?>')" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">รายละเอียด</button>
                                 </div>
                             </div>
@@ -51,7 +55,7 @@
         </div>
     </div>
     <script>
-        async function getDetailPost(id){
+        async function getDetailPost(id) {
             const myHeaders = new Headers();
             myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
 
@@ -59,32 +63,33 @@
             formdata.append("id_post", id);
 
             const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: formdata,
-            redirect: "follow"
+                method: "POST",
+                headers: myHeaders,
+                body: formdata,
+                redirect: "follow"
             };
 
             fetch("http://localhost/api/get/post", requestOptions)
-            .then((response) => response.text())
-            .then((result) => {
-                console.log(result);
-                result = JSON.parse(result);
-                console.log(result);
-                setModal_Activity_1(result)
-            })
-            .catch((error) => console.error(error));
+                .then((response) => response.text())
+                .then((result) => {
+                    console.log(result);
+                    result = JSON.parse(result);
+                    console.log(result);
+                    setModal_Activity_1(result)
+                })
+                .catch((error) => console.error(error));
         }
+
         function setModal_Activity_1(result) {
-            if(result.status!=200){
-                return 
+            if (result.status != 200) {
+                return
             }
             const data = result.data;
             const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
             const create_date = data.post_create; //วันที่ 25/2/68 19:25:40 น
-            const activity_date = data.post_start+" - "+data.post_end;//20/2/2568 - 22/2/2568 (3 วัน) 
+            const activity_date = data.post_start + " - " + data.post_end; //20/2/2568 - 22/2/2568 (3 วัน) 
             let images = ""
-            for(let i = 0;i<data.images.length;i++){
+            for (let i = 0; i < data.images.length; i++) {
                 images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`
             }
             let e = ""
@@ -122,7 +127,10 @@
                                 </div>
                             </div>
                             <div class="modal-footer justify-content-center">
-                                <button class="btn btn-success" onClick="joinActivity('${data.post_id}')">เข้าร่วม</button>
+                               <form class="btn btn-success col-6" action="/api/register/post" method="POST">
+                                        <input type="hidden" name="id_post" value="<?php echo $post['p_id']; ?>">
+                                        <button type="submit" class="btn btn-success col-6">เข้าร่วม</button>
+                                    </form>
                             </div>
                         </div>
                     </div>`
