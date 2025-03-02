@@ -1,5 +1,6 @@
 <?php
 require_once '../includes/db.php';
+
 function registerUser($pid, $aid) {
     global $conn;
     $status = 'รอการตรวจสอบ';
@@ -49,6 +50,26 @@ function getRegisterByIdPostAndIdUser($pid,$aid,$limit,$page){
     if($result->num_rows === 0){return ["status"=>201,"message"=>"ไม่พบข้อมูล"];}
     $data = $result->fetch_all(MYSQLI_ASSOC);
     return ["status"=>200,"message"=>"successfully.","data"=>$data];
+};
+function getWaitRegister($aid){
+    global $conn;
+    $page = isset($page) ? (int)$page : 1;
+    $limit = isset($limit) ? (int)$limit : 10;
+    $offset = ($page - 1) * $limit;
+    $stmt = $conn->prepare("
+        SELECT  COUNT(*) as wait_register
+        FROM 	register
+        WHERE	status = 'รอการตรวจสอบ'
+        AND 	aid = ?;
+    ");
+    $stmt->bind_param("s",$aid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if($result->num_rows === 0){
+        return 0;
+    }
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    return  $data[0]["wait_register"];
 };
 function upadteResgister($pid,$aid,$uid,$status){
     global $conn;

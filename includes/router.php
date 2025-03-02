@@ -107,18 +107,17 @@ if($method=="GET"){
             $url = "https://accounts.google.com/o/oauth2/v2/auth?client_id={$google_client_id}&redirect_uri={$google_redirect_uri}&response_type=code&scope=profile email";
             header("Location:{$url}");
             break;
-        case '/x':
-            // $data = getRegister("x","x","x",1);
-            print_r($data);
-            break;
         case '/':
             isLogin();
+            $login_token = $_SESSION["login_token"];
             $page = $_GET['page'] ?? 1;
             $postsTop = getPost(10, 1); // ห้ามยุ่งบรรทัดนี้
             $posts = ["status"=>0,"message"=>"set","data"=>[]];
             $keyword = $_GET['search'] ?? "";
             $date_start = $_GET['start_date'] ?? "";
             $date_end = $_GET['end_date'] ?? "";
+            $total_registers = getCountWaitRegister($login_token);
+            $waitReg = getWaitRegister($login_token);
             $posts = getPostx(10, $page,$keyword,$date_start,$date_end);
             require_once('../app/views/home.php');
             exit();
@@ -139,14 +138,12 @@ if($method=="GET"){
             break;
         case '/activity/register/show':
             isLogin();
-            $aid = $_SESSION["login_token"];
+            $login_token = $_SESSION["login_token"];
             $page = $_GET['page'] ?? 1;
-            $myactivities = getRegisteredActivities($aid,10,$page);
+            $myactivities = getRegisteredActivities($login_token,10,$page);
+            $total_registers = getCountWaitRegister($login_token);
+            $waitReg = getWaitRegister($login_token);
             require_once('../app/views/register/show.php');
-            exit();
-            break;
-        case '/setting':
-            require_once('../app/views/setting.php');
             exit();
             break;
         case '/activity/edit':
@@ -168,22 +165,29 @@ if($method=="GET"){
             break;
         case '/activity/create':
             isLogin();
+            $login_token = $_SESSION["login_token"];
+            $total_registers = getCountWaitRegister($login_token);
+            $waitReg = getWaitRegister($login_token);
             require_once('../app/views/activity/create.php');
             exit();
             break;
         case '/activity/delete':
             isLogin();
-            $aid = $_SESSION["login_token"];
+            $login_token = $_SESSION["login_token"];
+            $total_registers = getCountWaitRegister($login_token);
+            $waitReg = getWaitRegister($login_token);
             $pid = $_GET["pid"];
-            deletePostByIdPostAndIdUser($pid,$aid);
+            deletePostByIdPostAndIdUser($pid,$login_token);
             header("location:/activity/create/show?status=success&message=ลบกิจกรรมสำเร็จ");
             exit();
             break;
         case '/activity/create/show':
             isLogin();
-            $id_user = $_SESSION["login_token"];
+            $login_token = $_SESSION["login_token"];
+            $total_registers = getCountWaitRegister($login_token);
+            $waitReg = getWaitRegister($login_token);
             $page = $_GET['page'] ?? 1;
-            $data = getPostUserCreate($id_user,10,$page);
+            $data = getPostUserCreate($login_token,10,$page);
             if($data["status"]!=200){
                 $data["data"] = [];
             }
@@ -193,6 +197,8 @@ if($method=="GET"){
         case '/user/setting':
             isLogin();
             $login_token = $_SESSION["login_token"];
+            $total_registers = getCountWaitRegister($login_token);
+            $waitReg = getWaitRegister($login_token);
             $getaccount = getAccountID($login_token);
             $account = $getaccount['data']->fetch_assoc();
             require_once('../app/views/user/setting.php');

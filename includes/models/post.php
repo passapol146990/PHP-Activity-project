@@ -144,6 +144,28 @@
         $posts = $result->fetch_all(MYSQLI_ASSOC);
         return ["status"=>200,"message"=>"successfully.","data"=>$posts];
     };
+    function getCountWaitRegister($pid){
+        global $conn;
+        $page = isset($page) ? (int)$page : 1;
+        $limit = isset($limit) ? (int)$limit : 10;
+        $offset = ($page - 1) * $limit;
+        $stmt = $conn->prepare("
+            SELECT COUNT(*) AS total_registers
+            FROM register
+            JOIN post ON post.p_id = register.pid
+            WHERE post.p_aid = ?
+            AND register.status = 'รอการตรวจสอบ';
+        ");
+        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+        $stmt->bind_param("s", $pid);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if($result->num_rows === 0){
+            return 0;
+        }
+        $data = $result->fetch_all(MYSQLI_ASSOC);
+        return $data[0]["total_registers"];
+    };
     function createPost($p_id,$p_aid,$p_name,$p_about,$p_max,$p_address,$p_date_start,$p_date_end,$p_give){
         global $conn;
         $sql = 'INSERT INTO post(p_id,p_aid,p_name,p_about,p_max,p_address,p_date_start,p_date_end,p_give) VALUES(?,?,?,?,?,?,?,?,?)';
