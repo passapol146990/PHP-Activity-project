@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <title>req Activity</title>
 
@@ -16,7 +15,6 @@
             font-family: 'Mitr';
             font-size: 18px;
             font-weight: 300;
-
         }
 
         table {
@@ -32,7 +30,6 @@
             vertical-align: middle;
             border: 0px solid #ddd;
             padding: 8px;
-            /*white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
         }
 
         th {
@@ -41,15 +38,12 @@
 
         .btn-success {
             width: 90px;
-            /* กำหนดขนาดปุ่มให้เท่ากัน */
         }
 
         .img-thumbnail {
             width: 140px;
             height: 85px;
             object-fit: cover;
-            /* ป้องกันรูปเบี้ยว */
-
         }
 
         .text-head {
@@ -76,7 +70,6 @@
         .bold_text_modal {
             font-weight: 500;
         }
-
 
         .small-text {
             font-size: 0.8rem;
@@ -118,7 +111,6 @@
             border: 2px solid #ddd;
             border-radius: 8px;
             margin-bottom: 10px;
-            /* ระยะห่างระหว่างรูปและปุ่ม */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -165,10 +157,12 @@
                     $activities = getRegisteredActivities($account_id);
 
                     $status_mapping = [
-                        'pending' => 'รอการตรวจสอบ',
                         'approved' => 'อนุมัติเข้าร่วม',
-                        'rejected' => 'ปฏิเสธ',
-                        'cancelled' => 'ยกเลิก'
+                        'pending' => 'รอการตรวจสอบ',
+                        'rejected' => 'ถูกปฏิเสธเข้าร่วม',
+                        'invalid_image' => 'รูปภาพไม่ถูกต้อง',
+                        'pending_image_review' => 'รอตรวจสอบรูปภาพ',
+                        'completed' => 'เสร็จสิ้น'
                     ];
 
                     foreach ($activities as $activity) {
@@ -187,28 +181,53 @@
                         $register_status_th = $status_mapping[$register_status] ?? $register_status;
 
                         $action_button = '';
-                        if ($register_status == 'รอการตรวจสอบ') {
-                            $action_button = '<button class="btn btn-danger btn-sm" onclick="cancelRegistration(' . $register_id . ')">ยกเลิก</button>';
-                        } elseif ($register_status == 'อนุมัติเข้าร่วม') {
-                            $action_button = '<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#Modal_submit_pic_' . $post_id . '">ส่งรูปภาพ</button>';
+                        $status_color = '';
+
+                        switch ($register_status) {
+                            case 'อนุมัติเข้าร่วม':
+                                $status_color = 'color: green;';
+                                $action_button = '<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#Modal_submit_pic_' . $post_id . '">ส่งรูปภาพ</button>
+                                                 <button class="btn btn-danger btn-sm" onclick="cancelRegistration(' . $register_id . ')">ยกเลิก</button>';
+                                break;
+                            case 'รอการตรวจสอบ':
+                                $status_color = 'color: yellow;';
+                                $action_button = '<button class="btn btn-danger btn-sm" onclick="cancelRegistration(' . $register_id . ')">ยกเลิก</button>';
+                                break;
+                            case 'ถูกปฏิเสธเข้าร่วม':
+                                $status_color = 'color: red;';
+                                $action_button = '';
+                                break;
+                            case 'รูปภาพไม่ถูกต้อง':
+                                $status_color = 'color: red;';
+                                $action_button = '<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#Modal_submit_pic_' . $post_id . '">ส่งรูปภาพ</button>
+                                                 <button class="btn btn-danger btn-sm" onclick="cancelRegistration(' . $register_id . ')">ยกเลิก</button>';
+                                break;
+                            case 'รอตรวจสอบรูปภาพ':
+                                $status_color = 'color: yellow;';
+                                $action_button = '';
+                                break;
+                            case 'เสร็จสิ้น':
+                                $status_color = 'color: green;';
+                                $action_button = '';
+                                break;
                         }
 
                         echo "
-                    <tr>
-                        <td>$register_datetime</td>
-                        <td><img src='$imageUrl' class='img-thumbnail' alt='กิจกรรม' style='width: 100px; height: auto;'></td>
-                        <td>$post_name</td>
-                        <td>$post_date_start - $post_date_end</td>
-                        <td>$registered_count / $post_max</td>
-                        <td>
-                            <button class='btn btn-outline-primary btn-sm raduis' data-bs-toggle='modal' data-bs-target='#Modal_Activity_$post_id'>
-                                รายละเอียดกิจกรรม
-                            </button>
-                        </td>
-                        <td>$register_status_th</td>
-                        <td>$action_button</td>
-                    </tr>
-                    ";
+                        <tr>
+                            <td>$register_datetime</td>
+                            <td><img src='$imageUrl' class='img-thumbnail' alt='กิจกรรม' style='width: 100px; height: auto;'></td>
+                            <td>$post_name</td>
+                            <td>$post_date_start - $post_date_end</td>
+                            <td>$registered_count / $post_max</td>
+                            <td>
+                                <button class='btn btn-outline-primary btn-sm raduis' data-bs-toggle='modal' data-bs-target='#Modal_Activity_$post_id'>
+                                    รายละเอียดกิจกรรม
+                                </button>
+                            </td>
+                            <td style='$status_color'>$register_status_th</td>
+                            <td>$action_button</td>
+                        </tr>
+                        ";
                     }
                     ?>
                 </tbody>
@@ -233,67 +252,53 @@
         $creator_image = htmlspecialchars($activity["creator_image"]);
         $creatorImageUrl = "/get/image?img=/profile/" . urlencode($creator_image);
 
-        // ตรวจสอบสถานะการสมัคร
-        $register_status = $activity["register_status"];
-        $register_id = $activity["register_id"];
-
-        $action_button = '';
-        if ($register_status == 'รอการตรวจสอบ') {
-            $action_button = '<button class="btn btn-danger btn-sm" onclick="cancelRegistration(' . $register_id . ')">ยกเลิก</button>';
-        } elseif ($register_status == 'อนุมัติเข้าร่วม') {
-            $action_button = '<button class="btn btn-success btn-md" data-bs-toggle="modal" data-bs-target="#Modal_submit_pic_' . $post_id . '">ส่งรูปภาพ</button>';
-        } elseif ($register_status == 'approved') {
-        } else {
-            $action_button = '<button class="btn btn-success btn-md" onclick="joinActivity(' . $post_id . ')">เข้าร่วม</button>';
-        }
-
         echo "
-    <div class='modal fade text-font' id='Modal_Activity_$post_id' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
-        <div class='modal-dialog modal-dialog-scrollable modal-lg'>
-            <div class='modal-content'>
-                <div class='modal-header'>
-                    <h5 class='modal-title' id='exampleModalLabel'>รายละเอียดกิจกรรม<br><small class='text-muted small-text'>วันที่ $register_datetime</small></h5>
-                    <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
-                </div>
-                <div class='modal-body'>
-                    <div class='row d-flex align-items-center mb-3'>
-                        <div class='col-3 text-end'>ผู้สร้างกิจกรรม :</div>
-                        <div class='col-9'>
-                            <div class='d-flex align-items-center'>
-                                <img src='$creatorImageUrl' alt='ผู้สร้าง' style='width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 10px;'>
-                                <div>
-                                    <div><span class='bold_text_modal'>ชื่อผู้สร้าง :</span> $creator_fname $creator_lname</div>
+        <div class='modal fade text-font' id='Modal_Activity_$post_id' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
+            <div class='modal-dialog modal-dialog-scrollable modal-lg'>
+                <div class='modal-content'>
+                    <div class='modal-header'>
+                        <h5 class='modal-title' id='exampleModalLabel'>รายละเอียดกิจกรรม<br><small class='text-muted small-text'>วันที่ $register_datetime</small></h5>
+                        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                    </div>
+                    <div class='modal-body'>
+                        <div class='row d-flex align-items-center mb-3'>
+                            <div class='col-3 text-end'>ผู้สร้างกิจกรรม :</div>
+                            <div class='col-9'>
+                                <div class='d-flex align-items-center'>
+                                    <img src='$creatorImageUrl' alt='ผู้สร้าง' style='width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 10px;'>
+                                    <div>
+                                        <div><span class='bold_text_modal'>ชื่อผู้สร้าง :</span> $creator_fname $creator_lname</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class='row d-flex align-items-center mb-3'>
-                        <div class='col-3 text-end'>กิจกรรม :</div>
-                        <div class='col-9'>
-                            <img src='$imageUrl' alt='กิจกรรม' style='width: 350px; height: 230px; object-fit: cover;'>
+                        <div class='row d-flex align-items-center mb-3'>
+                            <div class='col-3 text-end'>กิจกรรม :</div>
+                            <div class='col-9'>
+                                <img src='$imageUrl' alt='กิจกรรม' style='width: 350px; height: 230px; object-fit: cover;'>
+                            </div>
+                        </div>
+                        <div class='row d-flex align-items-center mb-2'>
+                            <div class='col-3 text-end'></div>
+                            <div class='col-9'>
+                                <div><span class='bold_text_modal'>ชื่อกิจกรรม :</span> $post_name</div>
+                                <div><span class='bold_text_modal'>ช่วงเวลา :</span> $post_date_start - $post_date_end</div>
+                                <div><span class='bold_text_modal'>รายละเอียด :</span> $post_about</div>
+                                <div><span class='bold_text_modal'>จำนวนที่เปิดรับ :</span> $post_max</div>
+                            </div>
                         </div>
                     </div>
-                    <div class='row d-flex align-items-center mb-2'>
-                        <div class='col-3 text-end'></div>
-                        <div class='col-9'>
-                            <div><span class='bold_text_modal'>ชื่อกิจกรรม :</span> $post_name</div>
-                            <div><span class='bold_text_modal'>ช่วงเวลา :</span> $post_date_start - $post_date_end</div>
-                            <div><span class='bold_text_modal'>รายละเอียด :</span> $post_about</div>
-                            <div><span class='bold_text_modal'>จำนวนที่เปิดรับ :</span> $post_max</div>
-                        </div>
+                    <div class='modal-footer'>
+                        <td>$action_button</td>
+                        <button type='button' class='btn btn-secondary btn-md' data-bs-dismiss='modal'>ปิด</button>
                     </div>
-                </div>
-                <div class='modal-footer'>
-                    $action_button
-                    <button type='button' class='btn btn-secondary btn-md' data-bs-dismiss='modal'>ปิด</button>
                 </div>
             </div>
         </div>
-    </div>
-    ";
+        ";
     }
     ?>
-    <!-- Modal สำหรับอัปโหลดรูปภาพ -->
+
     <?php
     foreach ($activities as $activity) {
         $post_id = $activity["post_id"];
@@ -330,7 +335,6 @@
     }
     ?>
 
-    <!-- Script สำหรับแสดงรูปภาพที่อัปโหลด -->
     <script>
         function previewImage(event, postId) {
             var reader = new FileReader();
@@ -339,8 +343,8 @@
                 var uploadBtn = document.getElementById('upload-btn-' + postId);
 
                 output.src = reader.result;
-                output.style.display = 'block'; // แสดงภาพเมื่อเลือกไฟล์
-                uploadBtn.style.display = 'none'; // ซ่อนปุ่มอัพโหลดหลังจากอัพโหลดไฟล์
+                output.style.display = 'block';
+                uploadBtn.style.display = 'none';
             }
             reader.readAsDataURL(event.target.files[0]);
         }
@@ -358,7 +362,7 @@
                     .then(data => {
                         alert(data.message);
                         if (data.status === 200) {
-                            location.reload(); // รีเฟรชหน้าเมื่อยกเลิกสำเร็จ
+                            location.reload();
                         }
                     })
                     .catch(error => {
