@@ -158,26 +158,12 @@
         }
     }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<?php if(isset($_GET["status"])){?>
-    <script>
-        Swal.fire({
-            position: "top-end",
-            icon: '<?= htmlspecialchars($_GET["status"]) ?>',
-            title: <?= json_encode(isset($_GET["message"])??"") ?>,
-            showConfirmButton: false,
-            timer: 1500
-        }).then((result) => {
-            window.location.href = "/activity/create/show"
-        });
-    </script>
-<?php } ?>
-<nav class="navbar-component">
+ <nav class="navbar-component">
     <div class="logo-container">
         <div>
             <div class="box-logo">
                 <div class="logo">
-                    <img src="/get/image?img=/user/<?= htmlspecialchars($_SESSION["login_image"]) ?>" alt="Logo">
+                    <img src="<?= htmlspecialchars($_SESSION["login_image"]) ?>" alt="Logo">
                 </div>
             </div>
             <div class="site-name"><?= htmlspecialchars($_SESSION["login_name"]) ?></div>
@@ -205,17 +191,45 @@
     </div>
     <form action="#" method="get" class="search-container">
         <div class="search-box">
-            <input type="search" class="search-input" placeholder="ค้นหากิจกรรม...">
+            <input type="search" class="search-input" name="search" placeholder="ค้นหากิจกรรม...">
         </div>
-        <select class="filter-button">
-            <option class="filter-text" value="all">ฟิวเตอร์</option>
-            <option class="filter-text" value="created">กิจกรรมที่สร้าง</option>
-            <option class="filter-text" value="joined">กิจกรรมที่เข้าร่วม</option>
-        </select>
-        <button type="submit" class="search-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-            </svg>
-        </button>
+        
+
+            <!-- ฟิลเตอร์ -->
+            <select class="filter-button me-2" name="filter" id="filter">
+                <option class="filter-text" value="none">ฟิวเตอร์</option>
+                <option class="filter-text" value="all">เลือกวันที่</option>
+            </select>
+
+            <!-- ฟิลเตอร์วันที่ -->
+            <div class="filter-container" id="dateFilter" style="display: none;">
+                <label for="start_date">วันที่:</label>
+                <input type="date" name="start_date" id="start_date">
+
+                <label for="end_date">ถึง:</label>
+                <input type="date" name="start_date" id="end_date" >
+            </div>
+
+            <button type="submit" class="search-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+            </button>
+        </form>
+
+        <script>
+        document.getElementById("filter").addEventListener("change", function() {
+            var filterValue = this.value;
+            var dateFilter = document.getElementById("dateFilter");
+
+            if (filterValue === "all") {
+                dateFilter.style.display = "block"; // แสดงช่องเลือกวันที่
+            } else {
+                dateFilter.style.display = "none"; // ซ่อนช่องเลือกวันที่
+            }
+        });
+        </script>
+
+       
     </form>
 </nav>

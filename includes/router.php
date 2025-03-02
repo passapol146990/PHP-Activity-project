@@ -108,23 +108,30 @@ if($method=="GET"){
             header("Location:{$url}");
             break;
         case '/x':
-            $data = getRegister("x","x","x",1);
-            print_r($data);
-            break;
+            /*$data = getRegister("x","x","x",1);
+            print_r($data);*/
+            break; 
         case '/':
             isLogin();
             $page = $_GET['page'] ?? 1;
-            $postsTop = getPost(10,1); //ห้ามยุ่งบรรทัดนี้
+            $postsTop = getPost(10, 1); // ห้ามยุ่งบรรทัดนี้
             $posts = "";
-            if(isset($_GET['s'])||!empty($_GET['s'])){
-                $seach = $_GET['s'];
-                $posts = getPostBySearch(10,$page,$seach);
-            }else{
-                $posts = getPost(10,$page);
+                
+            // ตรวจสอบค่าของ search, start_date, end_date
+            $search = $_GET['search'] ?? "";
+            $startDate = $_GET['start_date'] ?? "";
+            $endDate = $_GET['end_date'] ?? "";
+                
+            // ถ้ามีการค้นหาและเลือกวันที่
+            if (!empty($search) || (!empty($startDate) && !empty($endDate))) {
+                $posts = getPostBySearch(10, $page, $search, $startDate, $endDate);
+            } else {
+                $posts = getPost(10, $page);
             }
+                
             require_once('../app/views/home.php');
             exit();
-            break;
+                
         case '/login':
             if(isset($_SESSION["login_token"])){
                 header("Location:/");
@@ -162,10 +169,9 @@ if($method=="GET"){
                 exit();
             }
             $result = $data['data']; 
-        require_once('../app/views/activity/edit.php');
-        exit();
-        break;
-                    
+            require_once('../app/views/activity/edit.php');
+            exit();
+            break;
         case '/activity/create':
             isLogin();
             require_once('../app/views/activity/create.php');
@@ -263,6 +269,10 @@ if($method=="GET"){
                 header("Location:/activity/create?message=กรุณาใส่สถานที่จัดกิจกรรม.");
                 exit();
             }
+            if(!isset($_POST["p_give"])||empty($_POST["p_give"])){
+                header("Location:/activity/edit?message=กรุณาใส่สถานที่จัดกิจกรรม.");
+                exit();
+            }
             if(!isset($_FILES['images'])||empty($_POST["location"])){
                 header("Location:/activity/create?message=กรุณาใส่รูปภาพ.");
                 exit();
@@ -304,22 +314,49 @@ if($method=="GET"){
             header("Location:/");
             exit();
             break;
-            case '/activity/edit':
-                isLogin();
-                $aid = $_SESSION["login_token"];
-                $title = $_POST["title"];
-                $p_id = $_POST["p_id"]; // ใช้ค่าเดิมจากฟอร์ม
-                $description = $_POST["description"];
-                $max_count = (int)$_POST["max_count"];
-                $start_date = $_POST["start_date"];
-                $end_date = $_POST["end_date"];
-                $location = $_POST["location"];
-                $p_give = $_POST["p_give"] ?? "";
-                $data = updatePost($p_id, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
-                require_once('../app/views/activity/show.php');
+        case '/activity/edit':
+            isLogin();
+            if(!isset($_POST["title"])||empty($_POST["title"])){
+                header("Location:/activity/edit?status=warnign&message=กรุณาใส่ชื่อกิจกรรม.");
+                exit(); 
+            }
+            if(!isset($_POST["description"])||empty($_POST["description"])){
+                header("Location:/activity/edit?status=warnign&message=กรุณาใส่รายละเอียดกิจกรรม.");
                 exit();
-                break;
-            
+            }
+            if(!isset($_POST["max_count"])||empty($_POST["max_count"])){
+                header("Location:/activity/edit?status=warnign&message=กรุณาใส่จำนวนคนที่รับ.");
+                exit();
+            }
+            if(!isset($_POST["start_date"])||empty($_POST["start_date"])){
+                header("Location:/activity/edit?status=warnign&message=กรุณาใส่วันที่เริ่มกิจกรรม.");
+                exit();
+            }
+            if(!isset($_POST["end_date"])||empty($_POST["end_date"])){
+                header("Location:/activity/edit?status=warnign&message=กรุณาใส่วันที่สิ้นสุดกิจกรรม.");
+                exit();
+            }
+            if(!isset($_POST["location"])||empty($_POST["location"])){
+                header("Location:/activity/edit?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
+                exit();
+            }
+            if(!isset($_POST["p_give"])||empty($_POST["p_give"])){
+                header("Location:/activity/edit?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
+                exit();
+            }
+            $aid = $_SESSION["login_token"];
+            $p_id = $_POST["p_id"]??"";
+            $title = $_POST["title"];
+            $description = $_POST["description"];
+            $max_count = (int)$_POST["max_count"];
+            $start_date = $_POST["start_date"];
+            $end_date = $_POST["end_date"];
+            $location = $_POST["location"];
+            $p_give = $_POST["p_give"];
+            $data = updatePost($p_id, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
+            header("location:/activity/create/show?status=success&message=อัพเดทกิจกรรมสำเร็จ");
+            exit();
+            break;
         case '/update/user/data':
             if (isset($_SESSION['login_time'])) {
                 $inactive = time() - $_SESSION['login_time'];
@@ -420,7 +457,23 @@ if($method=="GET"){
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
             break;
-                break;
+        case '/api/update/register':
+            isLogin();
+            if(!isset($_POST["pid"])||empty(isset($_POST["pid"]))){
+                echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            if(!isset($_POST["uid"])||empty(isset($_POST["uid"]))){
+                echo json_encode(["status" => 400, "message" => "id user is null!"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            $pid = $_POST["pid"];
+            $uid = $_POST["uid"];
+            $aid = $_SESSION["login_token"];
+            $data = getUserByIdPostAndIdUser($aid,$pid,$uid);
+            echo json_encode($data,JSON_UNESCAPED_UNICODE);
+            exit();
+            break;
         case '/api/get/userdetail':
             isLogin();
             if(!isset($_POST["pid"])||empty(isset($_POST["pid"]))){
@@ -438,8 +491,7 @@ if($method=="GET"){
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
             break;
-                break;
-        default:
+         default:
             header("Location:/");
             break;
     }
