@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="style/home.css">
     <title>หน้าแรก</title>
 </head>
+
 <body>
     <?php require_once '../app/component/navbar.php'; ?>
     <?php require_once '../app/component/slide.php'; ?>
@@ -27,12 +28,12 @@
                                 <label class="limited-text"><?= htmlspecialchars($post["p_name"]) ?></label>
                                 <p class="limited-text"><?= $post["p_date_start"] ?> - <?= $post["p_date_end"] ?></p>
                                 <div class="mt-auto d-flex justify-content-between gap-2">
-                                    <form class="btn btn-success col-6" action="/api/register/post" method="POST">
-                                        <input type="hidden" name="id_post" value="<?php echo $post['p_id']; ?>">
-                                        <button type="submit" class="btn btn-success col-6">เข้าร่วม</button>
-                                    </form>
+                                    <button type="submit" class="btn btn-success col-6" onclick="document.getElementById('registerForm').submit();">เข้าร่วม</button>
                                     <button class="btn btn-primary col-6" onClick="getDetailPost('<?= htmlspecialchars($post["p_id"]) ?>')" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">รายละเอียด</button>
                                 </div>
+                                <form id="registerForm" action="/api/register/post" method="POST" style="display: none;">
+                                    <input type="hidden" name="id_post" value="<?php echo $post['p_id']; ?>">
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -127,10 +128,10 @@
                                 </div>
                             </div>
                             <div class="modal-footer justify-content-center">
-                               <form class="btn btn-success col-6" action="/api/register/post" method="POST">
-                                        <input type="hidden" name="id_post" value="<?php echo $post['p_id']; ?>">
-                                        <button type="submit" class="btn btn-success col-6">เข้าร่วม</button>
-                                    </form>
+                             <button type="submit" class="btn btn-success col-6" onclick="document.getElementById('registerForm').submit();">เข้าร่วม</button>
+                               <form id="registerForm" action="/api/register/post" method="POST" style="display: none;">
+                                    <input type="hidden" name="id_post" value="<?php echo $post['p_id']; ?>">
+                                </form>
                             </div>
                         </div>
                     </div>`

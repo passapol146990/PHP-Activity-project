@@ -132,175 +132,175 @@ button {
         
     </style>
 </head>
-<body>   
- <?php // require_once '../app/component/navbar.php'; ?>
+<body>
+    <?php require_once '../app/component/navbar.php'; ?>
     <div class="container" style="margin-top: 20px;">
-    <div class="text-head">
+        <div class="text-head">
             กิจกรรมที่ขอเข้าร่วม
-    </div>
+        </div>
         <div class="mt-4">
             <table class="table">
                 <thead>
                     <tr class="text-font">
-                            <th style="width: 9%;">วันที่ส่งคำขอ</th>
-                            <th style="width: 13%;">รูปกิจกรรม</th>
-                            <th style="width: 15%;">กิจกรรม</th>
-                            <th style="width: 15%;">ช่วงเวลากิจกรรม</th>
-                            <th style="width: 10%;">จำนวนคนสมัคร</th>
-                            <th style="width: 15%;">รายละเอียดเพิ่มเติม</th>
-                            <th style="width: 13%;">สถานะ</th>
-                            <th style="width: 10%;"></th>
+                        <th style="width: 9%;">วันที่ส่งคำขอ</th>
+                        <th style="width: 13%;">รูปกิจกรรม</th>
+                        <th style="width: 15%;">กิจกรรม</th>
+                        <th style="width: 15%;">ช่วงเวลากิจกรรม</th>
+                        <th style="width: 10%;">จำนวนคนสมัคร</th>
+                        <th style="width: 15%;">รายละเอียดเพิ่มเติม</th>
+                        <th style="width: 13%;">สถานะ</th>
+                        <th style="width: 10%;"></th>
                     </tr>
                 </thead>
-
-            <!-- show data-->
                 <tbody>
-                    <tr>
-                        <td>1/1/2568 12:02:73</td>
-                        <td><img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" class="img-thumbnail" alt="กิจกรรม"></td>
-                        <td>C4C ค่ายมหาลัยสู่โรงเรียนในชุมชน</td>
-                        <td>1/2/2568 - 5/2/2568</td>
-                        <td>0/20</td>
-                        <td>
-                            <button class="btn btn-outline-primary btn-sm raduis" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
-                                รายละเอียดกิจกรรม
-                            </button>
-                        </td>
-                        <td class="">รอดำเนินรายการ..</td>
-                        <td><button class="btn btn-danger btn-sm btn-success">ยกเลิก</button></td>
-                    </tr>
-                </tbody>
+                    <?php
+                    // เรียกใช้ฟังก์ชันดึงข้อมูล
+                    $account_id = $_SESSION["login_token"];
+                    $activities = getRegisteredActivities($account_id);
 
-                <tbody>
-                    <tr>
-                        <td>1/1/2568 12:02:73</td>
-                        <td><img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" class="img-thumbnail" alt="กิจกรรม"></td>
-                        <td>C4C ค่ายมหาลัยสู่โรงเรียนในชุมชน</td>
-                        <td>1/2/2568 - 5/2/2568</td>
-                        <td>0/20</td>
-                        <td>
-                            <button class="btn btn-outline-primary btn-sm raduis" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
-                                รายละเอียดกิจกรรม
-                            </button>
-                        </td>
-                        <td class="">รอดำเนินรายการ..</td>
-                        <td><button class="btn btn-danger btn-sm btn-success">ยกเลิก</button></td>
-                    </tr>
-                </tbody>
+                    // วนลูปแสดงข้อมูล
+                    foreach ($activities as $activity) {
+                        $register_datetime = $activity["register_datetime"];
+                        $post_image = $activity["post_image"];
+                        $post_name = $activity["post_name"];
+                        $post_date_start = $activity["post_date_start"];
+                        $post_date_end = $activity["post_date_end"];
+                        $registered_count = $activity["registered_count"];
+                        $post_max = $activity["post_max"];
+                        $post_about = $activity["post_about"];
+                        $register_status = $activity["register_status"];
+                        $post_id = $activity["post_id"];
 
-                <tbody>
-                    <tr>
-                        <td>1/1/2568 12:02:73</td>
-                        <td><img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" class="img-thumbnail" alt="กิจกรรม"></td>
-                        <td>C4C ค่ายมหาลัยสู่โรงเรียนในชุมชน</td>
-                        <td>1/2/2568 - 5/2/2568</td>
-                        <td>0/20</td>
-                        <td>
-                            <button class="btn btn-outline-primary btn-sm raduis" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
-                                รายละเอียดกิจกรรม
-                            </button>
-                        </td>
-                        <td class="">อนุมัติ</td>
-                        <td>
-                            <button class="btn btn-success btn-sm " data-bs-toggle="modal" data-bs-target="#Modal_submit_pic_1">ส่งรูปภาพ</button>
-                        </td>
-                    </tr>
-                </tbody>
+                        // สร้างปุ่มยกเลิกหรือส่งรูปภาพตามสถานะ
+                        $action_button = '';
+                        if ($register_status == 'pending') {
+                            $action_button = '<button class="btn btn-danger btn-sm">ยกเลิก</button>';
+                        } elseif ($register_status == 'approved') {
+                            $action_button = '<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#Modal_submit_pic_' . $post_id . '">ส่งรูปภาพ</button>';
+                        }
 
+                        echo "
+                        <tr>
+                            <td>$register_datetime</td>
+                            <td><img src='$post_image' class='img-thumbnail' alt='กิจกรรม'></td>
+                            <td>$post_name</td>
+                            <td>$post_date_start - $post_date_end</td>
+                            <td>$registered_count / $post_max</td>
+                            <td>
+                                <button class='btn btn-outline-primary btn-sm raduis' data-bs-toggle='modal' data-bs-target='#Modal_Activity_$post_id'>
+                                    รายละเอียดกิจกรรม
+                                </button>
+                            </td>
+                            <td>$register_status</td>
+                            <td>$action_button</td>
+                        </tr>
+                        ";
+                    }
+                    ?>
+                </tbody>
             </table>
-        </div> 
+        </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade text-font" id="Modal_Activity_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม<br><small class="text-muted small-text">วันที่ 25/2/68 19:25:40 น.</small></h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Modal สำหรับแสดงรายละเอียดกิจกรรม -->
+    <?php
+    foreach ($activities as $activity) {
+        $post_id = $activity["post_id"];
+        $post_name = $activity["post_name"];
+        $post_date_start = $activity["post_date_start"];
+        $post_date_end = $activity["post_date_end"];
+        $post_about = $activity["post_about"];
+        $post_max = $activity["post_max"];
+        $post_image = $activity["post_image"];
+        $register_datetime = $activity["register_datetime"];
+
+        echo "
+        <div class='modal fade text-font' id='Modal_Activity_$post_id' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
+            <div class='modal-dialog modal-dialog-scrollable modal-lg'>
+                <div class='modal-content'>
+                    <div class='modal-header'>
+                        <h5 class='modal-title' id='exampleModalLabel'>รายละเอียดกิจกรรม<br><small class='text-muted small-text'>วันที่ $register_datetime</small></h5>
+                        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                     </div>
-                    <div class="modal-body">
-                        <div class="row d-flex align-items-center mb-2">
-                            <div class="col-3  text-end">ผู้สร้าง : </div>
-                            <div class="col-9">
-                                <img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์">
-                                <p class="d-inline-block ms-2" style="margin-bottom: 0;">พัสพล สุธาธรรม</p>
-                            
+                    <div class='modal-body'>
+                        <div class='row d-flex align-items-center mb-3'>
+                            <div class='col-3 text-end'>กิจกรรม : </div>
+                            <div class='col-9'>
+                                <img src='$post_image' alt='กิจกรรม' style='width: 350px; height: 230px; object-fit: cover;'>
                             </div>
                         </div>
-
-                        <div class="row d-flex align-items-center mb-3">
-                            <div class="col-3 text-end">กิจกรรม : </div>
-                            <div class="col-9">
-                                <img src="https://htmlcolorcodes.com/assets/images/colors/cream-color-solid-background-1920x1080.png" alt="กิจกรรม" style="width: 350px; height: 230px; object-fit: cover;">
+                        <div class='row d-flex align-items-center mb-2'>
+                            <div class='col-3 text-end'></div>
+                            <div class='col-9'>
+                                <div><span class='bold_text_modal'>ชื่อกิจกรรม :</span> $post_name</div>
+                                <div><span class='bold_text_modal'>ช่วงเวลา :</span> $post_date_start - $post_date_end</div>
+                                <div><span class='bold_text_modal'>รายละเอียด :</span> $post_about</div>
+                                <div><span class='bold_text_modal'>จำนวนที่เปิดรับ :</span> $post_max</div>
                             </div>
                         </div>
-
-
-                        <div class="row d-flex align-items-center mb-2">
-                            <div class="col-3 text-end"></div>
-                            <div class="col-9">
-                                <div><span class="bold_text_modal">ชื่อกิจกรรม :</span> กิจกรรม c4c เข้าค่ายเพื่อโรงเรียนทางบ้าน</div>
-                                <div><span class="bold_text_modal">ช่วงเวลา :</span> 20/2/2568 - 22/2/2568 (3 วัน)</div>
-                                <div><span class="bold_text_modal">รายละเอียด :</span> มหาลัยมหาสารคามออกค่ายเพื่อช่วงเหลือโรงเรียนทางบ้าน ร่วมเป็นส่วนหนึ่งกับเรา ค่าเดินทาง 0 บาท</div>
-                                <div><span class="bold_text_modal">จำนวนที่เปิดรับ :</span> 20</div>
-                            </div>
-                        </div>
-
                     </div>
-                    <div class="success-pad">
-                        <button type="button" class="btn btn-success btn-md">เข้าร่วม</button></div>
+                    <div class='success-pad'>
+                        <button type='button' class='btn btn-success btn-md'>เข้าร่วม</button>
+                    </div>
                 </div>
             </div>
         </div>
+        ";
+    }
+    ?>
 
-    <!-- Modal_submit_picture -->
-    <div class="modal fade text-font" id="Modal_submit_pic_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม<br><small class="text-muted small-text">วันที่ 25/2/68 19:25:40 น.</small></h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Modal สำหรับอัปโหลดรูปภาพ -->
+    <?php
+    foreach ($activities as $activity) {
+        $post_id = $activity["post_id"];
+        $register_datetime = $activity["register_datetime"];
+
+        echo "
+        <div class='modal fade text-font' id='Modal_submit_pic_$post_id' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
+            <div class='modal-dialog modal-dialog-scrollable modal-lg'>
+                <div class='modal-content'>
+                    <div class='modal-header'>
+                        <h5 class='modal-title' id='exampleModalLabel'>รายละเอียดกิจกรรม<br><small class='text-muted small-text'>วันที่ $register_datetime</small></h5>
+                        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                     </div>
-                    <div class="modal-body d-flex justify-content-center">
-                    <label for="file-upload" class="custom-file-upload">
-                    <div class="image-upload-container ">
-                            <!-- แสดงรูปภาพเป็นสี่เหลี่ยม -->
-                            <div id="image-preview" class="image-preview " style="width: 550px; height: 280px;">
-                                <img id="preview-img" src="#" alt="Image Preview" style="display: none; object-fit: contain;">
-                                <button id="upload-btn" class="btn btn-outline-secondary btn-lg" onclick="document.getElementById('file-upload').click()">อัพโหลดรูปภาพ</button>                            </div>
-                            
-                            <div class="d-flex flex-column align-items-center">
-                                <!-- input สำหรับเลือกไฟล์ -->
-                                <input id="file-upload" type="file" accept="image/*" onchange="previewImage(event)" style="display: none;">
+                    <div class='modal-body d-flex justify-content-center'>
+                        <label for='file-upload-$post_id' class='custom-file-upload'>
+                            <div class='image-upload-container'>
+                                <div id='image-preview-$post_id' class='image-preview' style='width: 550px; height: 280px;'>
+                                    <img id='preview-img-$post_id' src='#' alt='Image Preview' style='display: none; object-fit: contain;'>
+                                    <button id='upload-btn-$post_id' class='btn btn-outline-secondary btn-lg' onclick=\"document.getElementById('file-upload-$post_id').click()\">อัพโหลดรูปภาพ</button>
+                                </div>
+                                <div class='d-flex flex-column align-items-center'>
+                                    <input id='file-upload-$post_id' type='file' accept='image/*' onchange=\"previewImage(event, '$post_id')\" style='display: none;'>
+                                </div>
                             </div>
-                        </div>
-
-                        <!-- show picture -->
-                        <script>
-                            function previewImage(event) {
-                                var reader = new FileReader();
-                                reader.onload = function() {
-                                    var output = document.getElementById('preview-img');
-                                    var uploadBtn = document.getElementById('upload-btn');
-
-                                    output.src = reader.result;
-                                    output.style.display = 'block';  // แสดงภาพเมื่อเลือกไฟล์
-                                    uploadBtn.style.display = 'none'; // ซ่อนปุ่มอัพโหลดหลังจากอัพโหลดไฟล์
-                                }
-                                reader.readAsDataURL(event.target.files[0]);
-                            }
-                        </script>
-
-
-
+                        </label>
                     </div>
-                    <div class="success-pad">
-                        <button type="button" class="btn btn-success" style="width: 100px; height: 50px">ส่งรูปภาพ</button></div>
+                    <div class='success-pad'>
+                        <button type='button' class='btn btn-success' style='width: 100px; height: 50px'>ส่งรูปภาพ</button>
+                    </div>
                 </div>
             </div>
         </div>
-    
+        ";
+    }
+    ?>
+
+    <!-- Script สำหรับแสดงรูปภาพที่อัปโหลด -->
+    <script>
+        function previewImage(event, postId) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('preview-img-' + postId);
+                var uploadBtn = document.getElementById('upload-btn-' + postId);
+
+                output.src = reader.result;
+                output.style.display = 'block';  // แสดงภาพเมื่อเลือกไฟล์
+                uploadBtn.style.display = 'none'; // ซ่อนปุ่มอัพโหลดหลังจากอัพโหลดไฟล์
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 </body>
 </html>
 
