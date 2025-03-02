@@ -408,7 +408,8 @@ if($method=="GET"){
             $pid = $_POST["pid"];
             $uid = $_POST["uid"];
             $aid = $_SESSION["login_token"];
-            // echo json_encode($data,JSON_UNESCAPED_UNICODE);
+            $data = getUserByIdPostAndIdUser($aid,$pid,$uid);
+            echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
             break;
                 break;

@@ -363,103 +363,19 @@
     </div>
     <div class="modal-passapol" id="Modal_user_data_1">
         <div class="content" style="width:50%;height:30%;">
-            <div class="header">
+            <div class="header mb-3">
                 <div>
-                    <label class="title-header">ข้อมูลเพิ่มเติม</label>:<label> <h5 class="">${name}</h5></label><br>
+                    <label class="title-header">คำขอเข้าร่วมกิจกรรม</label>:<br>
                 </div>
-                <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
+                <button class="close-btn" onClick="closePopUp()">&times;</button>
             </div>
-            <div class="body">
-                <div class="d-flex align-items-center">
-                    <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg" class="rounded-circle border me-4" width="150" height="150" alt="Profile Image">
-                    <div class="ms-5">
-                        <h2 class="mb-1"><strong>ชื่อ:</strong> ภานุมาศ ท่าสะอาด</h2>
-                        <p class="mb-0">
-                            <strong>อายุ : </strong>20
-                        </p>
-                        <p><strong>เพศ : </strong> ชาย</p>
-                    </div>
-                </div>
+            <div class="body text-center p-5">
+                <h5>ไม่พบข้อมูลของผู้ใช้</h5>
             </div>
-        </div>
-    </div>
-    <!-- Modal_submit_picture -->
-    <!-- <div class="modal fade text-font" id="Modal_submit_pic_1" tabindex="-1" aria-labelledby="Modal_submit_pic_1">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม<br><small class="text-muted small-text">วันที่ 25/2/68 19:25:40 น.</small></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body d-flex justify-content-center">
-                    <label for="file-upload" class="custom-file-upload">
-                        <div class="image-upload-container ">
-                            <div id="image-preview" class="image-preview " style="width: 550px; height: 280px;">
-                                <img id="preview-img" src="#" alt="Image Preview" style="display: none; object-fit: contain;">
-                                <button id="upload-btn" class="btn btn-outline-secondary btn-lg" onclick="document.getElementById('file-upload').click()">อัพโหลดรูปภาพ</button>
-                            </div>
-
-                            <div class="d-flex flex-column align-items-center">
-                                <input id="file-upload" type="file" accept="image/*" onchange="previewImage(event)" style="display: none;">
-                            </div>
-                        </div>
-                        <script>
-                            function previewImage(event) {
-                                var reader = new FileReader();
-                                reader.onload = function() {
-                                    var output = document.getElementById('preview-img');
-                                    var uploadBtn = document.getElementById('upload-btn');
-
-                                    output.src = reader.result;
-                                    output.style.display = 'block';
-                                    uploadBtn.style.display = 'none';
-                                }
-                                reader.readAsDataURL(event.target.files[0]);
-                            }
-                        </script>
-
-
-
-                </div>
-                <div class="success-pad">
-                    <button type="button" class="btn btn-success" style="width: 100px; height: 50px">ส่งรูปภาพ</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Modal Profile คนขอเข้าร่วม มันคือ modal2-->
-    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModal">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content p-4 position-relative">
-                <div class="text-start mb-3">
-                    <h5 class="fw-bold">ข้อมูลเพิ่มเติม :ภานุมาศ ท่าสะอาด</h5>
-                </div>
-                <button type="button" class="btn-close position-absolute end-0 top-0 m-3" data-bs-dismiss="modal"></button>
-                <div class="d-flex align-items-center">
-                    <img src="https://i.pinimg.com/736x/54/e5/58/54e558799bef9dd570f990d3079b85ef.jpg" class="rounded-circle border me-4" width="150" height="150" alt="Profile Image">
-                    <div class="ms-5">
-                        <h2 class="mb-1"><strong>ชื่อ:</strong> ภานุมาศ ท่าสะอาด</h2>
-                        <p class="mb-0">
-                            <strong>อายุ:</strong>20
-                        </p>
-                        <p><strong>เพศ:</strong> ชาย</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="myModal" class="modal-passapol">
-        <div class="modal-content">
-            <button class="close-btn" id="closeModalBtn">&times;</button>
-            <h2>ยินดีต้อนรับ!</h2>
-            <p>นี่คือตัวอย่าง Modal ที่สวยงาม</p>
         </div>
     </div>
     <script>
         var modal = [];
-        // console.log(modal[modal.length-1])
-        // console.log(modal.pop())
-        // console.log(modal.pop())
         function openPopUp(id){
             modal.push(document.getElementById(id));
             modal[modal.length-1].classList.add("show");
@@ -474,8 +390,6 @@
                 }
             }catch{}
         });
-    </script>
-    <script>
         async function getDetailPost(id){
             openPopUp("Modal_Activity_1");
             const myHeaders = new Headers();
@@ -608,7 +522,7 @@
                                 </div>
                                 <div class="col-2 justify-content-center align-items-center">
                                     <img src="/get/image?img=/user/${doc.image}" style="width: 50px; height: 50px; border-radius: 50%;" alt=".">
-                                    <buttom class="link-about-user-passpol" onClick="SelectDtailUser('${doc.aid}')">
+                                    <buttom class="link-about-user-passpol" onClick="SelectDtailUser('${pid}','${doc.aid}')">
                                         <img src="https://cdn-icons-png.flaticon.com/512/6388/6388049.png" alt=".">
                                         ข้อมูลเพิ่มเติม
                                     </buttom>
@@ -654,14 +568,14 @@
             req_activity_1.innerHTML = e;
         }
         // 
-        async function SelectDtailUser(id) {
+        async function SelectDtailUser(pid,uid) {
             openPopUp("Modal_user_data_1");
             const myHeaders = new Headers();
             myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
 
             const formdata = new FormData();
-            formdata.append("id_post", id);
-            formdata.append("page", 1);
+            formdata.append("pid", pid);
+            formdata.append("uid", uid);
 
             const requestOptions = {
                 method: "POST",
@@ -670,9 +584,9 @@
                 redirect: "follow"
             };
 
-            // let res = await fetch("http://localhost/api/get/userdetail", requestOptions);
-            // res = await res.json();
-            // setModal_user_data_1(res)
+            let res = await fetch("http://localhost/api/get/userdetail", requestOptions);
+            res = await res.json();
+            setModal_user_data_1(res)
         }function setModal_user_data_1(result){
             const Modal_user_data_1 = document.getElementById('Modal_user_data_1');
             if(result.status!=200){
@@ -689,24 +603,24 @@
                     </div>
                 </div>`
             }
-            const data = result.data;
+            const data = result.data[0];
             let e = '';
             e = `<div class="content" style="width:50%;height:30%;">
                     <div class="header">
                         <div>
-                            <label class="title-header">ข้อมูลเพิ่มเติม</label>:<label> <h5 class="">${data.name}</h5></label><br>
+                            <label class="title-header">ข้อมูลเพิ่มเติม</label>:<label> <h5>${data.fname} ${data.lname}</h5></label><br>
                         </div>
                         <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
                     </div>
                     <div class="body">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex justify-content-center align-items-center p-5">
                             <img src="/get/image?img=/user/${data.image}" class="rounded-circle border me-4" width="150" height="150" alt="Profile Image">
-                            <div class="ms-5">
-                                <h2 class="mb-1"><strong>ชื่อ:</strong> ${data.fname}</h2>
-                                <h2 class="mb-1"><strong>นามสกุล:</strong> ${data.lname}</h2>
-                                <h2 class="mb-1"><strong>วันเกิด:</strong> ${data.birthday}</h2>
-                                <h2 class="mb-1"><strong>อายุ:</strong> ${calculateAge(data.birthday)}</h2>
-                                <h2 class="mb-1"><strong>เพศ:</strong> ${data.gender}</h2>
+                            <div class="ms-5 text-start">
+                                <label><strong>ชื่อ:</strong> ${data.fname}</label><br>
+                                <label><strong>นามสกุล:</strong> ${data.lname}</label><br>
+                                <label><strong>วันเกิด:</strong> ${data.birthday}</label><br>
+                                <label><strong>อายุ:</strong> ${calculateAge(data.birthday)}</label><br>
+                                <label><strong>เพศ:</strong> ${data.gender}</label><br>
                             </div>
                         </div>
                     </div>

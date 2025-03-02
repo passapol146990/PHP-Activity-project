@@ -81,4 +81,24 @@
             return ["status" => 204, "message" => "No changes made."];
         }
     }
+    function getUserByIdPostAndIdUser($aid,$pid,$uid){
+        global $conn;
+        $sql = 'SELECT account.*
+                FROM account
+                JOIN register ON register.aid = account.aid
+                JOIN post ON post.p_id = register.pid
+                WHERE post.p_aid = ?
+                AND post.p_id = ?
+                AND account.aid = ?;
+        ';
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+        $stmt->bind_param('sss',$aid,$pid,$uid);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        $data = $stmt->get_result();
+        if($data->num_rows === 0){return ["status"=>201,"message"=>"ไม่พบข้อมูล"];}
+        $data = $data->fetch_all(MYSQLI_ASSOC);
+        return ["status"=>200,"message"=>"successfuly.","data"=>$data];
+
+    }
 ?>
