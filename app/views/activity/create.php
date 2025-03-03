@@ -66,12 +66,12 @@
                             </div>
                             <div class="mb-3">
                                 <label for="title" class="form-label">ชื่อกิจกรรม</label>
-                                <input type="text" class="form-control" id="title" name="title" required>
+                                <input type="text" class="form-control" id="title" name="title" required maxlength="500">
                             </div>
                             
                             <div class="mb-3">
                                 <label for="description" class="form-label">รายละเอียดกิจกรรม</label>
-                                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                                <textarea class="form-control" id="description" name="description" rows="4" required maxlength="20000"></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="max-count" class="form-label">จำนวนคนที่รับสมัคร</label>
@@ -85,11 +85,11 @@
                             </div>
                             <div class="mb-3">
                                 <label for="location" class="form-label">สถานที่จัดกิจกรรม</label>
-                                <input type="text" class="form-control" id="location" name="location" required>
+                                <input type="text" class="form-control" id="location" name="location" required maxlength="2000">
                             </div>
                             <div class="mb-3">
                                 <label for="location" class="form-label">สิ่งที่ผู้เข้าร่วมจะได้รับ</label>
-                                <input type="text" class="form-control" id="p_give" name="p_give" required>
+                                <input type="text" class="form-control" id="p_give" name="p_give" required maxlength="20000">
                             </div>
                             
                             <div class="mt-4">

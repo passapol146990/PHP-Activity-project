@@ -200,8 +200,16 @@
     <div class="nav-links">
         <a href="/" class="nav-item">หน้าแรก</a>
         <a href="/activity/create" class="nav-item">สร้างกิจกรรม</a>
-        <a href="/activity/create/show" class="nav-item">กิจกรรมที่สร้าง<span class="notification-badge"><?= htmlspecialchars($total_registers) ?></span></a>
-        <a href="/activity/register/show" class="nav-item">กิจกรรมที่เข้าร่วม<span class="notification-badge"><?= htmlspecialchars($waitReg) ?></span></a>
+        <a href="/activity/create/show" class="nav-item">กิจกรรมที่สร้าง
+            <? if(isset($total_registers)&&$total_registers>0) { ?>
+                <span class="notification-badge"><?= htmlspecialchars($total_registers) ?></span>
+            <? } ?>
+        </a>
+        <a href="/activity/register/show" class="nav-item">กิจกรรมที่เข้าร่วม
+            <? if(isset($waitReg)&&$waitReg>0) { ?>
+                <span class="notification-badge"><?= htmlspecialchars($waitReg) ?></span>
+            <? } ?>
+        </a>
     </div>
     <form action="<?= htmlspecialchars($path) ?>" method="get" class="search-container">
         <div class="search-box">
