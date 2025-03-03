@@ -89,32 +89,37 @@ function upadteResgister($pid,$aid,$uid,$status){
 function getRegisteredActivities($aid,$limit,$page) {
     global $conn;
     $sql = "
-        SELECT 
-            r.datetime AS register_datetime,
-            r.status AS register_status,
-            p.p_id AS post_id,
-            p.p_name AS post_name,
-            p.p_date_start AS post_date_start,
-            p.p_date_end AS post_date_end,
-            p.p_max AS post_max,
-            p.p_about AS post_about,
-            p.p_give AS post_give,
-            p.p_datetime AS post_datetime,
-            i.image AS post_image, 
-            a.fname AS creator_fname,
-            a.lname AS creator_lname,
-            a.image AS creator_image,
-            (SELECT COUNT(*) FROM register WHERE pid = p.p_id AND status = 'อนุมัติการเข้าร่วม') AS approved_registers
-        FROM 
-            register r
-        JOIN 
-            post p ON r.pid = p.p_id
-        LEFT JOIN 
-            image i ON p.p_id = i.pid
-        LEFT JOIN 
-            account a ON p.p_aid = a.aid
-        WHERE 
-            r.aid = ?
+        SELECT  
+            register.id AS register_id,
+            register.datetime AS register_datetime,
+            register.status AS register_status,
+            post.p_id AS post_id,
+            post.p_name AS post_name,
+            post.p_date_start AS post_date_start,
+            post.p_date_end AS post_date_end,
+            post.p_max AS post_max,
+            post.p_about AS post_about,
+            post.p_give AS post_give,
+            post.p_datetime AS post_datetime,
+            (
+                SELECT image 
+                FROM image 
+                WHERE image.pid = post.p_id 
+                LIMIT 1
+            ) AS post_image, 
+            account.fname AS creator_fname,
+            account.lname AS creator_lname,
+            account.image AS creator_image,
+            (
+                SELECT COUNT(*) 
+                FROM register 
+                WHERE register.pid = post.p_id AND register.status = 'อนุมัติ'
+            ) AS approved_registers
+        FROM register
+        JOIN post ON register.pid = post.p_id
+        JOIN account ON post.p_aid = account.aid
+        WHERE register.aid = ?;
+
     ";
     $stmt = $conn->prepare($sql);
     if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
@@ -125,27 +130,11 @@ function getRegisteredActivities($aid,$limit,$page) {
     $data = $result->fetch_all(MYSQLI_ASSOC);
     return ["status"=>200,"message"=>"successfully.","data"=>$data];
 }
-function cancelRegistration($register_id) {
+function DeleteRegister($rid,$pid,$aid) {
     global $conn;
-
-    if (!$conn) {
-        return ["status" => 500, "message" => "Database connection error"];
-    }
-
-    $stmt = $conn->prepare("DELETE FROM register WHERE id = ?");
-    if (!$stmt) {
-        return ["status" => 500, "message" => "Prepare statement error"];
-    }
-
-    $stmt->bind_param("i", $register_id);
-    if (!$stmt->execute()) {
-        return ["status" => 500, "message" => "Execute statement error"];
-    }
-
-    if ($stmt->affected_rows > 0) {
-        return ["status" => 200, "message" => "ยกเลิกการสมัครสำเร็จ"];
-    } else {
-        return ["status" => 404, "message" => "ไม่พบข้อมูลการสมัคร"];
-    }
+    $stmt = $conn->prepare("DELETE FROM register WHERE id = ? AND pid = ? AND aid = ?;");
+    $stmt->bind_param("iss", $rid,$pid,$aid);
+    $stmt->execute();
+    return ["status" => 200, "message" => "ยกเลิกคำขอเข้าร่วมสำเร็จ"];
 }
 ?>

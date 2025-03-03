@@ -296,3 +296,23 @@ async function setStatusRegisterUser(pid,uid,status) {
         setReq_activity_1(respose,pid)
     }
 }   
+
+async function DeletePost(pid,title) {
+    const conf = await Swal.fire({
+        title: "ชี้แจง?",
+        text: `คุณต้องการลบกิจกรรม ${title} ใช่หรือไม่กดตกลงเพื่อลบกิจกรรม`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#cc0f0f",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          return true
+        }
+        return false
+    });
+    if(conf){
+        window.location.href = `/activity/delete?pid=${pid}`
+    }
+}  

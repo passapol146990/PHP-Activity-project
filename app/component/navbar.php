@@ -168,7 +168,7 @@
             showConfirmButton: false,
             timer: 1500
         }).then((result) => {
-            window.location.href = "/activity/create/show"
+            window.location.href = "<?= htmlspecialchars($path) ?>"
         });
     </script>
 <?php } ?>

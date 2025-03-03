@@ -333,7 +333,7 @@
                         <td>
                             <a href="/activity/edit?pid=<?= htmlspecialchars($doc["p_id"]) ?>" class="btn btn-primary bt_pri btn-sm">แก้ไข</a>
                             <div class="mb-3"></div>
-                            <a href="/activity/delete?pid=<?= htmlspecialchars($doc["p_id"]) ?>" class="btn btn-danger bt_pri btn-sm">ลบ</a>
+                            <button onClick="DeletePost('<?= htmlspecialchars($doc["p_id"]) ?>','<?= htmlspecialchars($doc["p_name"]) ?>')" class="btn btn-danger bt_pri btn-sm">ลบ</button>
                         </td>
                     </tr>
                 <? } ?>

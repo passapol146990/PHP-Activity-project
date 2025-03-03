@@ -140,12 +140,29 @@ if($method=="GET"){
             isLogin();
             $login_token = $_SESSION["login_token"];
             $page = $_GET['page'] ?? 1;
-            $myactivities = getRegisteredActivities($login_token,10,$page);
             $total_registers = getCountWaitRegister($login_token);
             $waitReg = getWaitRegister($login_token);
+            $myactivities = getRegisteredActivities($login_token,10,$page);
             require_once('../app/views/register/show.php');
             exit();
             break;
+        case '/register/cancel':
+            isLogin();
+            if (!isset($_GET["rid"]) || empty($_GET["rid"])) {
+                echo json_encode(["status" => 400, "message" => "Register ID is required"], JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            if (!isset($_GET["pid"]) || empty($_GET["pid"])) {
+                echo json_encode(["status" => 400, "message" => "Post ID is required"], JSON_UNESCAPED_UNICODE);
+                exit();
+            }
+            $rid = $_GET["rid"];
+            $pid = $_GET["pid"];
+            $login_token = $_SESSION["login_token"];
+            $result = DeleteRegister($rid,$pid,$login_token);
+            header("location:/activity/register/show?status=success&message=ยกเลิกคำขอเข้าร่วมสำเร็จ");
+            exit();
+            break; 
         case '/activity/edit':
             isLogin();
             if (!isset($_GET["pid"]) || empty($_GET["pid"])) {
@@ -489,18 +506,7 @@ if($method=="GET"){
             $data = getUserByIdPostAndIdUser($aid,$pid,$uid);
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
-            break;
-        case '/api/cancel/register':
-            isLogin();
-            if (!isset($_POST["register_id"]) || empty($_POST["register_id"])) {
-                echo json_encode(["status" => 400, "message" => "Register ID is required"], JSON_UNESCAPED_UNICODE);
-                exit();
-            }
-            $register_id = $_POST["register_id"];
-            $result = cancelRegistration($register_id);
-            echo json_encode($result, JSON_UNESCAPED_UNICODE);
-            exit();
-            break;                
+            break;               
         default:
             header("Location:/");
             break;
