@@ -323,8 +323,8 @@ if($method=="GET"){
                                 if ($image) {
                                     $width = imagesx($image);
                                     $height = imagesy($image);
-                                    $newWidth = intval($width * 0.7);
-                                    $newHeight = intval($height * 0.7);
+                                    $newWidth = intval($width * 0.5);
+                                    $newHeight = intval($height * 0.5);
                                     $newImage = imagecreatetruecolor($newWidth, $newHeight);
                                     imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
                                     $destination = '../image/post/' . $name;
