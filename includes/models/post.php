@@ -184,11 +184,10 @@
         $stmt->execute();
         $result = $stmt->get_result();
         if($result->num_rows === 0){
-            return false;
+            return true;
         }
         $data = $result->fetch_all(MYSQLI_ASSOC);
-        print_r($data);
-        if($data[0]["total_registers"]>$data[0]["p_max"]){
+        if($data[0]["total_registers"]>=$data[0]["p_max"]){
             return false;
         }
         return true;

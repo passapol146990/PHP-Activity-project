@@ -21,7 +21,7 @@ function registerUser($pid, $aid) {
         return ["status" => 400, "message" => "คุณสมัครกิจกรรมนี้แล้ว"];
     }
     $count = getCounApproveRegister($pid);
-    if($count){
+    if(!$count){
         return ["status" => 400, "message" => "กิจกรรมนี้คนสมัครเต็มแล้ว"];
     }
     $stmt = $conn->prepare("INSERT INTO register (pid, aid, status) VALUES (?, ?, ?)");
