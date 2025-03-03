@@ -93,8 +93,8 @@
                                 <input type="text" class="form-control" id="p_give" name="p_give" required maxlength="20000">
                             </div>
                             
-                            <div class="mt-4">
-                                <button type="submit" class="btn btn-primary">บันทึกกิจกรรม</button>
+                            <div class="mt-4" id="s">
+                                <button type="submit" class="btn btn-primary" onClick="s(event)">บันทึกกิจกรรม</button>
                             </div>
                         </form>
                     </div>
@@ -104,6 +104,19 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        function s(event) {
+            event.preventDefault();
+            const form = document.querySelector("form");
+            if (!form.checkValidity()) {
+                alert("กรุณากรอกข้อมูลให้ครบถ้วนก่อนสร้างกิจกรรม!");
+                return;
+            }
+            const btn = event.target;
+            btn.disabled = true;
+            btn.innerHTML = "กำลังสร้างกิจกรรม...";
+            form.submit();
+        }
+
         document.getElementById('image-upload').addEventListener('change', function(event) {
             const preview = document.getElementById('image-preview');
             preview.innerHTML = '';

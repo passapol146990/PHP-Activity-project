@@ -51,7 +51,7 @@
                     <option style="display:none;"><?= htmlspecialchars($account["gender"]??"กรุณาใส่เพศ") ?></option>
                     <option>ชาย</option>
                     <option>หญิง</option>
-                    <option>อื่นๆ</option>
+                    <option>ไม่ระบุเพศ</option>
                 </select>
             </div>
             <div class="mb-1 text-start">

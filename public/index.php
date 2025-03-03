@@ -10,4 +10,5 @@ $google_redirect_uri = "https://caiman-steady-flounder.ngrok-free.app/auth/googl
 
 
 require_once '../includes/router.php';
+// print("แก้แปป");
 ?>

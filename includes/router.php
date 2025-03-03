@@ -403,19 +403,31 @@ if($method=="GET"){
                     header("Location:/logout");
                     exit();
                 }
-            } else {
+            }else{
                 header('Location:/logout');
+                exit();
+            };
+            if(!isset($_POST['fname'])||empty($_POST['fname'])){
+                header("Location:/");
+                exit();
+            }
+            if(!isset($_POST['lname'])||empty($_POST['lname'])){
+                header("Location:/");
+                exit();
+            }
+            if(!isset($_POST['birthday'])||empty($_POST['birthday'])){
+                header("Location:/");
+                exit();
+            }
+            if(!isset($_POST['gender'])||empty($_POST['gender'])){
+                header("Location:/");
                 exit();
             }
             $id = $_SESSION["login_token"];
-            $fname = $_POST["fname"]?? "";
-            $lname = $_POST["lname"]?? "";
-            $birthday = $_POST["birthday"]?? "";
-            $gender= $_POST["gender"]?? "";
-            if(empty($fname)||empty($lname)||empty($birthday)||empty($gender)){
-                header("Location:/form/user/data?message=กรุณากรอกข้อมูลให้ครบ");
-                exit();
-            }
+            $fname = $_POST["fname"];
+            $lname = $_POST["lname"];
+            $birthday = $_POST["birthday"];
+            $gender= $_POST["gender"]??"ไม่ระบเพศ";
             setName($fname,$lname,$id);
             setBirthday($birthday,$id);
             setGender($gender,$id);

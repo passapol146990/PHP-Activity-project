@@ -195,7 +195,8 @@
     };
     function createPost($p_id,$p_aid,$p_name,$p_about,$p_max,$p_address,$p_date_start,$p_date_end,$p_give){
         global $conn;
-        if($p_max<0){
+        $p_max = intval($p_max);
+        if($p_max<=0){
             $p_max = 1;
         }
         $sql = 'INSERT INTO post(p_id,p_aid,p_name,p_about,p_max,p_address,p_date_start,p_date_end,p_give) VALUES(?,?,?,?,?,?,?,?,?)';
@@ -218,7 +219,8 @@
     };
     function updatePost($p_id, $p_aid, $p_name, $p_about, $p_max, $p_address, $p_date_start, $p_date_end, $p_give) {
         global $conn;
-        if($p_max<0){
+        $p_max = intval($p_max);
+        if($p_max<=0){
             $p_max = 1;
         }
         $sql = 'UPDATE post 
