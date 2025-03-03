@@ -184,10 +184,10 @@
         $stmt->bind_param("s", $pid);
         $stmt->execute();
         $result = $stmt->get_result();
+        $data = $result->fetch_all(MYSQLI_ASSOC);
         if($result->num_rows === 0){
             return true;
         }
-        $data = $result->fetch_all(MYSQLI_ASSOC);
         if($data[0]["total_registers"]>=$data[0]["p_max"]){
             return false;
         }
@@ -195,6 +195,9 @@
     };
     function createPost($p_id,$p_aid,$p_name,$p_about,$p_max,$p_address,$p_date_start,$p_date_end,$p_give){
         global $conn;
+        if($p_max<0){
+            $p_max = 1;
+        }
         $sql = 'INSERT INTO post(p_id,p_aid,p_name,p_about,p_max,p_address,p_date_start,p_date_end,p_give) VALUES(?,?,?,?,?,?,?,?,?)';
         $stmt = $conn->prepare($sql);
         if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
@@ -215,6 +218,9 @@
     };
     function updatePost($p_id, $p_aid, $p_name, $p_about, $p_max, $p_address, $p_date_start, $p_date_end, $p_give) {
         global $conn;
+        if($p_max<0){
+            $p_max = 1;
+        }
         $sql = 'UPDATE post 
                 SET p_name = ?, p_about = ?, p_max = ?, p_address = ?, p_date_start = ?, p_date_end = ?, p_give = ? 
                 WHERE p_id = ? AND p_aid = ?';

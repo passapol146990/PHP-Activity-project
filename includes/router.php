@@ -324,7 +324,7 @@ if($method=="GET"){
                                     if ($fileExt === 'png') {
                                         imagepng($newImage, $destination);
                                     } else {
-                                        imagejpeg($newImage, $destination, 60);
+                                        imagejpeg($newImage, $destination, 50);
                                     }
                                     $uploadedFiles[] = [
                                         'image' => $name,
