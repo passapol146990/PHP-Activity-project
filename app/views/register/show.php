@@ -11,7 +11,7 @@
     <title>กิจกรรมที่เข้าร่วม</title>
 
     <style>
-       .text-font {
+        .text-font {
             font-family: 'Mitr';
             font-size: 18px;
             font-weight: 400;
@@ -183,6 +183,7 @@
             font-weight: 200px;
 
         }
+
         .modal {
             z-index: 1050 !important;
         }
@@ -190,6 +191,7 @@
         #profileModal {
             z-index: 1060 !important;
         }
+
         .modal-passapol {
             z-index: 111;
             display: none;
@@ -202,18 +204,20 @@
             justify-content: center;
             align-items: center;
             transition: opacity 0.3s ease;
+
             .content {
                 background: white;
                 padding: 5px 20px;
                 border-radius: 10px;
                 max-width: 90%;
                 min-width: 30%;
-                max-height:90%;
+                max-height: 90%;
                 overflow: hidden;
                 text-align: center;
                 box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
                 transform: translateY(-20px);
                 transition: transform 0.3s ease;
+
                 .close-btn {
                     background: none;
                     border: none;
@@ -223,27 +227,33 @@
                     position: absolute;
                     top: 15px;
                     right: 15px;
+
                     &:hover {
                         color: #000;
                     }
                 }
-                .header{
+
+                .header {
                     display: flex;
                     justify-items: center;
                     justify-content: space-between;
                     text-align: start;
-                    .title-header{
+
+                    .title-header {
                         font-size: 30px;
                     }
                 }
-                .body{
-
-                }
             }
         }
+
+        .modal-backdrop {
+            display: none !important;
+        }
+
         .show {
             display: flex;
             opacity: 1;
+
             .modal-content {
                 transform: translateY(0);
             }
@@ -270,22 +280,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                <? foreach($myactivities["data"] as $key => $doc){ ?>
-                    <tr>
-                        <td><?= htmlspecialchars($doc["register_datetime"]) ?></td>
-                        <td><img src='/get/image?img=/post/<?= htmlspecialchars($doc['post_image']) ?>' class='img-thumbnail' alt='กิจกรรม' style='width: 200px; height: auto;'></td>
-                        <td id="title:<?= htmlspecialchars($doc["post_id"]) ?>"><?= htmlspecialchars($doc['post_name']??"") ?></td>
-                        <td style="font-size:14px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['post_date_start']) ?> - <?= htmlspecialchars($doc['post_date_end']) ?></td>
-                        <td id="numberpeople:<?= htmlspecialchars($doc["post_id"]) ?>"><?= htmlspecialchars($doc['approved_registers']."/".$doc["post_max"]) ?></td>
-                        <td>
-                            <button class='btn btn-outline-primary btn-sm raduis' onClick="getDetailPost('<?= htmlspecialchars($doc["post_id"]) ?>')">
-                                รายละเอียดกิจกรรม
-                            </button>
-                        </td>
-                        <td><?= htmlspecialchars($doc["register_status"]) ?></td>
-                        <td>$action_button</td>
-                    </tr>
-                <? } ?>
+                    <? foreach ($myactivities["data"] as $key => $doc) { ?>
+                        <tr>
+                            <td><?= htmlspecialchars($doc["register_datetime"]) ?></td>
+                            <td><img src='/get/image?img=/post/<?= htmlspecialchars($doc['post_image']) ?>' class='img-thumbnail' alt='กิจกรรม' style='width: 200px; height: auto;'></td>
+                            <td id="title:<?= htmlspecialchars($doc["post_id"]) ?>"><?= htmlspecialchars($doc['post_name'] ?? "") ?></td>
+                            <td style="font-size:14px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['post_date_start']) ?> - <?= htmlspecialchars($doc['post_date_end']) ?></td>
+                            <td id="numberpeople:<?= htmlspecialchars($doc["post_id"]) ?>"><?= htmlspecialchars($doc['approved_registers'] . "/" . $doc["post_max"]) ?></td>
+                            <td>
+                                <button class='btn btn-outline-primary btn-sm raduis' onClick="getDetailPost('<?= htmlspecialchars($doc["post_id"]) ?>')">
+                                    รายละเอียดกิจกรรม
+                                </button>
+                            </td>
+                            <td data-status="<?= htmlspecialchars($doc["register_status"]) ?>" data-post-id="<?= htmlspecialchars($doc["post_id"]) ?>">
+                                <?= htmlspecialchars($doc["register_status"]) ?>
+                            </td>
+                            <td><?= getActionButton($doc["register_status"], $doc["post_id"]) ?></td>
+                        </tr>
+                    <? } ?>
                 </tbody>
             </table>
         </div>
@@ -304,23 +316,68 @@
             </div>
         </div>
     </div>
+    <!-- Modal_submit_picture -->
+    <div class="modal fade text-font" id="Modal_submit_pic_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม<br><small class="text-muted small-text">วันที่ 25/2/68 19:25:40 น.</small></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center">
+                    <label for="file-upload" class="custom-file-upload">
+                        <div class="image-upload-container ">
+
+                            <div id="image-preview" class="image-preview " style="width: 550px; height: 280px;">
+                                <img id="preview-img" src="#" alt="Image Preview" style="display: none; object-fit: contain;">
+                                <button id="upload-btn" class="btn btn-outline-secondary btn-lg" onclick="document.getElementById('file-upload').click()">อัพโหลดรูปภาพ</button>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center">
+                                <input id="file-upload" type="file" accept="image/*" onchange="previewImage(event)" style="display: none;">
+                            </div>
+                        </div>
+
+                        <script>
+                            function previewImage(event) {
+                                var reader = new FileReader();
+                                reader.onload = function() {
+                                    var output = document.getElementById('preview-img');
+                                    var uploadBtn = document.getElementById('upload-btn');
+
+                                    output.src = reader.result;
+                                    output.style.display = 'block';
+                                    uploadBtn.style.display = 'none';
+                                }
+                                reader.readAsDataURL(event.target.files[0]);
+                            }
+                        </script>
+                </div>
+                <div class="success-pad">
+                    <button type="button" class="btn btn-success" style="width: 100px; height: 50px">ส่งรูปภาพ</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         var modal = [];
-        function openPopUp(id){
+
+        function openPopUp(id) {
             modal.push(document.getElementById(id));
-            modal[modal.length-1].classList.add("show");
+            modal[modal.length - 1].classList.add("show");
         }
-        function closePopUp(){
+
+        function closePopUp() {
             modal.pop().classList.remove("show");
         }
         window.addEventListener("click", (e) => {
-            try{
-                if (e.target === modal[modal.length-1]) {
+            try {
+                if (e.target === modal[modal.length - 1]) {
                     modal.pop().classList.remove("show");
                 }
-            }catch{}
+            } catch {}
         });
-        async function getDetailPost(id){
+        async function getDetailPost(id) {
             openPopUp("Modal_Activity_1");
             const myHeaders = new Headers();
             myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
@@ -329,24 +386,26 @@
             formdata.append("id_post", id);
 
             const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: formdata,
-            redirect: "follow"
+                method: "POST",
+                headers: myHeaders,
+                body: formdata,
+                redirect: "follow"
             };
             let res = await fetch("/api/get/post", requestOptions);
             res = await res.json();
             setModal_Activity_1(res)
-        }function setModal_Activity_1(result) {
-            if(result.status!=200){
-                return 
+        }
+
+        function setModal_Activity_1(result) {
+            if (result.status != 200) {
+                return
             }
             const data = result.data;
             const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
-            const create_date = data.post_create; //วันที่ 25/2/68 19:25:40 น
-            const activity_date = data.post_start+" - "+data.post_end;//20/2/2568 - 22/2/2568 (3 วัน) 
+            const create_date = data.post_create;
+            const activity_date = data.post_start + " - " + data.post_end; 
             let images = ""
-            for(let i = 0;i<data.images.length;i++){
+            for (let i = 0; i < data.images.length; i++) {
                 images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`
             }
             let e = ""
@@ -387,6 +446,42 @@
                 </div>`
             Modal_Activity_1.innerHTML = e;
         }
+
+        <?php
+        function getActionButton($status, $postId)
+        {
+            switch ($status) {
+                case "อนุมัติเข้าร่วม":
+                    return "<span class='text-success'>$status</span>
+                     <button class='btn btn-outline-primary btn-sm'data-bs-toggle='modal'data-bs-target='#Modal_submit_pic_1'>ส่งรูป</button>
+                    <button class='btn btn-outline-danger btn-sm' onClick='cancelParticipation(\"$postId\")'>ยกเลิก</button>";
+                case "รอการตรวจสอบ":
+                    return "<span class='text-warning'>$status</span>
+                    <button class='btn btn-outline-danger btn-sm' onClick='cancelParticipation(\"$postId\")'>ยกเลิก</button>";
+                case "ถูกปฏิเสธเข้าร่วม":
+                    return "<span class='text-danger'>$status</span>";
+                case "รูปภาพไม่ถูกต้อง":
+                    return "<span class='text-danger'>$status</span>
+                    <button class='btn btn-outline-primary btn-sm'data-bs-toggle='modal'data-bs-target='#Modal_submit_pic_1'>ส่งรูป</button>
+                    <button class='btn btn-outline-danger btn-sm' onClick='cancelParticipation(\"$postId\")'>ยกเลิก</button>";
+                case "รอตรวจสอบรูปภาพ":
+                    return "<span class='text-warning'>$status</span>";
+                case "เสร็จสิ้น":
+                    return "<span class='text-success'>$status</span>";
+                default:
+                    return "<span class='text-secondary'>$status</span>";
+            }
+        }
+        ?>
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll("td[data-status]").forEach(td => {
+                const postId = td.getAttribute("data-post-id");
+                const status = td.getAttribute("data-status");
+                td.innerHTML = getActionButton(status, postId);
+            });
+        });
     </script>
 </body>
+
 </html>
