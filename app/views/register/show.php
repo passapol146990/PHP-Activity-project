@@ -307,7 +307,7 @@
                                         $text = "<span class='text-success'>".htmlspecialchars($doc["register_status"])."</span>";
                                         break;
                                     case 'ปฏิเสธ':
-                                        $text = "<span class='text-gander'>".htmlspecialchars($doc["register_status"])."</span>";
+                                        $text = "<span class='text-danger'>".htmlspecialchars($doc["register_status"])."</span>";
                                         break;
                                     default:
                                         $text = "<span class='text-dark'>".htmlspecialchars($doc["register_status"])."</span>";

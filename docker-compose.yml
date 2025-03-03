@@ -1,30 +1,34 @@
 services:
   app:
     build: .
+    environment:
+      - PHP_UPLOAD_MAX_FILESIZE=10M
+      - PHP_POST_MAX_SIZE=20M
+      - PHP_MAX_FILE_UPLOADS=10
     ports:
       - "80:80"
     volumes:
       - .:/var/www/html
     container_name: php-activity-project
-  mysql-db-activity:
-    image: mysql
-    container_name: mysql-db-activity
-    environment:
-      MYSQL_ROOT_PASSWORD: OSssA45!sd@
-      MYSQL_DATABASE: db
-      MYSQL_USER: admin-dev
-      MYSQL_PASSWORD: COS@-56ac
-    ports:
-      - "3306:3306"
-  phpmyadmin-activity:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin-activity
-    links:
-      - mysql-db-activity
-    ports:
-      - "3030:80"
-    environment:
-      PMA_HOST: mysql-db-activity
-      MYSQL_ROOT_PASSWORD: OSssA45!sd@
+  # mysql-db-activity:
+  #   image: mysql
+  #   container_name: mysql-db-activity
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: OSssA45!sd@
+  #     MYSQL_DATABASE: db
+  #     MYSQL_USER: admin-dev
+  #     MYSQL_PASSWORD: COS@-56ac
+  #   ports:
+  #     - "3306:3306"
+  # phpmyadmin-activity:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: phpmyadmin-activity
+  #   links:
+  #     - mysql-db-activity
+  #   ports:
+  #     - "3030:80"
+  #   environment:
+  #     PMA_HOST: mysql-db-activity
+  #     MYSQL_ROOT_PASSWORD: OSssA45!sd@
 
 

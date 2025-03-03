@@ -47,6 +47,10 @@ function resizeImage($source, $destination, $width, $height) {
 
 if($method=="GET"){
     switch ($path) {
+        case '/x':
+            $count = getCounApproveRegister("5b34e15451b4ee2e4276935d930bcf7b39f934063964d1a11d9528c8d26d282b");
+            print($count);
+            break;
         case '/auth/google/callback':
             $code = $_GET['code'] ?? null;
             if (!$code) {
@@ -223,111 +227,130 @@ if($method=="GET"){
             break;
         case '/get/image':
             $img = $_GET['img'] ?? '';
-            $file = '../image/'.$img;
+            $file = "../image/$img";
+
             if (file_exists($file)) {
                 header('Content-Type: image/png');
-                readfile($file);
+                header('Cache-Control: max-age=86400, public');
+                header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 86400) . ' GMT');
+                header('Content-Length: ' . filesize($file));
+                $fp = fopen($file, 'rb');
+                fpassthru($fp);
+                fclose($fp);
             } else {
                 http_response_code(404);
                 echo "ไม่พบรูปภาพ";
             }
-            break;
         default:
             header("Location:/");
             break;
     }
 }else if($method=="POST"){
     switch ($path) {
-        case '/login':
-            if(isset($_SESSION["login"])){
-                header("Location:/");
-                exit();
-            }
-            if(!isset($_POST["username"])||empty($_POST["username"])){
-                header("Location:/login?message=กรุณาใส่ username.");
-                exit();
-            }
-            if(!isset($_POST["password"])||empty($_POST["password"])){
-                header("Location:/login?message=กรุณาใส่ password.");
-                exit();
-            }
-            // $login = login($_POST["username"],$_POST["password"]);
-            if($login["status"]!=200){
-                header("Location:/login?message=".$login["message"]);
-                exit();
-            }else{
-                header("Location:/");
-                exit();
-            }
-            break;
         case '/activity/create':
             isLogin();
-            if(!isset($_POST["title"])||empty($_POST["title"])){
-                header("Location:/activity/create?message=กรุณาใส่ชื่อกิจกรรม.");
+            if (!isset($_POST["title"]) || empty($_POST["title"])) {
+                header("Location:/activity/create?status=warning&message=กรุณาใส่ชื่อกิจกรรม.");
                 exit();
             }
-            if(!isset($_POST["description"])||empty($_POST["description"])){
-                header("Location:/activity/create?message=กรุณาใส่รายละเอียดกิจกรรม.");
+            if (!isset($_POST["description"]) || empty($_POST["description"])) {
+                header("Location:/activity/create?status=warning&message=กรุณาใส่รายละเอียดกิจกรรม.");
                 exit();
             }
-            if(!isset($_POST["max_count"])||empty($_POST["max_count"])){
-                header("Location:/activity/create?message=กรุณาใส่จำนวนคนที่รับ.");
+            if (!isset($_POST["max_count"]) || empty($_POST["max_count"])) {
+                header("Location:/activity/create?status=warning&message=กรุณาใส่จำนวนคนที่รับ.");
                 exit();
             }
-            if(!isset($_POST["start_date"])||empty($_POST["start_date"])){
-                header("Location:/activity/create?message=กรุณาใส่วันที่เริ่มกิจกรรม.");
+            if ($_POST["max_count"]>1000) {
+                header("Location:/activity/create?status=warning&message=กรุณาใส่จำนวนคนไม่เกิน 1000.");
                 exit();
             }
-            if(!isset($_POST["end_date"])||empty($_POST["end_date"])){
-                header("Location:/activity/create?message=กรุณาใส่วันที่สิ้นสุดกิจกรรม.");
+            if (!isset($_POST["start_date"]) || empty($_POST["start_date"])) {
+                header("Location:/activity/create?status=warning&message=กรุณาใส่วันที่เริ่มกิจกรรม.");
                 exit();
             }
-            if(!isset($_POST["location"])||empty($_POST["location"])){
-                header("Location:/activity/create?message=กรุณาใส่สถานที่จัดกิจกรรม.");
+            if (!isset($_POST["end_date"]) || empty($_POST["end_date"])) {
+                header("Location:/activity/create?status=warning&message=กรุณาใส่วันที่สิ้นสุดกิจกรรม.");
                 exit();
             }
-            if(!isset($_POST["p_give"])||empty($_POST["p_give"])){
-                header("Location:/activity/edit?message=กรุณาใส่สถานที่จัดกิจกรรม.");
+            if (!isset($_POST["location"]) || empty($_POST["location"])) {
+                header("Location:/activity/create?status=warning&message=กรุณาใส่สถานที่จัดกิจกรรม.");
                 exit();
             }
-            if(!isset($_FILES['images'])||empty($_POST["location"])){
-                header("Location:/activity/create?message=กรุณาใส่รูปภาพ.");
+            if (!isset($_POST["p_give"]) || empty($_POST["p_give"])) {
+                header("Location:/activity/create?status=warning&message=กรุณาใส่ของรางวัล.");
                 exit();
             }
-            $aid = $_SESSION["login_token"];
-            $title = $_POST["title"];
-            $pid =  hash('sha256',$aid.uniqid().$title); 
-            $description = $_POST["description"];
-            $max_count = $_POST["max_count"];
-            $start_date = $_POST["start_date"];
-            $end_date = $_POST["end_date"];
-            $location = $_POST["location"];
-            $p_give = $_POST["p_give"] ?? "";
-            $uploadedFiles = []; //image,path
-            createPost($pid,$aid,$title,$description,$max_count,$location,$start_date,$end_date,$p_give);
-            foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
-                if ($_FILES['images']['error'][$key] === 0) {
-                    $name = date('Ymd').$_SESSION["login_token"].'_'.uniqid().'.png';
-                    $fileName = $_FILES['images']['name'][$key];
-                    $fileSize = $_FILES['images']['size'][$key];
-                    $fileTmp = $_FILES['images']['tmp_name'][$key];
-                    $fileType = $_FILES['images']['type'][$key];
-                    $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-                    $allowedExtensions = ['jpg', 'png'];
-                    if (in_array($fileExt, $allowedExtensions)) {
-                        if ($fileSize < 5000000) {
-                            $destination = '../image/post/'.$name;
-                            if (move_uploaded_file($fileTmp, $destination)) {
-                                $uploadedFiles[] = [
-                                    'image' => $name,
-                                    'path' => $destination
-                                ];
-                                createImage($name,$pid);
+            if (!isset($_FILES['images']) || empty($_FILES['images']['name'][0])) {
+                header("Location:/activity/create?vmessage=กรุณาใส่รูปภาพ.");
+                exit();
+            }
+            if (count($_FILES['images']['tmp_name']) > 10) {
+                header("Location:/activity/create?status=warning&message=อัปโหลดได้สูงสุด 10 รูป.");
+                exit();
+            }
+        
+            try {
+                $aid = $_SESSION["login_token"];
+                $title = $_POST["title"];
+                $pid = hash('sha256', $aid . uniqid() . $title);
+                $description = $_POST["description"];
+                $max_count = $_POST["max_count"];
+                $start_date = $_POST["start_date"];
+                $end_date = $_POST["end_date"];
+                $location = $_POST["location"];
+                $p_give = $_POST["p_give"] ?? "";
+                $uploadedFiles = []; // image,path
+                createPost($pid, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
+        
+                foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+                    if ($_FILES['images']['error'][$key] === 0) {
+                        $name = date('Ymd') . $_SESSION["login_token"] . '_' . uniqid() . '.png';
+                        $fileName = $_FILES['images']['name'][$key];
+                        $fileSize = $_FILES['images']['size'][$key];
+                        $fileTmp = $_FILES['images']['tmp_name'][$key];
+                        $fileType = $_FILES['images']['type'][$key];
+                        $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                        $allowedExtensions = ['jpg', 'png'];
+                
+                        if (in_array($fileExt, $allowedExtensions)) {
+                            if ($fileSize < 2000000) {
+                                if ($fileExt === 'jpg' || $fileExt === 'jpeg') {
+                                    $image = imagecreatefromjpeg($fileTmp);
+                                } elseif ($fileExt === 'png') {
+                                    $image = imagecreatefrompng($fileTmp);
+                                }
+                                if ($image) {
+                                    $width = imagesx($image);
+                                    $height = imagesy($image);
+                                    $newWidth = intval($width * 0.7);
+                                    $newHeight = intval($height * 0.7);
+                                    $newImage = imagecreatetruecolor($newWidth, $newHeight);
+                                    imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                                    $destination = '../image/post/' . $name;
+                                    if ($fileExt === 'png') {
+                                        imagepng($newImage, $destination);
+                                    } else {
+                                        imagejpeg($newImage, $destination, 60);
+                                    }
+                                    $uploadedFiles[] = [
+                                        'image' => $name,
+                                        'path' => $destination
+                                    ];
+                                    imagedestroy($image);
+                                    imagedestroy($newImage);
+                                    createImage($name, $pid);
+                                }
                             }
                         }
                     }
                 }
+            } catch (Exception $err) {
+                error_log($err->getMessage()); 
+                header("Location:/");
+                exit();
             }
+        
             header("Location:/");
             exit();
             break;

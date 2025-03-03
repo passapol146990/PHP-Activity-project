@@ -61,7 +61,7 @@
                             <div class="mb-3">
                                 <label for="image-upload" class="form-label">รูปภาพกิจกรรม</label>
                                 <input type="file" class="form-control" id="image-upload" name="images[]" accept="image/*" multiple>
-                                <div class="form-text">อัพโหลดได้หลายรูป (สูงสุด 5MB ต่อรูป, รองรับไฟล์ JPEG, PNG)</div>
+                                <div class="form-text">อัพโหลดได้หลายรูป (สูงสุด 2MB ต่อรูป, รองรับไฟล์ JPEG, PNG)</div>
                                 <div id="image-preview" class="image-preview-container"></div>
                             </div>
                             <div class="mb-3">
@@ -107,21 +107,30 @@
             const preview = document.getElementById('image-preview');
             preview.innerHTML = '';
             const files = event.target.files;
+            const maxSize = 2 * 1024 * 1024; // 2MB
+
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
+
                 if (!file.type.match('image.*')) {
                     continue;
                 }
+
+                if (file.size > maxSize) {
+                    alert(`ไฟล์ ${file.name} มีขนาดเกิน 2MB!`);
+                    continue; // ข้ามไฟล์นี้
+                }
+
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const div = document.createElement('div');
                     div.className = 'image-preview-item';
-                    
+
                     const img = document.createElement('img');
                     img.src = e.target.result;
                     img.className = 'preview-image';
                     img.title = file.name;
-                    
+
                     const removeBtn = document.createElement('button');
                     removeBtn.className = 'remove-btn';
                     removeBtn.innerHTML = '×';
@@ -130,7 +139,7 @@
                         div.remove();
                         return false;
                     };
-                    
+
                     div.appendChild(img);
                     div.appendChild(removeBtn);
                     preview.appendChild(div);
