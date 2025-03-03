@@ -33,6 +33,7 @@
         if ($stmt === false) {
             die("Error preparing statement: " . $conn->error);
         }
+        // กำหนดประเภทและผูกค่าออโต้
         $param_types = str_repeat("s", count($params)) . "ii";
         $params[] = $offset;
         $params[] = $limit;

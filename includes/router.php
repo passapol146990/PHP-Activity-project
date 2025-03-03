@@ -47,19 +47,12 @@ function resizeImage($source, $destination, $width, $height) {
 
 if($method=="GET"){
     switch ($path) {
-        case '/x':
-            $count = getCounApproveRegister("5b34e15451b4ee2e4276935d930bcf7b39f934063964d1a11d9528c8d26d282b");
-            print($count);
-            break;
         case '/auth/google/callback':
             $code = $_GET['code'] ?? null;
             if (!$code) {
                 header("location:/");
                 exit();
             }
-            $client_id = getenv('Auth_Google_CLIENT_ID');
-            $client_secret = getenv('Auth_Google_CLIENT_SECRET');
-            $redirect_uri = getenv('Auth_Google_REDIRECT');
             $token_url = "https://oauth2.googleapis.com/token";
             $token_data = [
                 'client_id' => $google_client_id,
