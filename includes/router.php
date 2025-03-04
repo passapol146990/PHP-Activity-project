@@ -145,7 +145,14 @@ if($method=="GET"){
             $page = $_GET['page'] ?? 1;
             $total_registers = getCountWaitRegister($login_token);
             $waitReg = getWaitRegister($login_token);
-            $myactivities = getRegisteredActivities($login_token,10,$page);
+            $myactivities = getRegisteredActivities($login_token, 10, $page);
+        
+            foreach ($myactivities["data"] as &$activity) {
+                $activity['register_datetime_th'] = formatThaiDate($activity['register_datetime']);
+                $activity['post_date_start_th'] = formatThaiDate($activity['post_date_start']);
+                $activity['post_date_end_th'] = formatThaiDate($activity['post_date_end']);
+            }
+        
             require_once('../app/views/register/show.php');
             exit();
             break;
@@ -211,7 +218,11 @@ if($method=="GET"){
             if($data["status"]!=200){
                 $data["data"] = [];
             }
-            
+            foreach ($data["data"] as &$doc) {
+                $doc["p_datetime_th"] = formatThaiDate($doc["p_datetime"]);
+                $doc["p_date_start_th"] = formatThaiDate($doc["p_date_start"]);
+                $doc["p_date_end_th"] = formatThaiDate($doc["p_date_end"]);
+            }
             require_once('../app/views/activity/show.php');
             exit();
             break;
@@ -453,23 +464,33 @@ if($method=="GET"){
             }
             break;
         case '/api/get/post':
-            if(!isset($_POST["id_post"])||empty(isset($_POST["id_post"]))){
-                echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
+            if (!isset($_POST["id_post"]) || empty($_POST["id_post"])) {
+                echo json_encode(["status" => 400, "message" => "id post is null!"], JSON_UNESCAPED_UNICODE);
                 exit();
             }
             $post = getPostDetailById($_POST["id_post"]);
-            if($post['status']!=200){
-                echo json_encode($post,JSON_UNESCAPED_UNICODE);
+        
+            if ($post['status'] != 200) {
+                echo json_encode($post, JSON_UNESCAPED_UNICODE);
                 exit();
             }
-            if(empty($post["data"][0]["images"])){
+        
+            if (empty($post["data"][0]["images"])) {
                 $post["data"][0]["images"] = [];
-            }else{
+            } else {
                 $images = explode(',', $post["data"][0]["images"]);
                 $post["data"][0]["images"] = $images;
             }
-            $post["data"] = $post["data"][0];
-            echo json_encode($post,JSON_UNESCAPED_UNICODE);
+        
+            $postData = $post["data"][0];
+            $postData["post_create_th"] = formatThaiDate($postData["post_create"]);
+            $postData["post_start_th"] = formatThaiDate($postData["post_start"]);
+            $postData["post_end_th"] = formatThaiDate($postData["post_end"]);
+        
+            echo json_encode([
+                "status" => 200,
+                "data" => $postData
+            ], JSON_UNESCAPED_UNICODE);
             exit();
             break;
         case '/api/register/post':
@@ -481,6 +502,10 @@ if($method=="GET"){
             $id_post = $_POST["id_post"];
             $id = $_SESSION["login_token"];
             $result = registerUser($id_post, $id);
+            $postData = $post["data"][0];
+            $postData["post_create_th"] = formatThaiDate($postData["post_create"]);
+            $postData["post_start_th"] = formatThaiDate($postData["post_start"]);
+            $postData["post_end_th"] = formatThaiDate($postData["post_end"]);
             echo json_encode($result, JSON_UNESCAPED_UNICODE);
             exit();
             break;
@@ -494,6 +519,8 @@ if($method=="GET"){
             $id_post = $_POST["id_post"];
             $id_user = $_SESSION["login_token"];
             $data = getRegisterByIdPostAndIdUser($id_post,$id_user,100,$page);
+
+
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();
             break;

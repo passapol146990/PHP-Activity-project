@@ -309,13 +309,13 @@
                     <tr>
                         <td class="text-center">
                             <img src="/get/image?img=/post/<?= htmlspecialchars($doc['image']) ?>" class="img-thumbnail" alt="กิจกรรม"><br>
-                            <lable style="font-size:12px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['p_datetime']) ?> </lable>
+                            <lable style="font-size:12px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['p_datetime_th']) ?> </lable>
                         </td>
                         <td id="title:<?= htmlspecialchars($doc["p_id"]) ?>"><?= htmlspecialchars($doc['p_name']??"") ?></td>
                         <td>
                             <button onClick="getDetailPost('<?= htmlspecialchars($doc["p_id"]) ?>')" class="btn btn-outline-primary btn-sm raduis">รายละเอียดกิจกรรม</button>
                         </td>
-                        <td style="font-size:14px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['p_date_start']) ?> - <?= htmlspecialchars($doc['p_date_end']) ?></td>
+                        <td style="font-size:14px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['p_date_start_th']) ?> - <?= htmlspecialchars($doc['p_date_end_th']) ?></td>
                         <td>
                             <lable id="numberpeople:<?= htmlspecialchars($doc["p_id"]) ?>"><?= htmlspecialchars($doc['approved_registers']."/".$doc["p_max"]) ?></lable><br>
                             <div class="position-relative d-inline-block">

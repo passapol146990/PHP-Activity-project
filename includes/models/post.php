@@ -279,5 +279,4 @@
         return "$day $month $year";
     }
     
-    
 ?>

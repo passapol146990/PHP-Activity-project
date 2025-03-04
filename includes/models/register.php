@@ -125,7 +125,7 @@ function getRegisteredActivities($aid,$limit,$page) {
         JOIN account ON post.p_aid = account.aid
         WHERE register.aid = ?;
 
-    ";
+    "; 
     $stmt = $conn->prepare($sql);
     if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
     $stmt->bind_param("s",$aid);

@@ -276,7 +276,7 @@
                     <? foreach ($myactivities["data"] as $key => $doc) { ?>
                         <tr>
                             <td>
-                                <lable style="font-size:12px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['register_datetime']) ?> </lable>
+                                <lable style="font-size:12px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars($doc['register_datetime_th']) ?> </lable>
                             </td>
                             <td class="text-center">
                                 <img src="/get/image?img=/post/<?= htmlspecialchars($doc['post_image']) ?>" class="img-thumbnail" alt="กิจกรรม"><br>
@@ -285,7 +285,7 @@
                                 <?= htmlspecialchars($doc['post_name'] ?? "") ?>
                             </td>
                             <td style="font-size:14px; font-family: 'Prompt', sans-serif;">
-                                <?= htmlspecialchars($doc['post_date_start']) ?> - <?= htmlspecialchars($doc['post_date_end']) ?>
+                                <?= htmlspecialchars($doc['post_date_start_th']) ?> - <?= htmlspecialchars($doc['post_date_end_th']) ?>
                             </td>
                             <td id="numberpeople:<?= htmlspecialchars($doc["post_id"]) ?>">
                                 <?= htmlspecialchars($doc['approved_registers'] . "/" . $doc["post_max"]) ?>

@@ -36,8 +36,8 @@ async function getDetailPost(id){
     }
     const data = result.data;
     const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
-    const create_date = data.post_create; //วันที่ 25/2/68 19:25:40 น
-    const activity_date = data.post_start+" - "+data.post_end;//20/2/2568 - 22/2/2568 (3 วัน) 
+    const create_date = data.post_create_th;
+    const activity_date = `${data.post_start_th} - ${data.post_end_th}`;
     let images = ""
     for(let i = 0;i<data.images.length;i++){
         images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`
