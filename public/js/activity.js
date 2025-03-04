@@ -126,24 +126,6 @@ async function getRegisterPost(id){
     openPopUp("req_activity_1");
     const res = await API_RegisterPost(id,1);
     setReq_activity_1(res,id)
-}function formatThaiDate(dateString) {
-    if (!dateString) return '';
-
-    const date = new Date(dateString);
-    const thaiMonths = [
-        'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน',
-        'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม',
-        'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
-    ];
-
-    const day = date.getDate();
-    const month = thaiMonths[date.getMonth()];
-    const year = date.getFullYear() + 543;      
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
-
-    return `${day} ${month} ${year} ${hours}:${minutes}:${seconds} น.`;
 }
 function setReq_activity_1(result, pid) {
     const req_activity_1 = document.getElementById('req_activity_1');
