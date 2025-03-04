@@ -133,6 +133,8 @@ async function getRegisterPost(id){
     const pending = document.getElementById(`pending:${pid}`).textContent;
     const approved = document.getElementById(`approved:${pid}`).textContent;
     const rejected = document.getElementById(`rejected:${pid}`).textContent;
+    
+
     let user = ""
     data.forEach(doc => {
         const status = (doc.status=="รอการตรวจสอบ")?`<div class="text-warning">${doc.status}</div>`:((doc.status=="อนุมัติ")?`<div class="text-success">${doc.status}</div>`:`<div class="text-danger">${doc.status}</div>`);
@@ -248,53 +250,65 @@ async function SelectDtailUser(pid,uid) {
         </div>`
     Modal_user_data_1.innerHTML = e;
 }
-//
 async function setStatusRegisterUser(pid,uid,status) {
-    const conf = await Swal.fire({
-        title: "ชี้แจง?",
-        text: `คุณต้องการ `+((status==0)?"ปฏิเสธ":"อนุมัติ")+" คำขอเข้าร่วมกดตกลงเพื่อยืนยัน",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "ตกลง"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          return true
+
+    const number = parseInt(document.getElementById(`numberpeople:${pid}`));
+    const approve = parseInt(document.getElementById(`approved:${pid}`));
+    if (approve >= number) {
+        Swal.fire({
+            title: "แจ้งเตือน",
+            text: "ไม่สามารถอนุมัติได้ เนื่องจากจำนวนที่เปิดรับครบแล้ว",
+            icon: "warning"
+        });
+        
+    }else {
+        const conf = await Swal.fire({
+            title: "ชี้แจง?",
+            text: `คุณต้องการ `+((status==0)?"ปฏิเสธ":"อนุมัติ")+" คำขอเข้าร่วมกดตกลงเพื่อยืนยัน",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "ตกลง"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              return true
+            }
+            return false
+        });
+        if(conf){
+            const myHeaders = new Headers();
+            myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+            const formdata = new FormData();
+            formdata.append("pid", pid);
+            formdata.append("uid", uid);
+            formdata.append("status", status);
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: formdata,
+                redirect: "follow"
+            };
+            let res = await fetch("/api/update/register", requestOptions);
+            res = await res.json();
+            if(res.status==200){
+                Swal.fire({
+                    title: "สำเร็จ",
+                    text: res.message,
+                    icon: "success"
+                });
+            }else{
+                Swal.fire({
+                    title: "แจ้งเตือน",
+                    text: res.message,
+                    icon: "warning"
+                });
+            }
+            const respose = await API_RegisterPost(pid,1);
+            setReq_activity_1(respose,pid)
         }
-        return false
-    });
-    if(conf){
-        const myHeaders = new Headers();
-        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
-        const formdata = new FormData();
-        formdata.append("pid", pid);
-        formdata.append("uid", uid);
-        formdata.append("status", status);
-        const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: formdata,
-            redirect: "follow"
-        };
-        let res = await fetch("/api/update/register", requestOptions);
-        res = await res.json();
-        if(res.status==200){
-            Swal.fire({
-                title: "สำเร็จ",
-                text: res.message,
-                icon: "success"
-            });
-        }else{
-            Swal.fire({
-                title: "แจ้งเตือน",
-                text: res.message,
-                icon: "warning"
-            });
-        }
-        const respose = await API_RegisterPost(pid,1);
-        setReq_activity_1(respose,pid)
     }
+
 }   
 
 async function DeletePost(pid,title) {

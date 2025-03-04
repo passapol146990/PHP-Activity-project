@@ -521,6 +521,11 @@ if($method=="GET"){
             }else{
                 $status = "ปฏิเสธ";
             }
+            $count = getCounApproveRegister($pid);
+            if(!$count){
+                echo json_encode(["status" => 400, "message" => "กิจกรรมนี้คนสมัครเต็มแล้ว"],JSON_UNESCAPED_UNICODE);
+                exit();
+            }
             $data = upadteResgister($pid,$aid,$uid,$status);
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
             exit();

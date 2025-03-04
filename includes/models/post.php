@@ -169,9 +169,6 @@
     };
     function getCounApproveRegister($pid){
         global $conn;
-        $page = isset($page) ? (int)$page : 1;
-        $limit = isset($limit) ? (int)$limit : 10;
-        $offset = ($page - 1) * $limit;
         $stmt = $conn->prepare("
             SELECT COUNT(*) AS total_registers, post.p_max as p_max
             FROM register
