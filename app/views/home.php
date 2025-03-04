@@ -29,7 +29,7 @@
                             <div class="text-start event-info p-2 d-flex flex-column flex-grow-1">
                                 <label class="limited-text"><?= htmlspecialchars($post["p_name"] ?? "") ?></label>
                                 <p class="limited-text">
-                                    <?= htmlspecialchars($post["p_date_start_th"]) ?> - <?= htmlspecialchars($post["p_date_end_th"]) ?>
+                                    <?= htmlspecialchars(formatThaiDate($post["p_date_start"])) ?> - <?= htmlspecialchars(formatThaiDate($post["p_date_end"])) ?>
                                 </p>
 
                                 <div class="mt-auto d-flex justify-content-between gap-2">

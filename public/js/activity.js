@@ -23,6 +23,21 @@ function calculateAge(birthday) {
     }
     return age;
 }
+function formatThaiDate(dateString) {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const thaiMonths = [
+        'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน',
+        'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม',
+        'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+    ];
+
+    const day = date.getDate();
+    const month = thaiMonths[date.getMonth()];
+    const year = date.getFullYear() + 543; 
+    return `${day} ${month} ${year}`;
+}
 async function getDetailPost(id){
     openPopUp("Modal_Activity_1");
     const myHeaders = new Headers();
@@ -46,8 +61,8 @@ async function getDetailPost(id){
     }
     const data = result.data;
     const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
-    const create_date = data.post_create_th;
-    const activity_date = `${data.post_start_th} - ${data.post_end_th}`;
+    const create_date = formatThaiDate(data.post_create);
+    const activity_date = `${formatThaiDate(data.post_start)} - ${formatThaiDate(data.post_end)}`;
     let images = ""
     for(let i = 0;i<data.images.length;i++){
         images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`
@@ -58,7 +73,7 @@ async function getDetailPost(id){
             <div class="header mb-3">
                 <div>
                     <label class="title-header">รายละเอียดกิจกรรม</label>:<label> <h5 class="card-title">${data.post_name}</h5></label><br>
-                    <label class="small-text">${create_date}</label>
+                    <label class="small-text">${(create_date)}</label>
                 </div>
                 <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
             </div>
@@ -232,7 +247,8 @@ async function SelectDtailUser(pid,uid) {
     let res = await fetch("/api/get/userdetail", requestOptions);
     res = await res.json();
     setModal_user_data_1(res)
-}function setModal_user_data_1(result){
+}
+function setModal_user_data_1(result){
     const Modal_user_data_1 = document.getElementById('Modal_user_data_1');
     if(result.status!=200){
         return req_activity_1.innerHTML = `

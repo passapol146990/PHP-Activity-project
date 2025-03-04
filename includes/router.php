@@ -45,6 +45,7 @@ function resizeImage($source, $destination, $width, $height) {
     imagedestroy($newImg);
 }
 
+
 if($method=="GET"){
     switch ($path) {
         case '/auth/google/callback':
@@ -116,12 +117,6 @@ if($method=="GET"){
             $total_registers = getCountWaitRegister($login_token);
             $waitReg = getWaitRegister($login_token);
             $posts = getPostx(10, $page,$keyword,$date_start,$date_end);
-            if (!empty($posts["data"])) {
-                foreach ($posts["data"] as $key => $post) {
-                    $posts["data"][$key]["p_date_start_th"] = formatThaiDate($post["p_date_start"]);
-                    $posts["data"][$key]["p_date_end_th"] = formatThaiDate($post["p_date_end"]);
-                }
-            }
             require_once('../app/views/home.php');
             exit();
                 
@@ -146,13 +141,6 @@ if($method=="GET"){
             $total_registers = getCountWaitRegister($login_token);
             $waitReg = getWaitRegister($login_token);
             $myactivities = getRegisteredActivities($login_token, 10, $page);
-        
-            foreach ($myactivities["data"] as &$activity) {
-                $activity['register_datetime_th'] = formatThaiDate($activity['register_datetime']);
-                $activity['post_date_start_th'] = formatThaiDate($activity['post_date_start']);
-                $activity['post_date_end_th'] = formatThaiDate($activity['post_date_end']);
-            }
-        
             require_once('../app/views/register/show.php');
             exit();
             break;
@@ -217,11 +205,6 @@ if($method=="GET"){
             $data = getPostUserCreate($login_token,10,$page);
             if($data["status"]!=200){
                 $data["data"] = [];
-            }
-            foreach ($data["data"] as &$doc) {
-                $doc["p_datetime_th"] = formatThaiDate($doc["p_datetime"]);
-                $doc["p_date_start_th"] = formatThaiDate($doc["p_date_start"]);
-                $doc["p_date_end_th"] = formatThaiDate($doc["p_date_end"]);
             }
             require_once('../app/views/activity/show.php');
             exit();
@@ -481,15 +464,9 @@ if($method=="GET"){
                 $images = explode(',', $post["data"][0]["images"]);
                 $post["data"][0]["images"] = $images;
             }
-        
-            $postData = $post["data"][0];
-            $postData["post_create_th"] = formatThaiDate($postData["post_create"]);
-            $postData["post_start_th"] = formatThaiDate($postData["post_start"]);
-            $postData["post_end_th"] = formatThaiDate($postData["post_end"]);
-        
             echo json_encode([
                 "status" => 200,
-                "data" => $postData
+                "data" => $post["data"][0]
             ], JSON_UNESCAPED_UNICODE);
             exit();
             break;
@@ -502,10 +479,6 @@ if($method=="GET"){
             $id_post = $_POST["id_post"];
             $id = $_SESSION["login_token"];
             $result = registerUser($id_post, $id);
-            $postData = $post["data"][0];
-            $postData["post_create_th"] = formatThaiDate($postData["post_create"]);
-            $postData["post_start_th"] = formatThaiDate($postData["post_start"]);
-            $postData["post_end_th"] = formatThaiDate($postData["post_end"]);
             echo json_encode($result, JSON_UNESCAPED_UNICODE);
             exit();
             break;

@@ -24,6 +24,9 @@ async function registerPost(id) {
             icon: "warning"
         });
     }
+    setTimeout(()=>{
+        window.location.reload();
+    },1500)
 }
 async function getDetailPost(id) {
     const myHeaders = new Headers();
@@ -43,9 +46,25 @@ async function getDetailPost(id) {
     .then((response) => response.text())
     .then((result) => {
         result = JSON.parse(result);
+        console.log(result);
         setModal_Activity_1(result)
     })
     .catch((error) => console.error(error));
+}
+function formatThaiDate(dateString) {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const thaiMonths = [
+        'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน',
+        'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม',
+        'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+    ];
+
+    const day = date.getDate();
+    const month = thaiMonths[date.getMonth()];
+    const year = date.getFullYear() + 543; 
+    return `${day} ${month} ${year}`;
 }
 function setModal_Activity_1(result) {
     if (result.status != 200) {
@@ -55,8 +74,8 @@ function setModal_Activity_1(result) {
     const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
 
    
-    const create_date = data.post_create_th;
-    const activity_date = `${data.post_start_th} - ${data.post_end_th}`;
+    const create_date = (data.post_create);
+    const activity_date = `${formatThaiDate(data.post_start)} - ${formatThaiDate(data.post_end)}`;
 
     let images = "";
     for (let i = 0; i < data.images.length; i++) {
@@ -69,7 +88,7 @@ function setModal_Activity_1(result) {
                 <div class="modal-header">
                     <div>
                         <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม</h5>
-                        <p class="small-text">${create_date}</p>
+                        <p class="small-text">${formatThaiDate(create_date)}</p>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>

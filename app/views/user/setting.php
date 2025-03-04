@@ -21,10 +21,10 @@
                 <img class="rounded-circle" id="profileImage" src="/get/image?img=/user/<?= $_SESSION['login_image'] ?>" width="150px" class="profile-pic mb-2" alt="Profile">
             </div>
             <h2 class="mt-3"><?= htmlspecialchars($account["fname"]." ".$account["lname"]) ?></h2>
-            <h4>เข้าร่วมเมื่อ <?= htmlspecialchars($account["datetime"]) ?></h4>
+            <h4>เข้าร่วมเมื่อ <?= htmlspecialchars(formatThaiDate($account["datetime"])) ?></h4>
             <div class="mt-3 text-start">
                 <lable><b>เพศ:</b> <?= htmlspecialchars($account["gender"]) ?></lable><br>
-                <lable><b>วันเกิดของคุณ:</b> <?= htmlspecialchars($account["birthday"]) ?></lable>
+                <lable><b>วันเกิดของคุณ:</b> <?= htmlspecialchars(formatThaiDate($account["birthday"])) ?></lable>
             </div>
             <div class="text-end mt-5">
                 <a href="#">ติดต่อผู้ดูแลระบบ</a>
