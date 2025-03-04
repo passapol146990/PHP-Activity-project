@@ -11,6 +11,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="Logo_size32.png">
     <title>หน้าแรก</title>
 </head>
+
 <body>
     <?php require_once '../app/component/navbar.php'; ?>
     <?php require_once '../app/component/slide.php'; ?>
@@ -21,13 +22,16 @@
                 <? foreach ($posts["data"] as $key => $post) { ?>
                     <div class="col-md-4 mb-4 d-flex">
                         <div class="card p-2 d-flex flex-column flex-grow-1">
-                            <div class="text-end quota"><?= htmlspecialchars($post["approved"]."/".$post["p_max"]) ?></div>
+                            <div class="text-end quota"><?= htmlspecialchars($post["approved"] . "/" . $post["p_max"]) ?></div>
                             <div class="event-image">
                                 <img src="/get/image?img=/post/<?= htmlspecialchars($post["image"]) ?>" alt="Event Image" width="100%" loading="lazy">
                             </div>
                             <div class="text-start event-info p-2 d-flex flex-column flex-grow-1">
-                                <label class="limited-text"><?= htmlspecialchars($post["p_name"]??"") ?></label>
-                                <p class="limited-text"><?= $post["p_date_start"] ?> - <?= $post["p_date_end"] ?></p>
+                                <label class="limited-text"><?= htmlspecialchars($post["p_name"] ?? "") ?></label>
+                                <p class="limited-text">
+                                    <?= htmlspecialchars($post["p_date_start_th"]) ?> - <?= htmlspecialchars($post["p_date_end_th"]) ?>
+                                </p>
+
                                 <div class="mt-auto d-flex justify-content-between gap-2">
                                     <button class="btn btn-success col-6" onClick="registerPost('<?= htmlspecialchars($post["p_id"]) ?>')">เข้าร่วม</button>
                                     <button class="btn btn-primary col-6" onClick="getDetailPost('<?= htmlspecialchars($post["p_id"]) ?>')" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">รายละเอียด</button>
@@ -43,7 +47,9 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <div><h5 class="modal-title" id="exampleModalLabel">กำลังโหลดรายละเอียดกิจกรรม...</h5></div>
+                    <div>
+                        <h5 class="modal-title" id="exampleModalLabel">กำลังโหลดรายละเอียดกิจกรรม...</h5>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -72,6 +78,7 @@
     <script>
         const totalPages = 10;
         let currentPage = getCurrentPage();
+
         function getCurrentPage() {
             const urlParams = new URLSearchParams(window.location.search);
             const page = parseInt(urlParams.get('page')) || 1;
@@ -100,4 +107,5 @@
     </script>
     <script src="../js/home.js"></script>
 </body>
+
 </html>
