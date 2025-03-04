@@ -282,7 +282,7 @@ if($method=="GET"){
                 exit();
             }
             if (!isset($_FILES['images']) || empty($_FILES['images']['name'][0])) {
-                header("Location:/activity/create?vmessage=กรุณาใส่รูปภาพ.");
+                header("Location:/activity/create?status=warning&message=กรุณาใส่รูปภาพ.");
                 exit();
             }
             if (count($_FILES['images']['tmp_name']) > 10) {

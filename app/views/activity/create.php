@@ -146,11 +146,14 @@
                     img.title = file.name;
 
                     const removeBtn = document.createElement('button');
+                    const re_name = document.getElementById('image-upload');
                     removeBtn.className = 'remove-btn';
                     removeBtn.innerHTML = '×';
                     removeBtn.title = 'ลบรูปนี้';
                     removeBtn.onclick = function() {
                         div.remove();
+                        re_name.value = '';
+
                         return false;
                     };
 

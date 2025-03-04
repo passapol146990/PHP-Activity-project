@@ -37,7 +37,7 @@
         return false;
     }
     function deleteImage($filename) {
-        $filename = basename(filename);
+        $filename = basename('filename');
         $file = "../image/$filename";
         if (file_exists($file)) {
             unlink($file);
