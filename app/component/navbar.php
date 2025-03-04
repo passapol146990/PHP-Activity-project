@@ -158,12 +158,14 @@
         }
     }
 </style>
+<?php
+$path = "form.php"; // ตั้งค่าหน้าหลักหลังแจ้งเตือน
+?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php if(isset($_GET["status"])){?>
     <script>
         Swal.fire({
             position: "center",
-            icon: '<?= htmlspecialchars($_GET["status"]) ?>',
             title: <?= json_encode(isset($_GET["message"])?$_GET["message"]:"") ?>,
             showConfirmButton: false,
             timer: 1500
@@ -172,6 +174,7 @@
         });
     </script>
 <?php } ?>
+
 <nav class="navbar-component">
     <div class="logo-container">
         <div>

@@ -22,6 +22,19 @@
             border-radius: 50%;
         }
     </style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script>
+        Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "แจ้งเตือน",
+            text: " ",
+            confirmButtonText: "ตกลง"
+        });
+    </script> -->
+
+
 </head>
 <body class>
     <div class="container text-center">
@@ -43,7 +56,7 @@
             </div>
             <div class="mb-3 text-start">
                 <label class="form-label">วันเกิด</label>
-                <input type="date" name="birthday" class="form-control" value="<?= htmlspecialchars($account["birthday"]??"") ?>" required>
+                <input type="date" name="birthday" id="birthday" onchange="checkBirthday()" class="form-control" value="<?= htmlspecialchars($account["birthday"]??"") ?>" required>
             </div>
             <div class="mb-3 text-start">
                 <label class="form-label">เพศ</label>
@@ -62,5 +75,53 @@
             </div>
         </form>
     </div>
+
+    <script>
+       function checkBirthday() {
+        const birthday= document.getElementById("birthday");
+        const birthdayInput = birthday.value;
+    if (!birthdayInput) {
+        Swal.fire({
+            title: "แจ้งเตือน",
+            text: "กรุณากรอกวันเกิด",
+            icon: "warning",
+            confirmButtonText: "ตกลง"
+        });
+        return;
+    }
+
+    // แปลงค่าเป็นวันที่
+    const birthDate = new Date(birthdayInput);
+    const today = new Date();
+
+    // คำนวณอายุ
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--; // ยังไม่ถึงวันเกิดปีนี้
+    }
+
+
+    if (age < 12) {
+        Swal.fire({
+            title: "แจ้งเตือน",
+            text: "คุณต้องมีอายุตั้งแต่ 12 ปีขึ้นไป",
+            icon: "error",
+            confirmButtonText: "ตกลง"
+        });
+        birthday.value = "";
+    } else {
+        Swal.fire({
+            title: "ผ่าน!",
+            text: "อายุของคุณคือ " + age + " ปี",
+            icon: "success",
+            confirmButtonText: "ตกลง"
+        });
+    }
+
+}
+    </script>
 </body>
 </html>
+
+

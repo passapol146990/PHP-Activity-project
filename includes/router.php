@@ -423,6 +423,8 @@ if($method=="GET"){
                 exit();
             }
             if(!isset($_POST['birthday'])||empty($_POST['birthday'])){
+                $_SESSION['error'] = "กรุณากรอกวันเกิด";
+                $_SESSION['form_data'] = $_POST; // เก็บค่าที่กรอกไว้
                 header("Location:/");
                 exit();
             }
@@ -430,11 +432,27 @@ if($method=="GET"){
                 header("Location:/");
                 exit();
             }
+
+            $birthday = $_POST["birthday"];
+            $birthDate = DateTime::createFromFormat('Y-m-d', $birthday); // แปลงเป็น DateTime
+            $today = new DateTime(); // วันที่ปัจจุบัน
+            $age = $today->diff($birthDate)->y; 
+
+            if ($age < 12) {
+                $_SESSION['error'] = "คุณต้องมีอายุตั้งแต่ 12 ปีขึ้นไป";
+                $_SESSION['form_data'] = $_POST;
+                header("Location: form.php");
+                    exit();
+            }
             $id = $_SESSION["login_token"];
             $fname = $_POST["fname"];
             $lname = $_POST["lname"];
-            $birthday = $_POST["birthday"];
-            $gender= $_POST["gender"]??"ไม่ระบเพศ";
+           
+            $gender= $_POST["gender"]??"ไม่ระบุเพศ";
+            if ($gender!="ชาย"||$gender!="หญิง"||$gender!="ไม่ระบุเพศ")
+            {
+                $gender ="ไม่ระบุเพศ";
+            }
             setName($fname,$lname,$id);
             setBirthday($birthday,$id);
             setGender($gender,$id);
