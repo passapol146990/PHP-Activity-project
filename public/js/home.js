@@ -24,9 +24,6 @@ async function registerPost(id) {
             icon: "warning"
         });
     }
-    setTimeout(()=>{
-        window.location.reload();
-    },1500)
 }
 async function getDetailPost(id) {
     const myHeaders = new Headers();
@@ -46,40 +43,34 @@ async function getDetailPost(id) {
     .then((response) => response.text())
     .then((result) => {
         result = JSON.parse(result);
-        console.log(result);
         setModal_Activity_1(result)
     })
     .catch((error) => console.error(error));
-}
-function formatThaiDate(dateString) {
-    if (!dateString) return '';
-
-    const date = new Date(dateString);
-    const thaiMonths = [
-        'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน',
-        'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม',
-        'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
-    ];
-
-    const day = date.getDate();
-    const month = thaiMonths[date.getMonth()];
-    const year = date.getFullYear() + 543; 
-    return `${day} ${month} ${year}`;
 }
 function setModal_Activity_1(result) {
     if (result.status != 200) {
         return;
     }
+
     const data = result.data;
     const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
-
-   
-    const create_date = (data.post_create);
-    const activity_date = `${formatThaiDate(data.post_start)} - ${formatThaiDate(data.post_end)}`;
-
+    const create_date = data.post_create;
+    const activity_date = data.post_start + " - " + data.post_end;
     let images = "";
+
     for (let i = 0; i < data.images.length; i++) {
-        images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`;
+        images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`
+    }
+
+    let buttonHtml = "";
+    if (!data.user_status || data.user_status === "") {
+        buttonHtml = `<button class="btn btn-success col-6" onClick="registerPost('${data.post_id}')">เข้าร่วม</button>`;
+    } else if (data.user_status === "อนุมัติ") {
+        buttonHtml = `<button class="btn btn-success col-6" disabled>อนุมัติ</button>`;
+    } else if (data.user_status === "รอการตรวจสอบ") {
+        buttonHtml = `<button class="btn btn-warning col-6" disabled>รอการตรวจสอบ</button>`;
+    } else if (data.user_status === "ปฏิเสธ") {
+        buttonHtml = `<button class="btn btn-danger col-6" disabled>ปฏิเสธ</button>`;
     }
 
     let e = `
@@ -88,7 +79,7 @@ function setModal_Activity_1(result) {
                 <div class="modal-header">
                     <div>
                         <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม</h5>
-                        <p class="small-text">${formatThaiDate(create_date)}</p>
+                        <p class="small-text">${create_date}</p>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -117,9 +108,10 @@ function setModal_Activity_1(result) {
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button class="btn btn-success col-6" onClick="registerPost('${data.post_id}')">เข้าร่วม</button>
+                    ${buttonHtml}
                 </div>
             </div>
         </div>`;
+
     Modal_Activity_1.innerHTML = e;
 }
