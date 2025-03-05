@@ -24,6 +24,9 @@ async function registerPost(id) {
             icon: "warning"
         });
     }
+    setTimeout(() => {
+        window.location.reload();
+    }, 1500);
 }
 async function getDetailPost(id) {
     const myHeaders = new Headers();

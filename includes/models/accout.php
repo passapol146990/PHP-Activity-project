@@ -42,7 +42,7 @@
         $_SESSION['login_image'] = $data["image"];
         $_SESSION['login_name'] = ($data["fname"] ?? "") . " " . ($data["lname"] ?? "");
         $_SESSION['login_time'] = time();
-    }
+    };
     function setBirthday($date,$id){
         global $conn;
         $sql = 'UPDATE account SET birthday = ? WHERE aid = ?';
@@ -55,7 +55,7 @@
         } else {
             return ["status" => 204, "message" => "No changes made."];
         }
-    }
+    };
     function setGender($gender,$id){
         global $conn;
         $sql = 'UPDATE account SET gender = ? WHERE aid = ?';
@@ -68,7 +68,7 @@
         } else {
             return ["status" => 204, "message" => "No changes made."];
         }
-    }
+    };
     function setName($fname,$lname,$id){
         global $conn;
         $sql = 'UPDATE account SET fname = ? , lname = ? WHERE aid = ?';
@@ -81,7 +81,7 @@
         } else {
             return ["status" => 204, "message" => "No changes made."];
         }
-    }
+    };
     function getUserByIdPostAndIdUser($aid,$pid,$uid){
         global $conn;
         $sql = 'SELECT account.*
@@ -101,5 +101,5 @@
         $data = $data->fetch_all(MYSQLI_ASSOC);
         return ["status"=>200,"message"=>"successfuly.","data"=>$data];
 
-    }
+    };
 ?>

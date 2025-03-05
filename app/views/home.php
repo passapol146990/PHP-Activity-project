@@ -11,7 +11,6 @@
     <link rel="shortcut icon" type="image/x-icon" href="Logo_size32.png">
     <title>หน้าแรก</title>
 </head>
-
 <body>
     <?php require_once '../app/component/navbar.php'; ?>
     <?php require_once '../app/component/slide.php'; ?>

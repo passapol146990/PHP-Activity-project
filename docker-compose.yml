@@ -20,6 +20,8 @@ services:
       MYSQL_PASSWORD: COS@-56ac
     ports:
       - "3306:3306"
+    volumes:
+      - php-activity-project:/var/lib/mysql
   phpmyadmin-activity:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin-activity
@@ -30,15 +32,6 @@ services:
     environment:
       PMA_HOST: mysql-db-activity
       MYSQL_ROOT_PASSWORD: OSssA45!sd@
-  # phpmyadmin-activity:
-  #   image: phpmyadmin/phpmyadmin
-  #   container_name: phpmyadmin-activity
-  #   ports:
-  #     - "3030:80"
-  #   environment:
-  #     PMA_HOST: 192.168.1.5
-  #     PMA_PORT: 3306
-  #     MYSQL_ROOT_PASSWORD: OSssA45!sd@
 
-
-
+volumes:
+  php-activity-project:

@@ -162,13 +162,14 @@
 <?php if(isset($_GET["status"])){?>
     <script>
         Swal.fire({
-            position: "top-end",
+            position: "center",
             icon: '<?= htmlspecialchars($_GET["status"]) ?>',
             title: <?= json_encode(isset($_GET["message"])?$_GET["message"]:"") ?>,
             showConfirmButton: false,
             timer: 1500
         }).then((result) => {
-            window.location.href = "<?= htmlspecialchars($path) ?>"
+            const currentPath = new URL(document.URL).pathname;
+            window.location.href = currentPath
         });
     </script>
 <?php } ?>
