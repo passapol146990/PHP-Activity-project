@@ -116,6 +116,7 @@ if($method=="GET"){
             $total_registers = getCountWaitRegister($login_token);
             $waitReg = getWaitRegister($login_token);
             $posts = getPostx(10, $page,$keyword,$date_start,$date_end);
+
             if (!empty($posts["data"])) {
                 foreach ($posts["data"] as $key => $post) {
                     $posts["data"][$key]["p_date_start_th"] = formatThaiDate($post["p_date_start"]);
@@ -206,12 +207,25 @@ if($method=="GET"){
             $login_token = $_SESSION["login_token"];
             $total_registers = getCountWaitRegister($login_token);
             $waitReg = getWaitRegister($login_token);
+
+            $keyword = $_GET['search'] ?? "";
+            $date_start = $_GET['start_date'] ?? "";
+            $date_end = $_GET['end_date'] ?? "";
             $page = $_GET['page'] ?? 1;
+            $posts = getPostx(10, $page,$keyword,$date_start,$date_end);
+
+            if (!empty($posts["data"])) {
+                foreach ($posts["data"] as $key => $post) {
+                    $posts["data"][$key]["p_date_start_th"] = formatThaiDate($post["p_date_start"]);
+                    $posts["data"][$key]["p_date_end_th"] = formatThaiDate($post["p_date_end"]);
+                }
+            }
+            
             $data = getPostUserCreate($login_token,10,$page);
             if($data["status"]!=200){
                 $data["data"] = [];
             }
-            
+
             require_once('../app/views/activity/show.php');
             exit();
             break;
@@ -436,7 +450,7 @@ if($method=="GET"){
             $birthday = $_POST["birthday"];
             $birthDate = DateTime::createFromFormat('Y-m-d', $birthday); // แปลงเป็น DateTime
             $today = new DateTime(); // วันที่ปัจจุบัน
-            $age = $today->diff($birthDate)->y; 
+            $age = $today->diff($birthDate)->y;
 
             if ($age < 12) {
                 $_SESSION['error'] = "คุณต้องมีอายุตั้งแต่ 12 ปีขึ้นไป";
