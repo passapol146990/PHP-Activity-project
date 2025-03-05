@@ -7,7 +7,8 @@ $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($request, PHP_URL_PATH);
 
-function isLogin(){
+function isLogin()
+{
     if (isset($_SESSION['login_time'])) {
         $inactive = time() - $_SESSION['login_time'];
         if ($inactive > 6000) {
@@ -17,18 +18,18 @@ function isLogin(){
         $login_token = $_SESSION["login_token"];
         $login_image = $_SESSION["login_image"];
         $login_name = $_SESSION["login_name"];
-        if(!isset($login_token)||empty($login_token)||!isset($login_image)||empty($login_image)||!isset($login_name)||empty($login_name)){
+        if (!isset($login_token) || empty($login_token) || !isset($login_image) || empty($login_image) || !isset($login_name) || empty($login_name)) {
             session_destroy();
             header("Location:/logout");
             exit();
         }
         $getaccount = getAccountID($login_token);
-        if($getaccount["data"]->num_rows==0){
+        if ($getaccount["data"]->num_rows == 0) {
             header('Location:/logout');
             exit();
         }
         $account = $getaccount['data']->fetch_assoc();
-        if(empty($account['birthday'])||empty($account['gender'])){
+        if (empty($account['birthday']) || empty($account['gender'])) {
             require_once('../app/views/user/update.php');
             exit();
         }
@@ -37,7 +38,8 @@ function isLogin(){
         exit();
     }
 };
-function resizeImage($source, $destination, $width, $height) {
+function resizeImage($source, $destination, $width, $height)
+{
     $img = imagecreatefromstring(file_get_contents($source));
     $newImg = imagescale($img, $width, $height);
     imagepng($newImg, $destination);
@@ -45,8 +47,7 @@ function resizeImage($source, $destination, $width, $height) {
     imagedestroy($newImg);
 }
 
-
-if($method=="GET"){
+if ($method == "GET") {
     switch ($path) {
         case '/auth/google/callback':
             $code = $_GET['code'] ?? null;
@@ -87,17 +88,17 @@ if($method=="GET"){
             $profile_response = curl_exec($ch);
             curl_close($ch);
             $profile = json_decode($profile_response, true);
-            $id = hash('sha256',$profile['id']);
+            $id = hash('sha256', $profile['id']);
             $verified_email = $profile['verified_email'];
-            $fname = ($profile["given_name"])??"";
-            $lname = ($profile["family_name"])??"";
-            $gmail = ($profile["email"])??"";
-            $image = ($profile["picture"])??"";
-            if($verified_email!=1){
+            $fname = ($profile["given_name"]) ?? "";
+            $lname = ($profile["family_name"]) ?? "";
+            $gmail = ($profile["email"]) ?? "";
+            $image = ($profile["picture"]) ?? "";
+            if ($verified_email != 1) {
                 header("location:/");
                 exit();
             }
-            login($id,$fname,$lname,$gmail,$image);
+            login($id, $fname, $lname, $gmail, $image);
             header('location:/');
             exit();
             break;
@@ -110,18 +111,18 @@ if($method=="GET"){
             $login_token = $_SESSION["login_token"];
             $page = $_GET['page'] ?? 1;
             $postsTop = getPost(10, 1); // ห้ามยุ่งบรรทัดนี้
-            $posts = ["status"=>0,"message"=>"set","data"=>[]];
             $keyword = $_GET['search'] ?? "";
             $date_start = $_GET['start_date'] ?? "";
             $date_end = $_GET['end_date'] ?? "";
             $total_registers = getCountWaitRegister($login_token);
             $waitReg = getWaitRegister($login_token);
-            $posts = getPostx(10, $page,$keyword,$date_start,$date_end);
+        
+            $posts = getPostx(10, $page, $keyword, $date_start, $date_end, $login_token);
             require_once('../app/views/home.php');
             exit();
-                
+
         case '/login':
-            if(isset($_SESSION["login_token"])){
+            if (isset($_SESSION["login_token"])) {
                 header("Location:/");
                 exit();
             }
@@ -129,7 +130,7 @@ if($method=="GET"){
             exit();
             break;
         case '/logout':
-            session_unset(); 
+            session_unset();
             session_destroy();
             header("Location:/login");
             exit();
@@ -157,10 +158,10 @@ if($method=="GET"){
             $rid = $_GET["rid"];
             $pid = $_GET["pid"];
             $login_token = $_SESSION["login_token"];
-            $result = DeleteRegister($rid,$pid,$login_token);
+            $result = DeleteRegister($rid, $pid, $login_token);
             header("location:/activity/register/show?status=success&message=ยกเลิกคำขอเข้าร่วมสำเร็จ");
             exit();
-            break; 
+            break;
         case '/activity/edit':
             isLogin();
             if (!isset($_GET["pid"]) || empty($_GET["pid"])) {
@@ -169,12 +170,12 @@ if($method=="GET"){
             }
             $p_id = $_GET["pid"];
             $p_aid = $_SESSION["login_token"];
-            $data = getPosttoedit($p_id,$p_aid);
+            $data = getPosttoedit($p_id, $p_aid);
             if ($data["status"] != 200) {
                 header("Location: /");
                 exit();
             }
-            $result = $data['data']; 
+            $result = $data['data'];
             require_once('../app/views/activity/edit.php');
             exit();
             break;
@@ -192,7 +193,7 @@ if($method=="GET"){
             $total_registers = getCountWaitRegister($login_token);
             $waitReg = getWaitRegister($login_token);
             $pid = $_GET["pid"];
-            deletePostByIdPostAndIdUser($pid,$login_token);
+            deletePostByIdPostAndIdUser($pid, $login_token);
             header("location:/activity/create/show?status=success&message=ลบกิจกรรมสำเร็จ");
             exit();
             break;
@@ -202,10 +203,11 @@ if($method=="GET"){
             $total_registers = getCountWaitRegister($login_token);
             $waitReg = getWaitRegister($login_token);
             $page = $_GET['page'] ?? 1;
-            $data = getPostUserCreate($login_token,10,$page);
-            if($data["status"]!=200){
+            $data = getPostUserCreate($login_token, 10, $page);
+            if ($data["status"] != 200) {
                 $data["data"] = [];
             }
+
             require_once('../app/views/activity/show.php');
             exit();
             break;
@@ -239,7 +241,7 @@ if($method=="GET"){
             header("Location:/");
             break;
     }
-}else if($method=="POST"){
+} else if ($method == "POST") {
     switch ($path) {
         case '/activity/create':
             isLogin();
@@ -255,7 +257,7 @@ if($method=="GET"){
                 header("Location:/activity/create?status=warning&message=กรุณาใส่จำนวนคนที่รับ.");
                 exit();
             }
-            if ($_POST["max_count"]>1000) {
+            if ($_POST["max_count"] > 1000) {
                 header("Location:/activity/create?status=warning&message=กรุณาใส่จำนวนคนไม่เกิน 1000.");
                 exit();
             }
@@ -283,7 +285,7 @@ if($method=="GET"){
                 header("Location:/activity/create?status=warning&message=อัปโหลดได้สูงสุด 10 รูป.");
                 exit();
             }
-        
+
             try {
                 $aid = $_SESSION["login_token"];
                 $title = $_POST["title"];
@@ -296,7 +298,7 @@ if($method=="GET"){
                 $p_give = $_POST["p_give"] ?? "";
                 $uploadedFiles = []; // image,path
                 createPost($pid, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
-        
+
                 foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
                     if ($_FILES['images']['error'][$key] === 0) {
                         $name = date('Ymd') . $_SESSION["login_token"] . '_' . uniqid() . '.png';
@@ -306,7 +308,7 @@ if($method=="GET"){
                         $fileType = $_FILES['images']['type'][$key];
                         $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
                         $allowedExtensions = ['jpg', 'png'];
-                
+
                         if (in_array($fileExt, $allowedExtensions)) {
                             if ($fileSize < 2000000) {
                                 if ($fileExt === 'jpg' || $fileExt === 'jpeg') {
@@ -340,46 +342,46 @@ if($method=="GET"){
                     }
                 }
             } catch (Exception $err) {
-                error_log($err->getMessage()); 
+                error_log($err->getMessage());
                 header("Location:/");
                 exit();
             }
-        
+
             header("Location:/");
             exit();
             break;
         case '/activity/edit':
             isLogin();
-            if(!isset($_POST["title"])||empty($_POST["title"])){
+            if (!isset($_POST["title"]) || empty($_POST["title"])) {
                 header("Location:/activity/edit?status=warnign&message=กรุณาใส่ชื่อกิจกรรม.");
                 exit();
             }
-            if(!isset($_POST["description"])||empty($_POST["description"])){
+            if (!isset($_POST["description"]) || empty($_POST["description"])) {
                 header("Location:/activity/edit?status=warnign&message=กรุณาใส่รายละเอียดกิจกรรม.");
                 exit();
             }
-            if(!isset($_POST["max_count"])||empty($_POST["max_count"])){
+            if (!isset($_POST["max_count"]) || empty($_POST["max_count"])) {
                 header("Location:/activity/edit?status=warnign&message=กรุณาใส่จำนวนคนที่รับ.");
                 exit();
             }
-            if(!isset($_POST["start_date"])||empty($_POST["start_date"])){
+            if (!isset($_POST["start_date"]) || empty($_POST["start_date"])) {
                 header("Location:/activity/edit?status=warnign&message=กรุณาใส่วันที่เริ่มกิจกรรม.");
                 exit();
             }
-            if(!isset($_POST["end_date"])||empty($_POST["end_date"])){
+            if (!isset($_POST["end_date"]) || empty($_POST["end_date"])) {
                 header("Location:/activity/edit?status=warnign&message=กรุณาใส่วันที่สิ้นสุดกิจกรรม.");
                 exit();
             }
-            if(!isset($_POST["location"])||empty($_POST["location"])){
+            if (!isset($_POST["location"]) || empty($_POST["location"])) {
                 header("Location:/activity/edit?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
                 exit();
             }
-            if(!isset($_POST["p_give"])||empty($_POST["p_give"])){
+            if (!isset($_POST["p_give"]) || empty($_POST["p_give"])) {
                 header("Location:/activity/edit?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
                 exit();
             }
             $aid = $_SESSION["login_token"];
-            $p_id = $_POST["p_id"]??"";
+            $p_id = $_POST["p_id"] ?? "";
             $title = $_POST["title"];
             $description = $_POST["description"];
             $max_count = (int)$_POST["max_count"];
@@ -399,28 +401,28 @@ if($method=="GET"){
                     exit();
                 }
                 $login_token = $_SESSION["login_token"];
-                if(!isset($login_token)||empty($login_token)){
+                if (!isset($login_token) || empty($login_token)) {
                     session_destroy();
                     header("Location:/logout");
                     exit();
                 }
-            }else{
+            } else {
                 header('Location:/logout');
                 exit();
             };
-            if(!isset($_POST['fname'])||empty($_POST['fname'])){
+            if (!isset($_POST['fname']) || empty($_POST['fname'])) {
                 header("Location:/");
                 exit();
             }
-            if(!isset($_POST['lname'])||empty($_POST['lname'])){
+            if (!isset($_POST['lname']) || empty($_POST['lname'])) {
                 header("Location:/");
                 exit();
             }
-            if(!isset($_POST['birthday'])||empty($_POST['birthday'])){
+            if (!isset($_POST['birthday']) || empty($_POST['birthday'])) {
                 header("Location:/");
                 exit();
             }
-            if(!isset($_POST['gender'])||empty($_POST['gender'])){
+            if (!isset($_POST['gender']) || empty($_POST['gender'])) {
                 header("Location:/");
                 exit();
             }
@@ -428,18 +430,18 @@ if($method=="GET"){
             $fname = $_POST["fname"];
             $lname = $_POST["lname"];
             $birthday = $_POST["birthday"];
-            $gender= $_POST["gender"]??"ไม่ระบเพศ";
-            setName($fname,$lname,$id);
-            setBirthday($birthday,$id);
-            setGender($gender,$id);
+            $gender = $_POST["gender"] ?? "ไม่ระบเพศ";
+            setName($fname, $lname, $id);
+            setBirthday($birthday, $id);
+            setGender($gender, $id);
             header("Location:/");
             break;
         case '/save/image/submit':
             isLogin();
             if ($_FILES['image']['error'] == UPLOAD_ERR_OK) {
-                $name = date('Ymd').$_SESSION["login_token"].'_'.uniqid().'.png';
+                $name = date('Ymd') . $_SESSION["login_token"] . '_' . uniqid() . '.png';
                 $fileTmp = $_FILES['image']['tmp_name'];
-                $destination = '../image/submit/'.$name;
+                $destination = '../image/submit/' . $name;
                 resizeImage($fileTmp, $destination, 300, 300);
                 echo "อัปโหลดสำเร็จ!";
             } else {
@@ -447,27 +449,25 @@ if($method=="GET"){
             }
             break;
         case '/api/get/post':
-            if (!isset($_POST["id_post"]) || empty($_POST["id_post"])) {
+            if (!isset($_POST["id_post"]) || empty(isset($_POST["id_post"]))) {
                 echo json_encode(["status" => 400, "message" => "id post is null!"], JSON_UNESCAPED_UNICODE);
                 exit();
             }
-            $post = getPostDetailById($_POST["id_post"]);
-        
+            $login_token = $_SESSION["login_token"];
+            $post = getPostDetailById($_POST["id_post"], $login_token);
+
             if ($post['status'] != 200) {
                 echo json_encode($post, JSON_UNESCAPED_UNICODE);
                 exit();
             }
-        
             if (empty($post["data"][0]["images"])) {
                 $post["data"][0]["images"] = [];
             } else {
                 $images = explode(',', $post["data"][0]["images"]);
                 $post["data"][0]["images"] = $images;
             }
-            echo json_encode([
-                "status" => 200,
-                "data" => $post["data"][0]
-            ], JSON_UNESCAPED_UNICODE);
+            $post["data"] = $post["data"][0];
+            echo json_encode($post, JSON_UNESCAPED_UNICODE);
             exit();
             break;
         case '/api/register/post':
@@ -484,31 +484,29 @@ if($method=="GET"){
             break;
         case '/api/get/register':
             isLogin();
-            if(!isset($_POST["id_post"])||empty(isset($_POST["id_post"]))){
-                echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
+            if (!isset($_POST["id_post"]) || empty(isset($_POST["id_post"]))) {
+                echo json_encode(["status" => 400, "message" => "id post is null!"], JSON_UNESCAPED_UNICODE);
                 exit();
             }
             $page = $_POST['page'] ?? 1;
             $id_post = $_POST["id_post"];
             $id_user = $_SESSION["login_token"];
-            $data = getRegisterByIdPostAndIdUser($id_post,$id_user,100,$page);
-
-
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
+            $data = getRegisterByIdPostAndIdUser($id_post, $id_user, 100, $page);
+            echo json_encode($data, JSON_UNESCAPED_UNICODE);
             exit();
             break;
         case '/api/update/register':
             isLogin();
-            if(!isset($_POST["pid"])||empty(isset($_POST["pid"]))){
-                echo json_encode(["status" => 400, "message" => "pid is null!"],JSON_UNESCAPED_UNICODE);
+            if (!isset($_POST["pid"]) || empty(isset($_POST["pid"]))) {
+                echo json_encode(["status" => 400, "message" => "pid is null!"], JSON_UNESCAPED_UNICODE);
                 exit();
             }
-            if(!isset($_POST["uid"])||empty(isset($_POST["uid"]))){
-                echo json_encode(["status" => 400, "message" => "uid is null!"],JSON_UNESCAPED_UNICODE);
+            if (!isset($_POST["uid"]) || empty(isset($_POST["uid"]))) {
+                echo json_encode(["status" => 400, "message" => "uid is null!"], JSON_UNESCAPED_UNICODE);
                 exit();
             }
-            if(!isset($_POST["status"])||empty(isset($_POST["status"]))){
-                echo json_encode(["status" => 400, "message" => "status is null!"],JSON_UNESCAPED_UNICODE);
+            if (!isset($_POST["status"]) || empty(isset($_POST["status"]))) {
+                echo json_encode(["status" => 400, "message" => "status is null!"], JSON_UNESCAPED_UNICODE);
                 exit();
             }
             $pid = $_POST["pid"];
@@ -516,37 +514,36 @@ if($method=="GET"){
             $aid = $_SESSION["login_token"];
             $uid = $_POST["uid"];
             $status = "รอการตรวจสอบ";
-            if($pstatus==1){
+            if ($pstatus == 1) {
                 $status = "อนุมัติ";
-            }else{
+            } else {
                 $status = "ปฏิเสธ";
             }
-            $data = upadteResgister($pid,$aid,$uid,$status);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
+            $data = upadteResgister($pid, $aid, $uid, $status);
+            echo json_encode($data, JSON_UNESCAPED_UNICODE);
             exit();
             break;
         case '/api/get/userdetail':
             isLogin();
-            if(!isset($_POST["pid"])||empty(isset($_POST["pid"]))){
-                echo json_encode(["status" => 400, "message" => "id post is null!"],JSON_UNESCAPED_UNICODE);
+            if (!isset($_POST["pid"]) || empty(isset($_POST["pid"]))) {
+                echo json_encode(["status" => 400, "message" => "id post is null!"], JSON_UNESCAPED_UNICODE);
                 exit();
             }
-            if(!isset($_POST["uid"])||empty(isset($_POST["uid"]))){
-                echo json_encode(["status" => 400, "message" => "id user is null!"],JSON_UNESCAPED_UNICODE);
+            if (!isset($_POST["uid"]) || empty(isset($_POST["uid"]))) {
+                echo json_encode(["status" => 400, "message" => "id user is null!"], JSON_UNESCAPED_UNICODE);
                 exit();
             }
             $pid = $_POST["pid"];
             $uid = $_POST["uid"];
             $aid = $_SESSION["login_token"];
-            $data = getUserByIdPostAndIdUser($aid,$pid,$uid);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
+            $data = getUserByIdPostAndIdUser($aid, $pid, $uid);
+            echo json_encode($data, JSON_UNESCAPED_UNICODE);
             exit();
-            break;               
+            break;
         default:
             header("Location:/");
             break;
-        
     }
-}else{
+} else {
     header("Location:/");
 }
