@@ -111,27 +111,13 @@ if ($method == "GET") {
             $login_token = $_SESSION["login_token"];
             $page = $_GET['page'] ?? 1;
             $postsTop = getPost(10, 1); // ห้ามยุ่งบรรทัดนี้
-            $posts = ["status" => 0, "message" => "set", "data" => []];
             $keyword = $_GET['search'] ?? "";
             $date_start = $_GET['start_date'] ?? "";
             $date_end = $_GET['end_date'] ?? "";
             $total_registers = getCountWaitRegister($login_token);
             $waitReg = getWaitRegister($login_token);
-            $posts = getPostx(10, $page, $keyword, $date_start, $date_end);
-            $login_token = $_SESSION["login_token"];
-            
-            if (!empty($posts["data"])) {
-                foreach ($posts["data"] as $key => $post) {
-                    $post_id = $post["p_id"];
-                    $postDetail = getPostDetailById($post_id, $login_token);
-                    if (!empty($postDetail["data"][0]["user_status"])) {
-                        $posts["data"][$key]["user_status"] = $postDetail["data"][0]["user_status"];
-                    } else {
-                        $posts["data"][$key]["user_status"] = null;
-                    }
-                }
-            }
-            
+        
+            $posts = getPostx(10, $page, $keyword, $date_start, $date_end, $login_token);
             require_once('../app/views/home.php');
             exit();
 
