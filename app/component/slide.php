@@ -130,7 +130,7 @@
             <? foreach($postsTop["data"] as $key => $post){ ?>
                 <div class="slide" onClick="getDetailPost('<?= htmlspecialchars($post["p_id"]) ?>')" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">
                     <img src="/get/image?img=/post/<?= htmlspecialchars(($post["image"])??"") ?>" alt="<?= htmlspecialchars(($post["image"])??"") ?> " loading="lazy">
-                    <div class="slide-caption">วันที่รับสมัคร <?= htmlspecialchars($post["p_date_start"]." - ".$post["p_date_end"]) ?></div>
+                    <div class="slide-caption">วันที่รับสมัคร <?= htmlspecialchars(formatThaiDate($post["p_date_start"]) . " - " . formatThaiDate($post["p_date_end"])) ?></div>
                 </div>
             <? } ?>
         </div>

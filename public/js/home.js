@@ -24,6 +24,9 @@ async function registerPost(id) {
             icon: "warning"
         });
     }
+    setTimeout(()=>{
+        window.location.reload();
+    },1500)
 }
 async function getDetailPost(id) {
     const myHeaders = new Headers();
@@ -43,60 +46,80 @@ async function getDetailPost(id) {
     .then((response) => response.text())
     .then((result) => {
         result = JSON.parse(result);
+        console.log(result);
         setModal_Activity_1(result)
     })
     .catch((error) => console.error(error));
 }
+function formatThaiDate(dateString) {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const thaiMonths = [
+        'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน',
+        'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม',
+        'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+    ];
+
+    const day = date.getDate();
+    const month = thaiMonths[date.getMonth()];
+    const year = date.getFullYear() + 543; 
+    return `${day} ${month} ${year}`;
+}
 function setModal_Activity_1(result) {
     if (result.status != 200) {
-        return
+        return;
     }
     const data = result.data;
     const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
-    const create_date = data.post_create;
-    const activity_date = data.post_start + " - " + data.post_end;
-    let images = ""
+
+   
+    const create_date = (data.post_create);
+    const activity_date = `${formatThaiDate(data.post_start)} - ${formatThaiDate(data.post_end)}`;
+
+    let images = "";
     for (let i = 0; i < data.images.length; i++) {
-        images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`
+        images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`;
     }
-    let e = ""
-    e = `<div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div>
-                            <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม</h5>
-                            <p class="small-text">${create_date}</p>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+    let e = `
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม</h5>
+                        <p class="small-text">${formatThaiDate(create_date)}</p>
                     </div>
-                    <div class="modal-body">
-                        <div class="row d-flex align-items-center mb-3">
-                            <div class="col-2 text-start"><strong>ผู้สร้าง:</strong></div>
-                            <div class="col-10 d-flex align-items-center">
-                                <img src="/get/image?img=/user/${data.img}" style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์" loading="lazy">
-                                <h3 class="d-inline-block ms-3 mb-0">${data.fname} ${data.lname}</h3>
-                            </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row d-flex align-items-center mb-3">
+                        <div class="col-2 text-start"><strong>ผู้สร้าง:</strong></div>
+                        <div class="col-10 d-flex align-items-center">
+                            <img src="/get/image?img=/user/${data.img}" style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์" loading="lazy">
+                            <h3 class="d-inline-block ms-3 mb-0">${data.fname} ${data.lname}</h3>
                         </div>
-                        <div class="row d-flex align-items-center mb-3">
+                    </div>
+                    <div class="row d-flex align-items-center mb-3">
                         <div class="col-12">
-                                <div class="overflow-x d-flex">
-                                    ${images}
-                                </div>
+                            <div class="overflow-x d-flex">
+                                ${images}
                             </div>
                         </div>
-                        <div class="text-start">
-                            <p><strong>ชื่อกิจกรรม:</strong> ${data.post_name}</p>
-                            <p><strong>ช่วงเวลา:</strong> ${activity_date}</p>
-                            <p><strong>รายละเอียด:</strong> ${data.post_about}</p>
-                            <p><strong>สถานที่:</strong> ${data.post_address}</p>
-                            <p><strong>สิ่งที่ได้:</strong> ${data.post_give}</p>
-                            <p><strong>จำนวนที่เปิดรับ:</strong> ${data.post_people} คน</p>
-                        </div>
                     </div>
-                    <div class="modal-footer justify-content-center">
-                        <button class="btn btn-success col-6" onClick="registerPost('${data.post_id}')">เข้าร่วม</button>
+                    <div class="text-start">
+                        <p><strong>ชื่อกิจกรรม:</strong> ${data.post_name}</p>
+                        <p><strong>ช่วงเวลา:</strong> ${activity_date}</p>
+                        <p><strong>รายละเอียด:</strong> ${data.post_about}</p>
+                        <p><strong>สถานที่:</strong> ${data.post_address}</p>
+                        <p><strong>สิ่งที่ได้:</strong> ${data.post_give}</p>
+                        <p><strong>จำนวนที่เปิดรับ:</strong> ${data.post_people} คน</p>
                     </div>
                 </div>
-            </div>`
+                <div class="modal-footer justify-content-center">
+                    <button class="btn btn-success col-6" onClick="registerPost('${data.post_id}')">เข้าร่วม</button>
+                </div>
+            </div>
+        </div>`;
     Modal_Activity_1.innerHTML = e;
 }
