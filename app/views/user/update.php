@@ -22,23 +22,11 @@
             border-radius: 50%;
         }
     </style>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        Swal.fire({
-            position: "center",
-            icon: "error",
-            title: "แจ้งเตือน",
-            text: " ",
-            confirmButtonText: "ตกลง"
-        });
-    </script> 
-
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class>
     <div class="container text-center">
-        <form action="/update/user/data" method="post" class="mt-3 card p-4 shadow-sm" style="max-width: 500px; margin: auto;">
+        <form id="update-user-from" class="mt-3 card p-4 shadow-sm" style="max-width: 500px; margin: auto;">
             <div class="mb-3 text-start">
                 <a class="btn btn-danger" href="/logout">ออกจากระบบ</a>
             </div>
@@ -75,5 +63,6 @@
             </div>
         </form>
     </div>
+    <script src="../../js/user/user.js"></script>
 </body>
 </html>
