@@ -72,7 +72,7 @@
         $posts = $result->fetch_all(MYSQLI_ASSOC);
         return ["status"=>200,"message"=>"successfully.","data"=>$posts];
     };
-    function getPostDetailById($id){
+    function getPostDetailById($id, $id_user) {
         global $conn;
         $stmt = $conn->prepare("
             SELECT 
@@ -88,10 +88,12 @@
                 post.p_date_end AS post_end,
                 post.p_give AS post_give,
                 post.p_datetime AS post_create,
+                register.status AS user_status,
                 GROUP_CONCAT(image.image) AS images
             FROM post
             JOIN account ON account.aid = post.p_aid
             LEFT JOIN image ON image.pid = post.p_id
+            LEFT JOIN register ON register.pid = post.p_id AND register.aid = ?
             WHERE post.p_id = ? 
             GROUP BY 
                 post.p_id, 
@@ -105,16 +107,25 @@
                 post.p_date_start, 
                 post.p_date_end, 
                 post.p_give, 
-                post.p_datetime;
+                post.p_datetime, 
+                register.status;
         ");
-        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
-        $stmt->bind_param("s", $id);
-        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+    
+        if (!$stmt) {
+            return ["status" => 400, "message" => "prepare error!"];
+        }
+        $stmt->bind_param("ss", $id_user, $id);
+        if (!$stmt->execute()) {
+            return ["status" => 400, "message" => "execute error!"];
+        }
         $result = $stmt->get_result();
-        if($result->num_rows === 0){return ["status"=>400,"message"=>"ไม่พบข้อมูล"];}
+        if ($result->num_rows === 0) {
+            return ["status" => 400, "message" => "ไม่พบข้อมูล"];
+        }
         $posts = $result->fetch_all(MYSQLI_ASSOC);
-        return ["status"=>200,"message"=>"successfully.","data"=>$posts];
-    };
+        return ["status" => 200, "message" => "successfully.", "data" => $posts];
+    }
+    
     function getPostUserCreate($id,$limit, $page){
         global $conn;
         $page = isset($page) ? (int)$page : 1;

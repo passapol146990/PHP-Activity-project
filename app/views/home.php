@@ -33,9 +33,28 @@
                                 </p>
 
                                 <div class="mt-auto d-flex justify-content-between gap-2">
-                                    <button class="btn btn-success col-6" onClick="registerPost('<?= htmlspecialchars($post["p_id"]) ?>')">เข้าร่วม</button>
+                                    <?php
+                                    if (!isset($post["user_status"]) || empty($post["user_status"])) {
+                                    ?>
+                                        <button class="btn btn-success col-6" onClick="registerPost('<?= htmlspecialchars($post["p_id"]) ?>')">เข้าร่วม</button>
+                                    <?php
+                                    } elseif ($post["user_status"] === "อนุมัติ") {
+                                    ?>
+                                        <button class="btn btn-success col-6" disabled>อนุมัติ</button>
+                                    <?php
+                                    } elseif ($post["user_status"] === "รอการตรวจสอบ") {
+                                    ?>
+                                        <button class="btn btn-warning col-6" disabled>รอการตรวจสอบ</button>
+                                    <?php
+                                    } elseif ($post["user_status"] === "ปฏิเสธ") {
+                                    ?>
+                                        <button class="btn btn-danger col-6" disabled>ปฏิเสธ</button>
+                                    <?php
+                                    }
+                                    ?>
                                     <button class="btn btn-primary col-6" onClick="getDetailPost('<?= htmlspecialchars($post["p_id"]) ?>')" data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">รายละเอียด</button>
                                 </div>
+
                             </div>
                         </div>
                     </div>
