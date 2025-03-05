@@ -332,14 +332,3 @@ function getPosttoedit($p_id, $p_aid)
     $result = $data->fetch_assoc();
     return ["status" => 200, "message" => "Successfully.", "data" => $result];
 };
-function formatThaiDate($dateStr)
-{
-    $thaiMonths = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
-
-    $date = new DateTime($dateStr);
-    $day = (int)$date->format("d");
-    $month = $thaiMonths[(int)$date->format("m") - 1];
-    $year = (int)$date->format("Y") + 543;
-
-    return "$day $month $year";
-}
