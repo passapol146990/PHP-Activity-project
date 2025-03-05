@@ -200,7 +200,7 @@
     <div class="nav-links">
         <a href="/" class="nav-item">หน้าแรก</a>
         <a href="/activity/create" class="nav-item">สร้างกิจกรรม</a>
-        <a href="/activity/create/show" class="nav-item">กิจกรรมที่สร้าง
+        <a href="/activity/create/show" class="nav-item" id="ac_created">กิจกรรมที่สร้าง
             <? if(isset($total_registers)&&$total_registers>0) { ?>
                 <span class="notification-badge"><?= htmlspecialchars($total_registers) ?></span>
             <? } ?>

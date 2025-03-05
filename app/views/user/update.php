@@ -22,6 +22,19 @@
             border-radius: 50%;
         }
     </style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "แจ้งเตือน",
+            text: " ",
+            confirmButtonText: "ตกลง"
+        });
+    </script> 
+
+
 </head>
 <body class>
     <div class="container text-center">

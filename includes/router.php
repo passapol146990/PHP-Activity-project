@@ -116,7 +116,6 @@ if ($method == "GET") {
             $date_end = $_GET['end_date'] ?? "";
             $total_registers = getCountWaitRegister($login_token);
             $waitReg = getWaitRegister($login_token);
-        
             $posts = getPostx(10, $page, $keyword, $date_start, $date_end, $login_token);
             require_once('../app/views/home.php');
             exit();
@@ -202,9 +201,22 @@ if ($method == "GET") {
             $login_token = $_SESSION["login_token"];
             $total_registers = getCountWaitRegister($login_token);
             $waitReg = getWaitRegister($login_token);
+
+            $keyword = $_GET['search'] ?? "";
+            $date_start = $_GET['start_date'] ?? "";
+            $date_end = $_GET['end_date'] ?? "";
             $page = $_GET['page'] ?? 1;
-            $data = getPostUserCreate($login_token, 10, $page);
-            if ($data["status"] != 200) {
+            $posts = getPostx(10, $page,$keyword,$date_start,$date_end);
+
+            if (!empty($posts["data"])) {
+                foreach ($posts["data"] as $key => $post) {
+                    $posts["data"][$key]["p_date_start_th"] = formatThaiDate($post["p_date_start"]);
+                    $posts["data"][$key]["p_date_end_th"] = formatThaiDate($post["p_date_end"]);
+                }
+            }
+            
+            $data = getPostUserCreate($login_token,10,$page);
+            if($data["status"]!=200){
                 $data["data"] = [];
             }
 
@@ -425,6 +437,18 @@ if ($method == "GET") {
             if (!isset($_POST['gender']) || empty($_POST['gender'])) {
                 header("Location:/");
                 exit();
+            }
+
+            $birthday = $_POST["birthday"];
+            $birthDate = DateTime::createFromFormat('Y-m-d', $birthday); // แปลงเป็น DateTime
+            $today = new DateTime(); // วันที่ปัจจุบัน
+            $age = $today->diff($birthDate)->y;
+
+            if ($age < 12) {
+                $_SESSION['error'] = "คุณต้องมีอายุตั้งแต่ 12 ปีขึ้นไป";
+                $_SESSION['form_data'] = $_POST;
+                header("Location: form.php");
+                    exit();
             }
             $id = $_SESSION["login_token"];
             $fname = $_POST["fname"];
