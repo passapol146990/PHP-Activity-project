@@ -116,6 +116,12 @@ if($method=="GET"){
             $total_registers = getCountWaitRegister($login_token);
             $waitReg = getWaitRegister($login_token);
             $posts = getPostx(10, $page,$keyword,$date_start,$date_end);
+            if (!empty($posts["data"])) {
+                foreach ($posts["data"] as $key => $post) {
+                    $posts["data"][$key]["p_date_start_th"] = formatThaiDate($post["p_date_start"]);
+                    $posts["data"][$key]["p_date_end_th"] = formatThaiDate($post["p_date_end"]);
+                }
+            }
             require_once('../app/views/home.php');
             exit();
                 
@@ -205,6 +211,7 @@ if($method=="GET"){
             if($data["status"]!=200){
                 $data["data"] = [];
             }
+            
             require_once('../app/views/activity/show.php');
             exit();
             break;
