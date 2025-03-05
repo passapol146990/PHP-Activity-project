@@ -378,6 +378,9 @@
             </div>
         </div>
     </div>
+    <?php if(count($data["data"])>=10){
+        require_once '../app/component/buttonPage.php';
+    } ?>
     <script src="../../js/activity.js"></script>
 </body>
 </html>

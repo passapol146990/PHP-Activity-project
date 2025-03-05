@@ -13,16 +13,8 @@ class ACTIVITY{
         $date_start = $_GET['start_date'] ?? "";
         $date_end = $_GET['end_date'] ?? "";
         $page = $_GET['page'] ?? 1;
-        $posts = getPostx(10, $page,$keyword,$date_start,$date_end);
-
-        if (!empty($posts["data"])) {
-            foreach ($posts["data"] as $key => $post) {
-                $posts["data"][$key]["p_date_start_th"] = formatThaiDate($post["p_date_start"]);
-                $posts["data"][$key]["p_date_end_th"] = formatThaiDate($post["p_date_end"]);
-            }
-        }
         
-        $data = getPostUserCreate($login_token,10,$page);
+        $data = getPostUserCreateX($login_token, 10, $page, $keyword, $date_start, $date_end);
         if($data["status"]!=200){
             $data["data"] = [];
         }

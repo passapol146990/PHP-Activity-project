@@ -212,7 +212,7 @@
             <? } ?>
         </a>
     </div>
-    <form action="<?= htmlspecialchars($path) ?>" method="get" class="search-container">
+    <form action="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>" method="get" class="search-container">
         <div class="search-box">
             <? if(isset($_GET["search"])) { ?>
                 <input type="search" class="search-input" name="search" placeholder="ค้นหากิจกรรม..." value="<?= htmlspecialchars($_GET["search"]??"") ?>">

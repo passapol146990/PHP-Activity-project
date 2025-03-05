@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -253,7 +252,6 @@
         }
     </style>
 </head>
-
 <body>
     <?php require_once '../app/component/navbar.php'; ?>
     <div class="container bg-white pt-2 rounded" style="margin-top: 20px;">
@@ -379,6 +377,9 @@
             </div>
         </div>
     </div> -->
+    <?php if(count($myactivities["data"])>=10){
+        require_once '../app/component/buttonPage.php';
+    }?>
     <script src="../../js/register.js"></script>
 </body>
 </html>

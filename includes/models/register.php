@@ -91,8 +91,30 @@ function upadteResgister($pid,$aid,$uid,$status){
     if (!$stmt->execute()) {return ["status" => 400, "message" => "Execute error: " . $stmt->error];}
     return ["status" => 200, "message" => "อัพเดทคำขอเข้าร่วมสำเร็จ"];
 }
-function getRegisteredActivities($aid,$limit,$page) {
+function getRegisteredActivities($aid, $limit, $page, $keyword = '', $date_start = '', $date_end = '') {
     global $conn;
+
+    $page = isset($page) ? (int)$page : 1;
+    $limit = isset($limit) ? (int)$limit : 10;
+    $offset = ($page - 1) * $limit;
+
+    $where = "register.aid = ?";
+    $params = [$aid];
+    $param_types = "s"; // $aid เป็น string
+
+    if (!empty($keyword)) {
+        $where .= " AND post.p_name LIKE ?";
+        $params[] = "%$keyword%";
+        $param_types .= "s";
+    }
+
+    if (!empty($date_start) && !empty($date_end)) {
+        $where .= " AND (post.p_date_start <= ? AND post.p_date_end >= ?)";
+        $params[] = $date_end;
+        $params[] = $date_start;
+        $param_types .= "ss";
+    }
+
     $sql = "
         SELECT  
             register.id AS register_id,
@@ -123,18 +145,36 @@ function getRegisteredActivities($aid,$limit,$page) {
         FROM register
         JOIN post ON register.pid = post.p_id
         JOIN account ON post.p_aid = account.aid
-        WHERE register.aid = ?;
-
+        WHERE $where
+        ORDER BY register.datetime DESC
+        LIMIT ?, ?
     "; 
+
     $stmt = $conn->prepare($sql);
-    if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
-    $stmt->bind_param("s",$aid);
-    if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+    if (!$stmt) {
+        return ["status" => 400, "message" => "prepare error!"];
+    }
+
+    // เพิ่ม offset และ limit
+    $params[] = $offset;
+    $params[] = $limit;
+    $param_types .= "ii"; 
+
+    $stmt->bind_param($param_types, ...$params);
+    if (!$stmt->execute()) {
+        return ["status" => 400, "message" => "execute error!"];
+    }
+
     $result = $stmt->get_result();
-    if($result->num_rows === 0){return ["status"=>201,"message"=>"ไม่พบข้อมูล","data"=>[]];}
+    if ($result->num_rows === 0) {
+        return ["status" => 201, "message" => "ไม่พบข้อมูล", "data" => []];
+    }
+
     $data = $result->fetch_all(MYSQLI_ASSOC);
-    return ["status"=>200,"message"=>"successfully.","data"=>$data];
+    return ["status" => 200, "message" => "successfully.", "data" => $data];
 }
+
+
 function DeleteRegister($rid,$pid,$aid) {
     global $conn;
     $stmt = $conn->prepare("DELETE FROM register WHERE id = ? AND pid = ? AND aid = ?;");

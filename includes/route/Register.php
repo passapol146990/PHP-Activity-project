@@ -3,11 +3,18 @@ require_once("../includes/models/register.php");
 class REGISTER{
     function Show(){
         isLogin();
+        $keyword = $_GET['search'] ?? "";
+        $date_start = $_GET['start_date'] ?? "";
+        $date_end = $_GET['end_date'] ?? "";
+        $page = $_GET['page'] ?? 1;
+
         $login_token = $_SESSION["login_token"];
         $page = $_GET['page'] ?? 1;
         $total_registers = getCountWaitRegister($login_token);
         $waitReg = getWaitRegister($login_token);
-        $myactivities = getRegisteredActivities($login_token, 10, $page);
+        
+        // $myactivities = getRegisteredActivities($login_token, 10, $page);
+        $myactivities = getRegisteredActivities($login_token, 10, $page, $keyword, $date_start, $date_end);
         require_once('../app/views/register/show.php');
         exit();
     }

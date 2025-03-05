@@ -141,6 +141,68 @@ function getPostDetailById($id, $id_user)
     $posts = $result->fetch_all(MYSQLI_ASSOC);
     return ["status" => 200, "message" => "successfully.", "data" => $posts];
 }
+function getPostUserCreateX($id, $limit, $page, $keyword = '', $date_start = '', $date_end = '') {
+    global $conn;
+    $page = isset($page) ? (int)$page : 1;
+    $limit = isset($limit) ? (int)$limit : 10;
+    $offset = ($page - 1) * $limit;
+
+    $where = "account.aid = ?";
+    $params = [$id];
+    $param_types = "s"; // account.aid เป็น String
+
+    if (!empty($keyword)) {
+        $where .= " AND post.p_name LIKE ?";
+        $params[] = "%$keyword%";
+        $param_types .= "s";
+    }
+    if (!empty($date_start) && !empty($date_end)) {
+        $where .= " AND (post.p_date_start <= ? AND post.p_date_end >= ?)";
+        $params[] = $date_end;  // เปลี่ยนเป็น date_end
+        $params[] = $date_start; // เปลี่ยนเป็น date_start
+        $param_types .= "ss";
+    }
+
+    $sql = "
+        SELECT 
+            post.*, 
+            (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image, 
+            COUNT(register.pid) AS total_registers, 
+            SUM(CASE WHEN register.status = 'รอการตรวจสอบ' THEN 1 ELSE 0 END) AS pending_registers,
+            SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved_registers,
+            SUM(CASE WHEN register.status = 'ปฏิเสธ' THEN 1 ELSE 0 END) AS rejected_registers
+        FROM post
+        JOIN account ON post.p_aid = account.aid
+        LEFT JOIN register ON post.p_id = register.pid
+        WHERE $where
+        GROUP BY post.p_id
+        ORDER BY post.p_datetime DESC
+        LIMIT ?, ?
+    ";
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return ["status" => 400, "message" => "prepare error!"];
+    }
+
+    // เพิ่ม offset และ limit
+    $params[] = $offset;
+    $params[] = $limit;
+    $param_types .= "ii"; 
+
+    $stmt->bind_param($param_types, ...$params);
+    if (!$stmt->execute()) {
+        return ["status" => 400, "message" => "execute error!"];
+    }
+
+    $result = $stmt->get_result();
+    if ($result->num_rows === 0) {
+        return ["status" => 400, "message" => "ไม่พบข้อมูล"];
+    }
+
+    $posts = $result->fetch_all(MYSQLI_ASSOC);
+    return ["status" => 200, "message" => "successfully.", "data" => $posts];
+}
 
 function getPostUserCreate($id, $limit, $page)
 {
