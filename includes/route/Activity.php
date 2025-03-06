@@ -110,7 +110,7 @@ class ACTIVITY{
             $end_date = $_POST["end_date"];
             $location = $_POST["location"];
             $p_give = $_POST["p_give"] ?? "";
-            $post_status = $_SESSION['post_status'][$pid] = 'open';
+            $_SESSION['post_status'][$pid] = 'open';
             
             createPost($pid, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
 
@@ -209,10 +209,11 @@ class ACTIVITY{
             
         }else {
             $_SESSION['post_status'][$p_id] = 'open';
+            $data = updatePost($p_id, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
+            
         }
 
 
-        $data = updatePost($p_id, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
         header("location:/activity/create/show?status=success&message=อัพเดทกิจกรรมสำเร็จ");
         exit();
     }

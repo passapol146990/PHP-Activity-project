@@ -116,3 +116,44 @@ async function cancelRegister(rid,pid,title) {
         window.location.href = `/register/cancel?rid=${rid}&pid=${pid}`
     }
 }   
+
+document.addEventListener("DOMContentLoaded", function() {
+    const fileInput = document.getElementById("file-upload");
+    const fileNameLabel = document.getElementById("file_name");
+    const previewImg = document.getElementById("preview-img");
+    const uploadBtn = document.getElementById("upload-btn");
+
+    if (!fileInput || !fileNameLabel || !previewImg || !uploadBtn) return;
+
+    uploadBtn.addEventListener("click", function() {
+        fileInput.click();
+    });
+    previewImg.addEventListener("click", function() {
+        fileInput.click();
+    });
+    function previewImage(event) {
+        const files = event.target.files;
+        const maxSize = 2 * 1024 * 1024; // 2MB
+        if (files.length === 0) return;
+        const file = files[0];
+        fileNameLabel.innerText = file.name;
+        if (!file.type.match("image.*")) {
+            alert("กรุณาอัปโหลดไฟล์รูปภาพเท่านั้น");
+            return;
+        }
+        if (file.size > maxSize) {
+            alert(`ไฟล์ ${file.name} มีขนาดเกิน 2MB!`);
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            previewImg.style.display = "block";
+            uploadBtn.style.display = "none";
+        };
+        reader.readAsDataURL(file);
+    }
+
+    fileInput.addEventListener("change", previewImage);
+});
+

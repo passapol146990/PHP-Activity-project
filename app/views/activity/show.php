@@ -332,13 +332,14 @@
                             <lable id="pending:<?= htmlspecialchars($doc["p_id"]) ?>" style="display:none;"><?= htmlspecialchars($doc['pending_registers']) ?></lable>
                         </td>
                         <td>
+                        <div class="mt-2"></div>
                             <a href="/activity/edit?pid=<?= htmlspecialchars($doc["p_id"]) ?>" class="btn btn-primary bt_pri btn-sm">แก้ไข</a>
 
                             <div class="mb-1"></div>
                                 <?php $p_id = $doc['p_id']; 
                                 $p_status = $_SESSION['post_status'][$p_id] ?? 'null';?>
                                 <?php if ($p_status == 'close'): ?>
-                                    <button type="button" class="btn btn-warning" >ตรวจรูปภาพ</button><?php else: ?>
+                                    <button onclick="" type="button" class="btn btn-warning" >ตรวจรูปภาพ</button><?php else: ?>
                                 <?php endif; ?>
 
                             <div class="mb-3"></div>
@@ -390,6 +391,7 @@
         require_once '../app/component/buttonPage.php';
     } ?>
     <script src="../../js/activity.js"></script>
+    
 
 </body>
 </html>

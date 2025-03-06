@@ -6,6 +6,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <link rel="shortcut icon" type="image/x-icon" href="../../Logo_size32.png">
     <title>กิจกรรมที่เข้าร่วม</title>
 
@@ -250,6 +252,15 @@
                 transform: translateY(0);
             }
         }
+
+    .modal {
+    z-index: 110 !important;
+    }
+
+    .modal-backdrop {
+        z-index: 109 !important;
+    }
+
     </style>
 </head>
 <body>
@@ -297,13 +308,15 @@
                                 $rid = htmlspecialchars($doc["register_id"]);
                                 $pid = htmlspecialchars($doc["post_id"]);
                                 $title = htmlspecialchars($doc['post_name']);
+                                
                                 switch($doc["register_status"]){
                                     case 'รอการตรวจสอบ':
                                         $text = "<span class='text-warning'>".htmlspecialchars($doc["register_status"])."</span>";
-                                        $action = '<buttom onClick="cancelRegister('."'$rid','$pid','$title'".')" class="btn btn-danger bt_pri btn-sm">ลบ</buttom>';
+                                        $action = '<button onClick="cancelRegister('."'$rid','$pid','$title'".')" class="btn btn-danger bt_pri btn-sm">ลบ</buttom>';
                                         break;
                                     case 'อนุมัติ':
                                         $text = "<span class='text-success'>".htmlspecialchars($doc["register_status"])."</span>";
+                                        $action = '<button class="btn btn-warning bt_pri btn-sm" data-bs-toggle="modal" data-bs-target="#Modal_submit_pic_1" data-rid="'.$rid.'" data-pid="'.$pid.'" data-title="'.$title.'">ส่งรูปภาพ</button>';                                        
                                         break;
                                     case 'ปฏิเสธ':
                                         $text = "<span class='text-danger'>".htmlspecialchars($doc["register_status"])."</span>";
@@ -335,48 +348,37 @@
             </div>
         </div>
     </div>
-    <!-- <div class="modal fade text-font" id="Modal_submit_pic_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+
+    
+    <!--modal submit -->
+      <div class="modal fade text-font" id="Modal_submit_pic_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม<br><small class="text-muted small-text">วันที่ 25/2/68 19:25:40 น.</small></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button onClick="closePopUp()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body d-flex justify-content-center">
-                    <label for="file-upload" class="custom-file-upload">
-                        <div class="image-upload-container ">
-
-                            <div id="image-preview" class="image-preview " style="width: 550px; height: 280px;">
-                                <img id="preview-img" src="#" alt="Image Preview" style="display: none; object-fit: contain;">
-                                <button id="upload-btn" class="btn btn-outline-secondary btn-lg" onclick="document.getElementById('file-upload').click()">อัพโหลดรูปภาพ</button>
-                            </div>
-
-                            <div class="d-flex flex-column align-items-center">
-                                <input id="file-upload" type="file" accept="image/*" onchange="previewImage(event)" style="display: none;">
-                            </div>
+                <div class="modal-body d-block justify-content-center text-center">
+                    <label for="file-upload" class="custom-file-upload" id="file_name"></label>
+                    <div class="image-upload-container">
+                        <div id="image-preview" class="image-preview" style="width: 550px; height: 280px;">
+                            <img id="preview-img" src="#" alt="Image Preview" style="display: none; object-fit: contain; width: 100%; height: 100%;">
+                            <button id="upload-btn" class="btn btn-outline-secondary btn-lg" type="button">อัพโหลดรูปภาพ</button>
                         </div>
 
-                        <script>
-                            function previewImage(event) {
-                                var reader = new FileReader();
-                                reader.onload = function() {
-                                    var output = document.getElementById('preview-img');
-                                    var uploadBtn = document.getElementById('upload-btn');
-
-                                    output.src = reader.result;
-                                    output.style.display = 'block';
-                                    uploadBtn.style.display = 'none';
-                                }
-                                reader.readAsDataURL(event.target.files[0]);
-                            }
-                        </script>
+                            <div class="d-flex flex-column align-items-center">
+                                <input id="file-upload" type="file" accept="image/*" style="display: none;">
+                            </div>
+                        </div>
                 </div>
                 <div class="success-pad">
                     <button type="button" class="btn btn-success" style="width: 100px; height: 50px">ส่งรูปภาพ</button>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div> 
+    
     <?php if(count($myactivities["data"])>=10){
         require_once '../app/component/buttonPage.php';
     }?>
