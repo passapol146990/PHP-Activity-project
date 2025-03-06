@@ -14,7 +14,7 @@ class ACTIVITY{
         $date_end = $_GET['end_date'] ?? "";
         $page = $_GET['page'] ?? 1;
         
-        $data = getPostUserCreateX($login_token, 10, $page, $keyword, $date_start, $date_end);
+        $data = getPostUserCreateX($login_token, 10, $page, $keyword, $date_start, $date_end); 
         if($data["status"]!=200){
             $data["data"] = [];
         }
@@ -110,6 +110,8 @@ class ACTIVITY{
             $end_date = $_POST["end_date"];
             $location = $_POST["location"];
             $p_give = $_POST["p_give"] ?? "";
+            $post_status = $_SESSION['post_status'][$pid] = 'open';
+            
             createPost($pid, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
 
             foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
@@ -156,6 +158,7 @@ class ACTIVITY{
         }
         header("Location:/?status=success&message=สร้างกิจกรรมสำเร็จ");
         exit();
+        
     }
     function update(){
         isLogin();
@@ -187,6 +190,7 @@ class ACTIVITY{
             header("Location:/activity/edit?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
             exit();
         }
+        
         $aid = $_SESSION["login_token"];
         $p_id = $_POST["p_id"] ?? "";
         $title = $_POST["title"];
@@ -196,6 +200,18 @@ class ACTIVITY{
         $end_date = $_POST["end_date"];
         $location = $_POST["location"];
         $p_give = $_POST["p_give"];
+        $action = $_POST["action_type"] ?? "";
+        
+        $post_status = $_SESSION['post_status'][$p_id];
+        
+        if (!empty($post_status) && $action == "close") {
+            $_SESSION['post_status'][$p_id] = 'close';
+            
+        }else {
+            $_SESSION['post_status'][$p_id] = 'open';
+        }
+
+
         $data = updatePost($p_id, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
         header("location:/activity/create/show?status=success&message=อัพเดทกิจกรรมสำเร็จ");
         exit();

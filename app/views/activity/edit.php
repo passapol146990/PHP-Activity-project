@@ -120,7 +120,7 @@
                 <a href="/activity/create/show" class="btn btn-primary">&larr; กลับ</a>
             </div>
             <h2 class="mb-3">แก้ไขกิจกรรม : <?= htmlspecialchars($result['post_name'] ?? '') ?></h2>
-            <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($p_id); ?>">
+                <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($p_id); ?>">
             <div class="mb-3">
                 <label for="image-upload" class="form-label">รูปภาพกิจกรรม</label>
                 <div id="image-preview" class="image-preview-container" data-existing-images="<?= htmlspecialchars($result['images'] ?? '') ?>"></div>
@@ -155,11 +155,33 @@
                 <label for="location" class="form-label">สิ่งที่ผู้เข้าร่วมจะได้รับ</label>
                 <input type="text" class="form-control" id="p_give" name="p_give" value="<?= htmlspecialchars($result['post_give']) ?>" required>
             </div>
-            <div class="p-2 d-flex justify-content-end mt-3">
-                <button type="submit" class="btn btn-warning">แก้ไขกิจกรรม</button>   
-            </div>
+                            
+            <?php $p_status = $_SESSION['post_status'][$p_id] ?? 'null';?>
+                <div class="p-2 d-flex justify-content-between mt-3">
+                    <?php if ($p_status == 'open'): ?>
+                        <button type="submit" class="btn btn-danger" onclick="setAction('close')">
+                        <input type="hidden" name="action_type" id="action_type" value="">
+                            ปิดรับสมัครกิจกรรม
+                        </button>
+                    <?php else: ?>
+                        <button type="button" class="btn btn-secondary" disabled>
+                            ปิดรับแล้ว
+                        </button>
+                    <?php endif; ?>
+
+                    <button type="submit" class="btn btn-warning" onclick="setAction('update')">
+                        แก้ไขกิจกรรม
+                    </button>
+                </div>
+
         </form>
     </div>
+    <script>
+    function setAction(action) {
+        document.getElementById('action_type').value = action;
+        }
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const preview = document.getElementById("image-preview");
