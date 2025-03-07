@@ -249,7 +249,7 @@ class ACTIVITY{
                             }
                             imagedestroy($image);
                             imagedestroy($newImage);
-                            createImage($name, $pid);
+                            // submitRegister($name, $pid,$aid);
                         }
                     }
                 }

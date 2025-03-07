@@ -76,6 +76,9 @@ class REGISTER{
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         exit();
     }
+    function submitRegister(){
+        
+    }
 }
 $Register = new REGISTER();
 ?>

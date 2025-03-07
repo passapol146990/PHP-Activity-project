@@ -84,16 +84,6 @@ if ($method == "GET") {
             $User->update();
             break;
         case '/image/submit':
-            // isLogin();
-            // if ($_FILES['image']['error'] == UPLOAD_ERR_OK) {
-            //     $name = date('Ymd') . $_SESSION["login_token"] . '_' . uniqid() . '.png';
-            //     $fileTmp = $_FILES['image']['tmp_name'];
-            //     $destination = '../image/submit/' . $name;
-            //     resizeImage($fileTmp, $destination, 300, 300);
-            //     echo "อัปโหลดสำเร็จ!";
-            // } else {
-            //     echo "อัปโหลดล้มเหลว!";
-            // }
             $Activity->userSubmitpic();
             break;
         case '/api/get/post':
