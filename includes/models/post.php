@@ -295,19 +295,19 @@ function getCounApproveRegister($pid)
     }
     return true;
 };
-function createPost($p_id, $p_aid, $p_name, $p_about, $p_max, $p_address, $p_date_start, $p_date_end, $p_give)
+function createPost($p_id, $p_aid, $p_name, $p_about, $p_max, $p_address, $p_date_start, $p_date_end, $p_give,$p_status)
 {
     global $conn;
     $p_max = intval($p_max);
     if ($p_max <= 0) {
         $p_max = 1;
     }
-    $sql = 'INSERT INTO post(p_id,p_aid,p_name,p_about,p_max,p_address,p_date_start,p_date_end,p_give) VALUES(?,?,?,?,?,?,?,?,?)';
+    $sql = 'INSERT INTO post(p_id,p_aid,p_name,p_about,p_max,p_address,p_date_start,p_date_end,p_give,p_status) VALUES(?,?,?,?,?,?,?,?,?,?)';
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         return ["status" => 400, "message" => "prepare error!"];
     }
-    $stmt->bind_param('ssssdssss', $p_id, $p_aid, $p_name, $p_about, $p_max, $p_address, $p_date_start, $p_date_end, $p_give);
+    $stmt->bind_param('ssssdsssss', $p_id, $p_aid, $p_name, $p_about, $p_max, $p_address, $p_date_start, $p_date_end, $p_give,$p_status);
     if (!$stmt->execute()) {
         return ["status" => 400, "message" => "execute error!"];
     }
@@ -329,7 +329,7 @@ function deletePostByIdPostAndIdUser($pid, $aid)
     $data = $stmt->get_result();
     return ["status" => 200, "message" => "successfuly.", "data" => $data];
 };
-function updatePost($p_id, $p_aid, $p_name, $p_about, $p_max, $p_address, $p_date_start, $p_date_end, $p_give)
+function updatePost($p_id, $p_aid, $p_name, $p_about, $p_max, $p_address, $p_date_start, $p_date_end, $p_give, $p_status)
 {
     global $conn;
     $p_max = intval($p_max);
@@ -337,13 +337,13 @@ function updatePost($p_id, $p_aid, $p_name, $p_about, $p_max, $p_address, $p_dat
         $p_max = 1;
     }
     $sql = 'UPDATE post 
-                SET p_name = ?, p_about = ?, p_max = ?, p_address = ?, p_date_start = ?, p_date_end = ?, p_give = ? 
+                SET p_name = ?, p_about = ?, p_max = ?, p_address = ?, p_date_start = ?, p_date_end = ?, p_give = ?, p_status = ?
                 WHERE p_id = ? AND p_aid = ?';
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         return ["status" => 400, "message" => "Prepare error: " . $conn->error];
     }
-    $stmt->bind_param('ssdssssss', $p_name, $p_about, $p_max, $p_address, $p_date_start, $p_date_end, $p_give, $p_id, $p_aid);
+    $stmt->bind_param('ssdsssssss',  $p_name, $p_about, $p_max, $p_address, $p_date_start, $p_date_end, $p_give, $p_status, $p_id, $p_aid);
     if (!$stmt->execute()) {
         return ["status" => 400, "message" => "Execute error: " . $stmt->error];
     }
@@ -352,6 +352,28 @@ function updatePost($p_id, $p_aid, $p_name, $p_about, $p_max, $p_address, $p_dat
     }
     return ["status" => 200, "message" => "Updated successfully."];
 };
+
+function updateStatus_Post($p_id, $p_aid, $p_status)
+{
+    global $conn;
+    $sql = 'UPDATE post 
+                SET p_status = ?
+                WHERE p_id = ? AND p_aid = ?';
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return ["status" => 400, "message" => "Prepare error: " . $conn->error];
+    }
+    $stmt->bind_param('sss', $p_status, $p_id, $p_aid);
+    if (!$stmt->execute()) {
+        return ["status" => 400, "message" => "Execute error: " . $stmt->error];
+    }
+    if ($stmt->affected_rows === 0) {
+        return ["status" => 204, "message" => "No changes made."];
+    }
+    var_dump($stmt->affected_rows);
+    return ["status" => 200, "message" => "Closed post successfully."];
+};
+
 function getPosttoedit($p_id, $p_aid)
 {
     global $conn;
@@ -365,6 +387,7 @@ function getPosttoedit($p_id, $p_aid)
                 post.p_date_end AS post_end,
                 post.p_give AS post_give,
                 post.p_datetime AS post_create,
+                post.p_status AS post_status,
             IFNULL(GROUP_CONCAT(image.image SEPARATOR ', '), '') AS images
             FROM post
             JOIN account ON account.aid = post.p_aid
@@ -379,7 +402,8 @@ function getPosttoedit($p_id, $p_aid)
                 post.p_date_start, 
                 post.p_date_end, 
                 post.p_give, 
-                post.p_datetime;");
+                post.p_datetime,
+                post.p_status");
     if (!$stmt) {
         return ["status" => 400, "message" => "Prepare error!"];
     }

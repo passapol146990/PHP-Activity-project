@@ -155,21 +155,23 @@
                 <label for="location" class="form-label">สิ่งที่ผู้เข้าร่วมจะได้รับ</label>
                 <input type="text" class="form-control" id="p_give" name="p_give" value="<?= htmlspecialchars($result['post_give']) ?>" required>
             </div>
-                            
-            <?php $p_status = $_SESSION['post_status'][$p_id] ?? 'null';?>
+            <input type="hidden" name="p_status" id="p_status" value="<?= htmlspecialchars($result['post_status']) ?>">
+            <input type="hidden" name="action_type" id="action_type">         
+            <?php
+                //echo("status"." ".$result['post_status']); 
+            ?> 
                 <div class="p-2 d-flex justify-content-between mt-3">
-                    <?php if ($p_status == 'open'): ?>
+                    <?php if ($result['post_status'] == 'open'): ?>
                         <button type="submit" class="btn btn-danger" onclick="setAction('close')">
-                        <input type="hidden" name="action_type" id="action_type" value="">
                             ปิดรับสมัครกิจกรรม
                         </button>
                     <?php else: ?>
                         <button type="button" class="btn btn-secondary" disabled>
-                            ปิดรับแล้ว
+                            ปิดรับแล้ว 
                         </button>
                     <?php endif; ?>
 
-                    <button type="submit" class="btn btn-warning" onclick="setAction('update')">
+                    <button type="submit" class="btn btn-warning" onclick="setAction('open')">
                         แก้ไขกิจกรรม
                     </button>
                 </div>

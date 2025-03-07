@@ -111,8 +111,9 @@ class ACTIVITY{
             $location = $_POST["location"];
             $p_give = $_POST["p_give"] ?? "";
             $_SESSION['post_status'][$pid] = 'open';
+            $p_status = "open";
             
-            createPost($pid, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
+            createPost($pid, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give, $p_status);
 
             foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
                 if ($_FILES['images']['error'][$key] === 0) {
@@ -201,19 +202,10 @@ class ACTIVITY{
         $location = $_POST["location"];
         $p_give = $_POST["p_give"];
         $action = $_POST["action_type"] ?? "";
+        $p_status = $_POST["p_status"] ?? "";
         
-        $post_status = $_SESSION['post_status'][$p_id];
-        
-        if (!empty($post_status) && $action == "close") {
-            $_SESSION['post_status'][$p_id] = 'close';
-            
-        }else {
-            $_SESSION['post_status'][$p_id] = 'open';
-            $data = updatePost($p_id, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
-            
-        }
-
-
+        $data = updatePost($p_id, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give, $action);
+       
         header("location:/activity/create/show?status=success&message=อัพเดทกิจกรรมสำเร็จ");
         exit();
     }
