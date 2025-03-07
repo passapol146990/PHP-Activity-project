@@ -28,6 +28,21 @@ async function registerPost(id) {
         window.location.reload();
     }, 1000);
 }
+function formatThaiDate(dateString) {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const thaiMonths = [
+        'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน',
+        'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม',
+        'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+    ];
+
+    const day = date.getDate();
+    const month = thaiMonths[date.getMonth()];
+    const year = date.getFullYear() + 543; 
+    return `${day} ${month} ${year}`;
+}
 async function getDetailPost(id) {
     const myHeaders = new Headers();
     myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
@@ -57,8 +72,8 @@ function setModal_Activity_1(result) {
 
     const data = result.data;
     const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
-    const create_date = data.post_create;
-    const activity_date = data.post_start + " - " + data.post_end;
+    const create_date =  formatThaiDate(data.post_create);
+    const activity_date = `${formatThaiDate(data.post_start)} - ${formatThaiDate(data.post_end)}`;
     let images = "";
 
     for (let i = 0; i < data.images.length; i++) {
@@ -69,11 +84,22 @@ function setModal_Activity_1(result) {
     if (!data.user_status || data.user_status === "") {
         buttonHtml = `<button class="btn btn-success col-6" onClick="registerPost('${data.post_id}')">เข้าร่วม</button>`;
     } else if (data.user_status === "อนุมัติ") {
-        buttonHtml = `<button class="btn btn-success col-6" disabled>อนุมัติ</button>`;
+        buttonHtml = `<div
+                                            class="text-success col-6 d-flex justify-content-center align-items-center fw-bold">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" class="me-2"
+                                                style="stroke: green; fill: white;">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            เข้าร่วมกิจกรรมแล้ว
+                                        </div>`;
     } else if (data.user_status === "รอการตรวจสอบ") {
         buttonHtml = `<button class="btn btn-warning col-6" disabled>รอการตรวจสอบ</button>`;
     } else if (data.user_status === "ปฏิเสธ") {
-        buttonHtml = `<button class="btn btn-danger col-6" disabled>ปฏิเสธ</button>`;
+        buttonHtml = `<div class="text-danger col-6 d-flex justify-content-center align-items-center fw-bold">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"viewBox="0 0 24 24" stroke="currentColor" class="me-2"style="stroke: red; fill: white;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"d="M6 6l12 12M6 18L18 6" />
+        // </svg>ปฏิเสธ</div>`;
     }
 
     let e = `
