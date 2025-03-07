@@ -336,11 +336,9 @@
                             <a href="/activity/edit?pid=<?= htmlspecialchars($doc["p_id"]) ?>" class="btn btn-primary bt_pri btn-sm">แก้ไข</a>
 
                             <div class="mb-1"></div>
-                                <?php $p_id = $doc['p_id']; 
-                                $p_status = $_SESSION['post_status'][$p_id] ?? 'null';?>
-                                <?php if ($p_status == 'close'): ?>
+                                <?php if ($doc['p_status'] == 'close'): ?>
                                     <button onclick="" type="button" class="btn btn-warning" >ตรวจรูปภาพ</button><?php else: ?>
-                                <?php endif; ?>
+                                <?php endif; ?> 
 
                             <div class="mb-3"></div>
                             <button onClick="DeletePost('<?= htmlspecialchars($doc["p_id"]) ?>','<?= htmlspecialchars($doc["p_name"]) ?>')" class="btn btn-danger bt_pri btn-sm">ลบ</button>
