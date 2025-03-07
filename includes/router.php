@@ -83,7 +83,7 @@ if ($method == "GET") {
         case '/update/user/data':
             $User->update();
             break;
-        case '/save/image/submit':
+        case '/image/submit':
             // isLogin();
             // if ($_FILES['image']['error'] == UPLOAD_ERR_OK) {
             //     $name = date('Ymd') . $_SESSION["login_token"] . '_' . uniqid() . '.png';
@@ -94,6 +94,7 @@ if ($method == "GET") {
             // } else {
             //     echo "อัปโหลดล้มเหลว!";
             // }
+            $Activity->userSubmitpic();
             break;
         case '/api/get/post':
             $Post->get();

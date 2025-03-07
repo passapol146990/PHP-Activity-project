@@ -128,6 +128,7 @@ function getRegisteredActivities($aid, $limit, $page, $keyword = '', $date_start
             post.p_about AS post_about,
             post.p_give AS post_give,
             post.p_datetime AS post_datetime,
+            post.p_status AS post_status,
             (
                 SELECT image 
                 FROM image 

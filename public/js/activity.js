@@ -338,3 +338,4 @@ async function DeletePost(pid,title) {
         window.location.href = `/activity/delete?pid=${pid}`
     }
 }  
+

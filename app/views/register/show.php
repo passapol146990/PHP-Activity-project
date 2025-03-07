@@ -283,6 +283,7 @@
                 </thead>
                 <tbody>
                     <? foreach ($myactivities["data"] as $key => $doc) { ?>
+                       
                         <tr>
                             <td>
                                 <lable style="font-size:12px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars(formatThaiDate($doc['register_datetime'])) ?> </lable>
@@ -308,32 +309,62 @@
                                 $rid = htmlspecialchars($doc["register_id"]);
                                 $pid = htmlspecialchars($doc["post_id"]);
                                 $title = htmlspecialchars($doc['post_name']);
-                                
+
                                 switch($doc["register_status"]){
                                     case 'รอการตรวจสอบ':
                                         $text = "<span class='text-warning'>".htmlspecialchars($doc["register_status"])."</span>";
-                                        $action = '<button onClick="cancelRegister('."'$rid','$pid','$title'".')" class="btn btn-danger bt_pri btn-sm">ลบ</buttom>';
+                                        $action = '<button onClick="cancelRegister('."'$rid','$pid','$title'".')" class="btn btn-danger bt_pri btn-sm">ลบ</button>';
                                         break;
                                     case 'อนุมัติ':
                                         $text = "<span class='text-success'>".htmlspecialchars($doc["register_status"])."</span>";
-                                        $action = '<button class="btn btn-warning bt_pri btn-sm" data-bs-toggle="modal" data-bs-target="#Modal_submit_pic_1" data-rid="'.$rid.'" data-pid="'.$pid.'" data-title="'.$title.'">ส่งรูปภาพ</button>';                                        
+                                        $action = '<button onClick="openModal(\'' . $pid . '\')" class="btn btn-warning bt_pri btn-sm">ส่งรูปภาพ</button>';
                                         break;
                                     case 'ปฏิเสธ':
                                         $text = "<span class='text-danger'>".htmlspecialchars($doc["register_status"])."</span>";
+                                        $action = '<button onClick="cancelRegister('."'$rid','$pid','$title'".')" class="btn btn-danger bt_pri btn-sm">ลบ</button>';
                                         break;
-                                    default:
-                                        $text = "<span class='text-dark'>".htmlspecialchars($doc["register_status"])."</span>";
-                                    break;
                                 }
                                 echo "<td>{$text}</td>";
                                 echo "<td>{$action}</td>";
                             ?>
                         </tr>
+
+                        <div class="modal fade text-font" id="Modal_submit_pic_<?= $pid ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">รายละเอียดกิจกรรม <?= htmlspecialchars($doc["post_name"]) ?></h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form action="/image/submit" method="POST" enctype="multipart/form-data">
+                                        <input type="hidden" name="pid" value="<?= $pid ?>">
+                                        <h2 id="file-name-<?= $pid ?>" class="text-muted text-center" style="display: none;"></h2>
+                                        
+                                        <div class="image-upload-container">
+                                            <div id="image-preview-<?= $pid ?>" class="image-preview" 
+                                                style="width: 550px; height: 280px; display: flex; align-items: center; justify-content: center; border: 1px dashed #ccc; position: relative; cursor: pointer;" 
+                                                onclick="triggerFileInput('file-upload-<?= $pid ?>')">
+                                                <img id="preview-img-<?= $pid ?>" src="#" alt="Image Preview" style="display: none; object-fit: contain; width: 100%; height: 100%;">
+                                                <button id="upload-btn-<?= $pid ?>" class="btn btn-outline-secondary btn-lg" type="button">อัพโหลดรูปภาพ</button>
+                                            </div>
+                                            <input id="file-upload-<?= $pid ?>" type="file" accept="image/*" name="image" style="display: none;" onchange="previewImage(this, '<?= $pid ?>')">
+                                        </div>
+
+                                        <div class="success-pad">
+                                            <button id="submit-btn-<?= $pid ?>" type="submit" class="btn btn-success disabled" style="width: 100px; height: 50px; pointer-events: none; opacity: 0.5;">ส่งรูปภาพ</button>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
                     <? } ?>
+
                 </tbody>
             </table>
         </div>
     </div>
+
     <div class="modal-passapol" id="Modal_Activity_1">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -347,38 +378,11 @@
                 </div>
             </div>
         </div>
-    </div>
-
-
-    
-    <!--modal submit -->
-      <div class="modal fade text-font" id="Modal_submit_pic_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">รายละเอียดกิจกรรม<br><small class="text-muted small-text">วันที่ 25/2/68 19:25:40 น.</small></h5>
-                    <button onClick="closePopUp()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body d-block justify-content-center text-center">
-                    <label for="file-upload" class="custom-file-upload" id="file_name"></label>
-                    <div class="image-upload-container">
-                        <div id="image-preview" class="image-preview" style="width: 550px; height: 280px;">
-                            <img id="preview-img" src="#" alt="Image Preview" style="display: none; object-fit: contain; width: 100%; height: 100%;">
-                            <button id="upload-btn" class="btn btn-outline-secondary btn-lg" type="button">อัพโหลดรูปภาพ</button>
-                        </div>
-
-                            <div class="d-flex flex-column align-items-center">
-                                <input id="file-upload" type="file" accept="image/*" style="display: none;">
-                            </div>
-                        </div>
-                </div>
-                <div class="success-pad">
-                    <button type="button" class="btn btn-success" style="width: 100px; height: 50px">ส่งรูปภาพ</button>
-                </div>
-            </div>
-        </div>
     </div> 
+
     
+
+
     <?php if(count($myactivities["data"])>=10){
         require_once '../app/component/buttonPage.php';
     }?>

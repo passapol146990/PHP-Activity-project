@@ -153,7 +153,6 @@
                         div.remove();
                         return false;
                     };
-
                     div.appendChild(img);
                     div.appendChild(removeBtn);
                     preview.appendChild(div);

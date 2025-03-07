@@ -109,8 +109,7 @@ class ACTIVITY{
             $start_date = $_POST["start_date"];
             $end_date = $_POST["end_date"];
             $location = $_POST["location"];
-            $p_give = $_POST["p_give"] ?? "";
-            $_SESSION['post_status'][$pid] = 'open';
+            $p_give = $_POST["p_give"] ?? ""; 
             $p_status = "open";
             
             createPost($pid, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give, $p_status);
@@ -157,7 +156,7 @@ class ACTIVITY{
             header("Location:/?status=error&message=เกิดปัญหาไม่สามารถสร้างกิจกรรมได้");
             exit();
         }
-        header("Location:/?status=success&message=สร้างกิจกรรมสำเร็จ");
+       header("Location:/?status=success&message=สร้างกิจกรรมสำเร็จ");
         exit();
         
     }
@@ -209,6 +208,63 @@ class ACTIVITY{
         header("location:/activity/create/show?status=success&message=อัพเดทกิจกรรมสำเร็จ");
         exit();
     }
-}
-$Activity = new Activity();
+
+    function userSubmitpic() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (isset($_POST['pid'])) {
+                $pid = $_POST['pid'];
+            }else{
+                echo("null pid");
+            }
+            
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+                $name = date('Ymd') . $_SESSION["login_token"] . '_' . uniqid() . '.png';
+                $fileTmpPath = $_FILES['image']['tmp_name'];
+                $fileName = $_FILES['image']['name'];
+                $fileSize = $_FILES['image']['size'];
+                $fileType = $_FILES['image']['type'];
+                
+                $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                $allowedExtensions = ['jpg', 'png'];
+
+                if (in_array($fileExt, $allowedExtensions)) {
+                    if ($fileSize < 2000000) {
+                        if ($fileExt === 'jpg' || $fileExt === 'jpeg') {
+                            $image = imagecreatefromjpeg($fileTmpPath);
+                        } elseif ($fileExt === 'png') {
+                            $image = imagecreatefrompng($fileTmpPath);
+                        }
+                        if ($image) {
+                            $width = imagesx($image);
+                            $height = imagesy($image);
+                            $newWidth = intval($width * 0.5);
+                            $newHeight = intval($height * 0.5);
+                            $newImage = imagecreatetruecolor($newWidth, $newHeight);
+                            imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                            $destination = '../image/submit/' . $name;
+                            if ($fileExt === 'png') {
+                                imagepng($newImage, $destination);
+                            } else {
+                                imagejpeg($newImage, $destination, 50);
+                            }
+                            imagedestroy($image);
+                            imagedestroy($newImage);
+                            createImage($name, $pid);
+                        }
+                    }
+                }
+                
+            }else{
+                echo("ไม่มีไฟล์ส่งมา");
+            }
+        }else {
+            echo("ส่งไม่ถูก");
+        }
+
+        header("location:/activity/create/show?status=success&message=ส่งรูปภาพสำเร็จ");
+        exit();
+        }
+    }
+
+    $Activity = new Activity();
 ?>
