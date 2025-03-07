@@ -9,15 +9,15 @@ async function registerPost(id) {
         body: formdata,
         redirect: "follow"
     };
-    let res = await  fetch("/api/register/post", requestOptions);
+    let res = await fetch("/api/register/post", requestOptions);
     res = await res.json();
-    if(res.status==200){
+    if (res.status == 200) {
         Swal.fire({
             title: "สำเร็จ",
             text: res.message,
             icon: "success"
         });
-    }else{
+    } else {
         Swal.fire({
             title: "แจ้งเตือน",
             text: res.message,
@@ -40,7 +40,7 @@ function formatThaiDate(dateString) {
 
     const day = date.getDate();
     const month = thaiMonths[date.getMonth()];
-    const year = date.getFullYear() + 543; 
+    const year = date.getFullYear() + 543;
     return `${day} ${month} ${year}`;
 }
 async function getDetailPost(id) {
@@ -58,12 +58,12 @@ async function getDetailPost(id) {
     };
 
     fetch("/api/get/post", requestOptions)
-    .then((response) => response.text())
-    .then((result) => {
-        result = JSON.parse(result);
-        setModal_Activity_1(result)
-    })
-    .catch((error) => console.error(error));
+        .then((response) => response.text())
+        .then((result) => {
+            result = JSON.parse(result);
+            setModal_Activity_1(result)
+        })
+        .catch((error) => console.error(error));
 }
 function setModal_Activity_1(result) {
     if (result.status != 200) {
@@ -72,7 +72,7 @@ function setModal_Activity_1(result) {
 
     const data = result.data;
     const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
-    const create_date =  formatThaiDate(data.post_create);
+    const create_date = formatThaiDate(data.post_create);
     const activity_date = `${formatThaiDate(data.post_start)} - ${formatThaiDate(data.post_end)}`;
     let images = "";
 
@@ -95,11 +95,34 @@ function setModal_Activity_1(result) {
                                             เข้าร่วมกิจกรรมแล้ว
                                         </div>`;
     } else if (data.user_status === "รอการตรวจสอบ") {
-        buttonHtml = `<button class="btn btn-warning col-6" disabled>รอการตรวจสอบ</button>`;
+        buttonHtml = `<div class="text-warning col-6 d-flex justify-content-center align-items-center fw-bold">
+                        <svg class="me-2" width="24px" height="24px" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                            </g>
+                            <g id="SVGRepo_iconCarrier">
+                                <g id="style=bulk">
+                                    <g id="warning-circle">
+                                        <path id="vector (Stroke)" fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M1.25 12C1.25 6.06294 6.06294 1.25 12 1.25C17.9371 1.25 22.75 6.06294 22.75 12C22.75 17.9371 17.9371 22.75 12 22.75C6.06294 22.75 1.25 17.9371 1.25 12Z"
+                                            fill="#ffdd00"></path>
+                                        <path id="vector (Stroke)_2" fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M12 6.25C12.4142 6.25 12.75 6.58579 12.75 7V14.1047C12.75 14.5189 12.4142 14.8547 12 14.8547C11.5858 14.8547 11.25 14.5189 11.25 14.1047V7C11.25 6.58579 11.5858 6.25 12 6.25Z"
+                                            fill="#000000"></path>
+                                        <path id="ellipse (Stroke)" fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M11 17C11 16.4477 11.4477 16 12 16H12.01C12.5623 16 13.01 16.4477 13.01 17C13.01 17.5523 12.5623 18 12.01 18H12C11.4477 18 11 17.5523 11 17Z"
+                                            fill="#000000"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                        รอการตรวจสอบ...
+                    </div>`;
     } else if (data.user_status === "ปฏิเสธ") {
         buttonHtml = `<div class="text-danger col-6 d-flex justify-content-center align-items-center fw-bold">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"viewBox="0 0 24 24" stroke="currentColor" class="me-2"style="stroke: red; fill: white;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"d="M6 6l12 12M6 18L18 6" />
-        // </svg>ปฏิเสธ</div>`;
+        </svg>ปฏิเสธการเข้าร่วม</div>`;
     }
 
     let e = `
