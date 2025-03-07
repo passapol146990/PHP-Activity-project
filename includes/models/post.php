@@ -370,7 +370,7 @@ function updateStatus_Post($p_id, $p_aid, $p_status)
     if ($stmt->affected_rows === 0) {
         return ["status" => 204, "message" => "No changes made."];
     }
-    var_dump($stmt->affected_rows);
+    // var_dump($stmt->affected_rows);
     return ["status" => 200, "message" => "Closed post successfully."];
 };
 

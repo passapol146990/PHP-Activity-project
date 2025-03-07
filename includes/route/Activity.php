@@ -223,6 +223,7 @@ class ACTIVITY{
                 $fileName = $_FILES['image']['name'];
                 $fileSize = $_FILES['image']['size'];
                 $fileType = $_FILES['image']['type'];
+                $aid = $_SESSION["login_token"];
                 
                 $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
                 $allowedExtensions = ['jpg', 'png'];
@@ -249,7 +250,7 @@ class ACTIVITY{
                             }
                             imagedestroy($image);
                             imagedestroy($newImage);
-                            // submitRegister($name, $pid,$aid);
+                            submitRegister($name, $pid, $aid);
                         }
                     }
                 }

@@ -37,10 +37,28 @@
         return false;
     }
     function deleteImage($filename) {
-        $filename = basename(filename);
+        $filename = basename($filename);
         $file = "../image/$filename";
         if (file_exists($file)) {
             unlink($file);
+        }
+    }
+
+    function submitRegister($name, $pid, $aid){
+        global $conn;
+        $sql = "UPDATE  register 
+                SET     datetime_submit = CONVERT_TZ(NOW(), 'UTC', 'Asia/Bangkok') , image_submit = ? , status_submit = 'รอตรวจสอบ'
+                WHERE   pid = ? AND aid = ?";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+                return ["status" => 400, "message" => "Prepare error: " . $conn->error];
+        }
+        $stmt->bind_param('sss', $name, $pid, $aid);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        if ($stmt->affected_rows > 0) {
+            return ["status" => 200, "message" => "ส่งรูปภาพเรียบร้อย."];
+        } else {
+            return ["status" => 204, "message" => "No changes made."];
         }
     }
     
