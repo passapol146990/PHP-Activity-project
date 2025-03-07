@@ -11,7 +11,7 @@ services:
       - .:/var/www/html
     container_name: php-activity-project
   mysql-db-activity:
-    image: mysql
+    image: mysql:5.7
     container_name: mysql-db-activity
     environment:
       MYSQL_ROOT_PASSWORD: OSssA45!sd@
