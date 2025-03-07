@@ -107,6 +107,9 @@ if ($method == "GET") {
         case '/api/update/register':
             $Register->update();
             break;
+        case '/api/update/register/status':
+            $Register->updateStatusSubmit();
+            break;
         case '/api/get/userdetail':
             $User->get();
             break;

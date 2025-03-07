@@ -182,4 +182,19 @@ function DeleteRegister($rid,$pid,$aid) {
     $stmt->execute();
     return ["status" => 200, "message" => "ยกเลิกคำขอเข้าร่วมสำเร็จ"];
 }
+
+function updateStatusSubmit($pid,$aid,$login_token,$status){
+    isLogin();
+    global $conn;
+    $sql  = `UPDATE 	register
+    JOIN 	post ON post.p_id = register.pid
+    SET 	status_submit = ?
+    WHERE 	post.p_id = ?
+    AND		register.aid = ?
+    AND		post.p_aid = ?`;
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssss",$status,$pid,$aid,$login_token);
+    $stmt->execute();
+    return ["status" => 200, "message" => "อัพเดทสถานะส่งภาพยืนยันสำเร็จแล้ว"];
+}
 ?>
