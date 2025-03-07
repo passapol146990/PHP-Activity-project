@@ -15,21 +15,29 @@ window.addEventListener("click", (e) => {
 });
 async function getDetailPost(id){
     openPopUp("Modal_Activity_1");
-    const myHeaders = new Headers();
-    myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
-
-    const formdata = new FormData();
-    formdata.append("id_post", id);
-
-    const requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: formdata,
-    redirect: "follow"
-    };
-    let res = await fetch("/api/get/post", requestOptions);
-    res = await res.json();
-    setModal_Activity_1(res)
+    try{
+        const myHeaders = new Headers();
+        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+    
+        const formdata = new FormData();
+        formdata.append("id_post", id);
+    
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow"
+        };
+        let res = await fetch("/api/get/post", requestOptions);
+        res = await res.json();
+        setModal_Activity_1(res)
+    }catch{
+        Swal.fire({
+            title: "Error",
+            text: "เกิดข้อผิดพลาดในการอัพเดทสถานะของผู้ใช้ กรุณารีหน้าเว็บแล้วลองใหม่อีกครั้ง",
+            icon: "error"
+        });
+    }
 }
 function formatThaiDate(dateString) {
     if (!dateString) return '';
@@ -96,23 +104,59 @@ function setModal_Activity_1(result) {
         </div>`
     Modal_Activity_1.innerHTML = e;
 }
-
 async function cancelRegister(rid,pid,title) {
-    const conf = await Swal.fire({
-        title: "ชี้แจง?",
-        text: `คุณต้องการยกเลิกคำขอเข้าร่วมกิจกรรม ${title} ใช่หรือไม่กดตกลงเพื่อยืนยัน`,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "ตกลง"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          return true
+    try{
+        const conf = await Swal.fire({
+            title: "ชี้แจง?",
+            text: `คุณต้องการยกเลิกคำขอเข้าร่วมกิจกรรม ${title} ใช่หรือไม่กดตกลงเพื่อยืนยัน`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "ตกลง"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              return true
+            }
+            return false
+        });
+        if(conf){
+            window.location.href = `/register/cancel?rid=${rid}&pid=${pid}`
         }
-        return false
-    });
-    if(conf){
-        window.location.href = `/register/cancel?rid=${rid}&pid=${pid}`
+    }catch{
+        Swal.fire({
+            title: "Error",
+            text: "เกิดข้อผิดพลาดในการอัพเดทสถานะของผู้ใช้ กรุณารีหน้าเว็บแล้วลองใหม่อีกครั้ง",
+            icon: "error"
+        });
     }
-}   
+}
+async function updateStatusRegister(pid,aid,status){
+    try{
+        const myHeaders = new Headers();
+        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+        const formdata = new FormData();
+        formdata.append("pid", pid);
+        formdata.append("aid", aid);
+        formdata.append("status", status);
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow"
+        };
+        let res = await fetch("/api/update/register/statusป", requestOptions);
+        res = await res.json();
+        Swal.fire({
+            title: (res.status==200)?"สำเร็จ":"แจ้งเตือน",
+            text: res.message,
+            icon: (res.status==200)?"success":"warning"
+        });
+    }catch{
+        Swal.fire({
+            title: "Error",
+            text: "เกิดข้อผิดพลาดในการอัพเดทสถานะของผู้ใช้ กรุณารีหน้าเว็บแล้วลองใหม่อีกครั้ง",
+            icon: "error"
+        });
+    }
+}

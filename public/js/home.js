@@ -1,32 +1,40 @@
 async function registerPost(id) {
-    const myHeaders = new Headers();
-    myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
-    const formdata = new FormData();
-    formdata.append("id_post", id);
-    const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: formdata,
-        redirect: "follow"
-    };
-    let res = await fetch("/api/register/post", requestOptions);
-    res = await res.json();
-    if (res.status == 200) {
+    try{
+        const myHeaders = new Headers();
+        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+        const formdata = new FormData();
+        formdata.append("id_post", id);
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow"
+        };
+        let res = await fetch("/api/register/post", requestOptions);
+        res = await res.json();
+        if (res.status == 200) {
+            Swal.fire({
+                title: "สำเร็จ",
+                text: res.message,
+                icon: "success"
+            });
+        } else {
+            Swal.fire({
+                title: "แจ้งเตือน",
+                text: res.message,
+                icon: "warning"
+            });
+        }
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    }catch{
         Swal.fire({
-            title: "สำเร็จ",
-            text: res.message,
-            icon: "success"
-        });
-    } else {
-        Swal.fire({
-            title: "แจ้งเตือน",
-            text: res.message,
-            icon: "warning"
+            title: "Error",
+            text: "เกิดข้อผิดพลาดในการอัพเดทสถานะของผู้ใช้ กรุณารีหน้าเว็บแล้วลองใหม่อีกครั้ง",
+            icon: "error"
         });
     }
-    setTimeout(() => {
-        window.location.reload();
-    }, 1000);
 }
 function formatThaiDate(dateString) {
     if (!dateString) return '';
@@ -44,26 +52,34 @@ function formatThaiDate(dateString) {
     return `${day} ${month} ${year}`;
 }
 async function getDetailPost(id) {
-    const myHeaders = new Headers();
-    myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
-
-    const formdata = new FormData();
-    formdata.append("id_post", id);
-
-    const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: formdata,
-        redirect: "follow"
-    };
-
-    fetch("/api/get/post", requestOptions)
-        .then((response) => response.text())
-        .then((result) => {
-            result = JSON.parse(result);
-            setModal_Activity_1(result)
-        })
-        .catch((error) => console.error(error));
+    try{
+        const myHeaders = new Headers();
+        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+    
+        const formdata = new FormData();
+        formdata.append("id_post", id);
+    
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow"
+        };
+    
+        fetch("/api/get/post", requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                result = JSON.parse(result);
+                setModal_Activity_1(result)
+            })
+            .catch((error) => console.error(error));
+    }catch{
+        Swal.fire({
+            title: "Error",
+            text: "เกิดข้อผิดพลาดในการอัพเดทสถานะของผู้ใช้ กรุณารีหน้าเว็บแล้วลองใหม่อีกครั้ง",
+            icon: "error"
+        });
+    }
 }
 function setModal_Activity_1(result) {
     if (result.status != 200) {

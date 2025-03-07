@@ -39,22 +39,30 @@ function formatThaiDate(dateString) {
     return `${day} ${month} ${year}`;
 }
 async function getDetailPost(id){
-    openPopUp("Modal_Activity_1");
-    const myHeaders = new Headers();
-    myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
-
-    const formdata = new FormData();
-    formdata.append("id_post", id);
-
-    const requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: formdata,
-    redirect: "follow"
-    };
-    let res = await fetch("/api/get/post", requestOptions);
-    res = await res.json();
-    setModal_Activity_1(res)
+    try{
+        openPopUp("Modal_Activity_1");
+        const myHeaders = new Headers();
+        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+    
+        const formdata = new FormData();
+        formdata.append("id_post", id);
+    
+        const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow"
+        };
+        let res = await fetch("/api/get/post", requestOptions);
+        res = await res.json();
+        setModal_Activity_1(res)
+    }catch{
+        Swal.fire({
+            title: "Error",
+            text: "เกิดข้อผิดพลาดในการอัพเดทสถานะของผู้ใช้ กรุณารีหน้าเว็บแล้วลองใหม่อีกครั้ง",
+            icon: "error"
+        });
+    }
 }function setModal_Activity_1(result) {
     if(result.status!=200){
         return 
@@ -107,25 +115,37 @@ async function getDetailPost(id){
 }
 //
 async function API_RegisterPost(id,page) {
-    const myHeaders = new Headers();
-    myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
-    const formdata = new FormData();
-    formdata.append("id_post", id);
-    formdata.append("page", page);
-    const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: formdata,
-        redirect: "follow"
-    };
-    let res = await fetch("/api/get/register", requestOptions);
-    res = await res.json();
-    return res;
+    try{
+        const myHeaders = new Headers();
+        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+        const formdata = new FormData();
+        formdata.append("id_post", id);
+        formdata.append("page", page);
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow"
+        };
+        let res = await fetch("/api/get/register", requestOptions);
+        res = await res.json();
+        return res;
+    }catch{
+        return {"status":404,"message":"Error"}
+    }
 }
 async function getRegisterPost(id){
     openPopUp("req_activity_1");
-    const res = await API_RegisterPost(id,1);
-    setReq_activity_1(res,id)
+    try{
+        const res = await API_RegisterPost(id,1);
+        setReq_activity_1(res,id)
+    }catch{
+        Swal.fire({
+            title: "Error",
+            text: "เกิดข้อผิดพลาดในการอัพเดทสถานะของผู้ใช้ กรุณารีหน้าเว็บแล้วลองใหม่อีกครั้ง",
+            icon: "error"
+        });
+    }
 }
 function setReq_activity_1(result, pid) {
     const req_activity_1 = document.getElementById('req_activity_1');
@@ -209,26 +229,33 @@ function setReq_activity_1(result, pid) {
         </div>`;
     req_activity_1.innerHTML = e;
 }
-// 
 async function SelectDtailUser(pid,uid) {
     openPopUp("Modal_user_data_1");
-    const myHeaders = new Headers();
-    myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
-
-    const formdata = new FormData();
-    formdata.append("pid", pid);
-    formdata.append("uid", uid);
-
-    const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: formdata,
-        redirect: "follow"
-    };
-
-    let res = await fetch("/api/get/userdetail", requestOptions);
-    res = await res.json();
-    setModal_user_data_1(res)
+    try{
+        const myHeaders = new Headers();
+        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+    
+        const formdata = new FormData();
+        formdata.append("pid", pid);
+        formdata.append("uid", uid);
+    
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow"
+        };
+    
+        let res = await fetch("/api/get/userdetail", requestOptions);
+        res = await res.json();
+        setModal_user_data_1(res)
+    }catch{
+        Swal.fire({
+            title: "Error",
+            text: "เกิดข้อผิดพลาดในการอัพเดทสถานะของผู้ใช้ กรุณารีหน้าเว็บแล้วลองใหม่อีกครั้ง",
+            icon: "error"
+        });
+    }
 }
 function setModal_user_data_1(result){
     const Modal_user_data_1 = document.getElementById('Modal_user_data_1');
@@ -270,7 +297,6 @@ function setModal_user_data_1(result){
         </div>`
     Modal_user_data_1.innerHTML = e;
 }
-//
 async function setStatusRegisterUser(pid,uid,status) {
     const conf = await Swal.fire({
         title: "ชี้แจง?",
@@ -287,35 +313,43 @@ async function setStatusRegisterUser(pid,uid,status) {
         return false
     });
     if(conf){
-        const myHeaders = new Headers();
-        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
-        const formdata = new FormData();
-        formdata.append("pid", pid);
-        formdata.append("uid", uid);
-        formdata.append("status", status);
-        const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: formdata,
-            redirect: "follow"
-        };
-        let res = await fetch("/api/update/register", requestOptions);
-        res = await res.json();
-        if(res.status==200){
+        try{
+            const myHeaders = new Headers();
+            myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+            const formdata = new FormData();
+            formdata.append("pid", pid);
+            formdata.append("uid", uid);
+            formdata.append("status", status);
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: formdata,
+                redirect: "follow"
+            };
+            let res = await fetch("/api/update/register", requestOptions);
+            res = await res.json();
+            if(res.status==200){
+                Swal.fire({
+                    title: "สำเร็จ",
+                    text: res.message,
+                    icon: "success"
+                });
+            }else{
+                Swal.fire({
+                    title: "แจ้งเตือน",
+                    text: res.message,
+                    icon: "warning"
+                });
+            }
+            const respose = await API_RegisterPost(pid,1);
+            setReq_activity_1(respose,pid)
+        }catch{
             Swal.fire({
-                title: "สำเร็จ",
-                text: res.message,
-                icon: "success"
-            });
-        }else{
-            Swal.fire({
-                title: "แจ้งเตือน",
-                text: res.message,
-                icon: "warning"
+                title: "Error",
+                text: "เกิดข้อผิดพลาดในการอัพเดทสถานะของผู้ใช้ กรุณารีหน้าเว็บแล้วลองใหม่อีกครั้ง",
+                icon: "error"
             });
         }
-        const respose = await API_RegisterPost(pid,1);
-        setReq_activity_1(respose,pid)
     }
 }   
 
