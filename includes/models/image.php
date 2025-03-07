@@ -36,12 +36,28 @@
         }
         return false;
     }
-    function deleteImage($filename) {
-        $filename = basename(filename);
+    function deleteImageInfolder($filename) {
+        $filename = basename($filename);
         $file = "../image/$filename";
         if (file_exists($file)) {
             unlink($file);
         }
+    }
+    function deleteImage($imageName, $postId, $postAid) {
+        global $conn;
+        $sql = "DELETE image 
+                FROM image 
+                JOIN post ON post.p_id = image.pid  
+                WHERE image.image = ? 
+                AND post.p_id = ? 
+                AND post.p_aid = ?";
+        
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+        $stmt->bind_param("sss", $imageName, $postId, $postAid);
+        deleteImageInfolder("post/".$imageName);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        return ["status"=>200,"message"=>"ลบรูปภาพสำเร็จ!"];
     }
     
 ?>
