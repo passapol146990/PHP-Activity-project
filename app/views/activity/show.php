@@ -185,13 +185,6 @@
         .badge-notification:empty {
             display: none;
         }
-
-        .btn-warning {
-            margin-top: 10px;
-            width: 124px;
-            color: rgb(255, 255, 255);
-        }
-
         .modal-header p {
             margin-top: auto;
             margin-bottom: 3px;
@@ -333,16 +326,9 @@
                         </td>
                         <td>
                         <div class="mt-2"></div>
-                            <a href="/activity/edit?pid=<?= htmlspecialchars($doc["p_id"]) ?>" class="btn btn-primary bt_pri btn-sm">แก้ไข</a>
-
-                            <div class="mb-1"></div>
-                                <?php if ($doc['p_status'] == 'close'): ?>
-                                    <button onClick="checkSubpic('<?= htmlspecialchars($doc['p_id']) ?>')" type="button" class="btn btn-warning" >ตรวจรูปภาพ</button>
-                                <?php else: ?>
-                                <?php endif; ?> 
-
-                            <div class="mb-3"></div>
-                            <button onClick="DeletePost('<?= htmlspecialchars($doc["p_id"]) ?>','<?= htmlspecialchars($doc["p_name"]) ?>')" class="btn btn-danger bt_pri btn-sm">ลบ</button>
+                            <a class="btn btn-primary w-100 mb-1" href="/activity/edit?pid=<?= htmlspecialchars($doc["p_id"]) ?>">แก้ไข</a>
+                            <button class="btn btn-warning w-100 mb-1" onClick="checkSubpic('<?= htmlspecialchars($doc['p_id']) ?>')" type="button">ตรวจรูปภาพ</button>
+                            <button class="btn btn-danger w-100" onClick="DeletePost('<?= htmlspecialchars($doc["p_id"]) ?>','<?= htmlspecialchars($doc["p_name"]) ?>')">ลบ</button>
                         </td>
                     </tr>
                 <? } ?>
@@ -373,7 +359,6 @@
             <div class="body"></div>
         </div>
     </div>
-
     <div class="modal-passapol" id="check_pic">
         <div class="content" style="width:50%;height:30%;">
             <div class="header mb-3">
@@ -387,7 +372,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal-passapol" id="Modal_user_data_1">
         <div class="content" style="width:50%;height:30%;">
             <div class="header mb-3">
@@ -406,7 +390,5 @@
         require_once '../app/component/buttonPage.php';
     } ?>
     <script src="../../js/activity.js"></script>
-    
-
 </body>
 </html>
