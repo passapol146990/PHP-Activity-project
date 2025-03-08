@@ -101,6 +101,9 @@ if ($method == "GET") {
         case '/api/get/userdetail':
             $User->get();
             break;
+        case '/api/get/picSubmit':
+            $Register->getsubmitRegister();
+            break;
         default:
             header("Location:/");
             break;

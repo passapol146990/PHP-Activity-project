@@ -183,4 +183,53 @@ function DeleteRegister($rid,$pid,$aid) {
     $stmt->execute();
     return ["status" => 200, "message" => "ยกเลิกคำขอเข้าร่วมสำเร็จ"];
 }
+
+function getSubpicBy_User($login_token, $pid, $aid){
+    global $conn;
+    $stmt = $conn->prepare("SELECT 	register.datetime_submit as datetime_submit,
+                                    register.image_submit as image_submit,
+                                    register.status_submit as status_submit
+                            FROM 	`register`
+                            JOIN	post ON post.p_id = register.pid
+                            WHERE 	post.p_aid = ?
+                            AND 	post.p_id = ?
+                            AND 	register.aid = ?");
+    $stmt->bind_param("sss", $login_token, $pid, $aid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows === 0) {
+        return ["status" => 201, "message" => "ไม่มีรูปภาพ", "data" => []];
+    }
+
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    return ["status" => 200, "message" => "successfully.", "data" => $data];
+}
+
+function getSubpicBy_Creater($login_token, $pid){
+    global $conn;
+    $stmt = $conn->prepare("SELECT 	register.datetime_submit as datetime_submit,
+                                    register.image_submit as image_submit,
+                                    register.status_submit as status_submit,
+                                    account.image as image_user,
+                                    account.fname as fname,
+                                    account.lname as lname,
+                                    account.gender as gender,
+                                    account.birthday as birthday,
+                                    account.aid as aid
+                            FROM 	`register`
+                            JOIN	post ON post.p_id = register.pid
+                            JOIN	account ON register.aid = account.aid
+                            WHERE 	post.p_aid = ?
+                            AND 	post.p_id = ?");
+    $stmt->bind_param("ss", $login_token, $pid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows === 0) {
+        return ["status" => 201, "message" => "ไม่มีรูปภาพ", "data" => []];
+    }
+
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    return ["status" => 200, "message" => "successfully.", "data" => $data];
+}
+
 ?>

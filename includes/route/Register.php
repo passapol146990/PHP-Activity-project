@@ -76,9 +76,22 @@ class REGISTER{
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         exit();
     }
-    function submitRegister(){
+    function getsubmitRegister() {
+        isLogin();
+    
+        // ตรวจสอบว่ามีค่า pid ถูกส่งมาหรือไม่
+        if (!isset($_POST["pid"]) || empty($_POST["pid"])) {
+            echo json_encode(["status" => 400, "message" => "pid is null!"], JSON_UNESCAPED_UNICODE);
+            exit();
+        }
+        $login_token = $_SESSION['login_token'];
+        $pid = $_POST['pid'];
         
+        $result = getSubpicBy_Creater($login_token, $pid);
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        exit();
     }
+    
 }
 $Register = new REGISTER();
 ?>
