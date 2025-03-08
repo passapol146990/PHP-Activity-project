@@ -94,10 +94,24 @@ class REGISTER{
         $pid = $_POST["pid"];
         $aid = $_POST["aid"];
         $status = ($_POST["status"]==1)?"ผ่านกิจกรรม":"ไม่ผ่านกิจกรรม";
-        $res = updateStatusSubmit($pid,$aid,$login_token,$status);
+        $res = updateRegisterStatusSubmit($pid,$aid,$login_token,$status);
         echo json_encode($res , JSON_UNESCAPED_UNICODE);
         exit();
     }
+    function getsubmitRegister() {
+        isLogin();
+        if (!isset($_POST["pid"]) || empty($_POST["pid"])) {
+            echo json_encode(["status" => 400, "message" => "pid is null!"], JSON_UNESCAPED_UNICODE);
+            exit();
+        }
+        $login_token = $_SESSION['login_token'];
+        $pid = $_POST['pid'];
+        
+        $result = getSubpicBy_Creater($login_token, $pid);
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        exit();
+    }
+    
 }
 $Register = new REGISTER();
 ?>

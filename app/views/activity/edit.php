@@ -127,7 +127,7 @@
                 <a href="/activity/create/show" class="btn btn-primary">&larr; กลับ</a>
             </div>
             <h2 class="mb-3">แก้ไขกิจกรรม : <?= htmlspecialchars($result['post_name'] ?? '') ?></h2>
-            <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($p_id); ?>">
+                <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($p_id); ?>">
             <div class="mb-3">
                 <label for="image-upload" class="form-label">รูปภาพกิจกรรม</label>
                 <input type="file" class="form-control" id="image-upload" name="images[]" accept="image/*" multiple>
@@ -170,7 +170,7 @@
         </form>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const preview = document.getElementById("image-preview");
             let existingImages = preview.getAttribute("data-existing-images");
             if (existingImages) {

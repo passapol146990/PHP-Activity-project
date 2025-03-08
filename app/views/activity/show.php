@@ -332,7 +332,15 @@
                             <lable id="pending:<?= htmlspecialchars($doc["p_id"]) ?>" style="display:none;"><?= htmlspecialchars($doc['pending_registers']) ?></lable>
                         </td>
                         <td>
+                        <div class="mt-2"></div>
                             <a href="/activity/edit?pid=<?= htmlspecialchars($doc["p_id"]) ?>" class="btn btn-primary bt_pri btn-sm">แก้ไข</a>
+
+                            <div class="mb-1"></div>
+                                <?php if ($doc['p_status'] == 'close'): ?>
+                                    <button onClick="checkSubpic('<?= htmlspecialchars($doc['p_id']) ?>')" type="button" class="btn btn-warning" >ตรวจรูปภาพ</button>
+                                <?php else: ?>
+                                <?php endif; ?> 
+
                             <div class="mb-3"></div>
                             <button onClick="DeletePost('<?= htmlspecialchars($doc["p_id"]) ?>','<?= htmlspecialchars($doc["p_name"]) ?>')" class="btn btn-danger bt_pri btn-sm">ลบ</button>
                         </td>
@@ -365,11 +373,26 @@
             <div class="body"></div>
         </div>
     </div>
+
+    <div class="modal-passapol" id="check_pic">
+        <div class="content" style="width:50%;height:30%;">
+            <div class="header mb-3">
+                <div>
+                    <label class="title-header">ตรวจสอบรูปภาพ</label>:<br>
+                </div>
+                <button class="close-btn" onClick="closePopUp()">&times;</button>
+            </div>
+            <div class="body text-center p-5">
+                <h5>ไม่พบรูปภาพผู้ขอเข้าร่วม</h5>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-passapol" id="Modal_user_data_1">
         <div class="content" style="width:50%;height:30%;">
             <div class="header mb-3">
                 <div>
-                    <label class="title-header">คำขอเข้าร่วมกิจกรรม</label>:<br>
+                    <label class="title-header">ข้อมูลผู้ใช้</label>:<br>
                 </div>
                 <button class="close-btn" onClick="closePopUp()">&times;</button>
             </div>
@@ -378,9 +401,12 @@
             </div>
         </div>
     </div>
+
     <?php if(count($data["data"])>=10){
         require_once '../app/component/buttonPage.php';
     } ?>
     <script src="../../js/activity.js"></script>
+    
+
 </body>
 </html>

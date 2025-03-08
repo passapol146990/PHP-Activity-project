@@ -83,6 +83,9 @@ if ($method == "GET") {
         case '/update/user/data':
             $User->update();
             break;
+        case '/image/submit':
+            $Activity->userSubmitpic();
+            break;
         case '/api/get/post':
             $Post->get();
             break;
@@ -103,6 +106,8 @@ if ($method == "GET") {
             break;
         case '/api/delete/image':
             $Post->DeleteImage();
+        case '/api/get/picSubmit':
+            $Register->getsubmitRegister();
             break;
         default:
             header("Location:/");

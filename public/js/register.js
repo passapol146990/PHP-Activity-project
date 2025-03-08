@@ -160,3 +160,103 @@ async function updateStatusRegister(pid,aid,status){
         });
     }
 }
+}   
+
+document.addEventListener("DOMContentLoaded", function() {
+    const fileInput = document.getElementById("file-upload");
+    const fileNameLabel = document.getElementById("file_name");
+    const previewImg = document.getElementById("preview-img");
+    const uploadBtn = document.getElementById("upload-btn");
+
+    if (!fileInput || !fileNameLabel || !previewImg || !uploadBtn) return;
+
+    uploadBtn.addEventListener("click", function() {
+        fileInput.click();
+    });
+    previewImg.addEventListener("click", function() {
+        fileInput.click();
+    });
+    function previewImage(event) {
+        const files = event.target.files;
+        const maxSize = 2 * 1024 * 1024; // 2MB
+        if (files.length === 0) return;
+        const file = files[0];
+        fileNameLabel.innerText = file.name;
+        if (!file.type.match("image.*")) {
+            alert("กรุณาอัปโหลดไฟล์รูปภาพเท่านั้น");
+            return;
+        }
+        if (file.size > maxSize) {
+            alert(`ไฟล์ ${file.name} มีขนาดเกิน 2MB!`);
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            previewImg.style.display = "block";
+            uploadBtn.style.display = "none";
+        };
+        reader.readAsDataURL(file);
+    }
+
+    fileInput.addEventListener("change", previewImage);
+});
+
+function openModal(pid) {
+    let modalId = `Modal_submit_pic_${pid}`;
+    let modalElement = document.getElementById(modalId); 
+
+    console.log("modalId:", modalId);
+    console.log("modalElement:", modalElement);
+
+    if (modalElement) {
+        let modal = new bootstrap.Modal(modalElement); 
+        modal.show(); 
+    } else {
+        console.error("Modal not found: " + modalId); 
+    }
+}
+
+function triggerFileInput(inputId) {
+    document.getElementById(inputId).click();
+}
+
+function previewImage(input, pid) {
+    const file = input.files[0];
+    const previewImg = document.getElementById(`preview-img-${pid}`);
+    const uploadBtn = document.getElementById(`upload-btn-${pid}`);
+    const previewContainer = document.getElementById(`image-preview-${pid}`);
+    const fileNameDisplay = document.getElementById(`file-name-${pid}`);
+    const submitBtn = document.getElementById(`submit-btn-${pid}`);
+    const maxSize = 2 * 1024 * 1024; // 2MB
+
+    if (!file.type.match('image.*')) {
+        alert("กรุณาอัปโหลดเฉพาะไฟล์รูปภาพ!");
+        return;
+    }
+
+    if (file.size > maxSize) {
+        alert(`ไฟล์ ${file.name} มีขนาดเกิน 2MB!`);
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        previewImg.src = e.target.result;
+        previewImg.style.display = "block";  
+        uploadBtn.style.display = "none"; 
+        previewContainer.style.cursor = "pointer";
+
+        fileNameDisplay.textContent = `ไฟล์ที่เลือก: ${file.name}`;
+        fileNameDisplay.style.display = "block"; 
+
+        submitBtn.removeAttribute("disabled");
+        submitBtn.style.pointerEvents = "auto";
+        
+    };
+    reader.readAsDataURL(file);
+}
+
+
+
+
