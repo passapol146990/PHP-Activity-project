@@ -133,6 +133,7 @@
                 <label for="image-upload" class="form-label">รูปภาพกิจกรรม</label>
                 <input type="file" class="form-control" id="image-upload" name="images[]" accept="image/*" multiple>
                 <div id="image-preview" class="image-preview-container" data-existing-images="<?= htmlspecialchars($result['images'] ?? '') ?>"></div>
+                <div id="image-newupload" class="image-preview-container" data-existing-images="<?= htmlspecialchars($result['images'] ?? '') ?>"></div>
             </div>
             <div class="p-2">
                 <label class="form-label ms-1"> ชื่อกิจกรรม :</label>
@@ -227,7 +228,7 @@
         });
 
         document.getElementById('image-upload').addEventListener('change', function(event) {
-            const preview = document.getElementById('image-preview');
+            const preview = document.getElementById('image-newupload');
             preview.innerHTML = '';
             const files = event.target.files;
             const maxSize = 2 * 1024 * 1024; // 2MB
