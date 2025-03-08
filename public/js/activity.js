@@ -230,100 +230,6 @@ function setReq_activity_1(result, pid) {
     req_activity_1.innerHTML = e;
 }
 
-// check_pic
-async function API_getcheckImg(id) {
-    const myHeaders = new Headers();
-    myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
-    const formdata = new FormData();
-    formdata.append("pid", id);
-    const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: formdata,
-        redirect: "follow"
-    };
-    let res = await fetch("/api/get/picSubmit", requestOptions);
-    res = await res.json();
-    
-    return res;
-}
-async function checkSubpic(id){
-    openPopUp("check_pic");
-    const res = await API_getcheckImg(id);
-    setCheck_pic(res,id)
-}
-function setCheck_pic(result, pid) {
-    const model = document.getElementById('check_pic');
-    if (result.status != 200) {
-        return model.innerHTML = `
-        <div class="content">
-            <div class="header mb-3">
-                <div>
-                    <label class="title-header">ตรวจสอบรูปภาพ</label>:<br>
-                </div>
-                <button class="close-btn" onClick="closePopUp()">&times;</button>
-            </div>
-            <div class="body text-center p-5">
-                <h5>ไม่มีรูปภาพยืนยันผู้เข้าร่วมกิจกกรรม</h5>
-            </div>
-        </div>`;
-       
-    }
-
-    let user = "";
-    const data = result.data;
-    data.forEach(doc => {
-        const status = (doc.status_submit == "รอการตรวจสอบ") ? `<div class="text-warning">${doc.status_submit}</div>` : ((doc.status_submit == "อนุมัติ") ? `<div class="text-success">${doc.status_submit}</div>` : `<div class="text-danger">${doc.status_submit}</div>`);
-        const thaiDate = formatThaiDate(doc.datetime_submit); // แปลงวันที่เป็นรูปแบบไทย
-        user += `
-        
-            <div class="row d-flex justify-content-between align-items-center" style="width:100%;">
-                <div class="col-2">
-                    <label>${thaiDate}</label> <!-- แสดงวันที่ในรูปแบบไทย -->
-                </div>
-                <div class="col-1 justify-content-center align-items-center">
-                    <img src="/get/image?img=/user/${doc.image_user}" style="width: 50px; height: 50px; border-radius: 50%;" alt=".">
-                    <buttom class="link-about-user-passpol" onClick="SelectDtailUser('${pid}','${doc.aid}')">
-                        <img src="https://cdn-icons-png.flaticon.com/512/6388/6388049.png" alt=".">
-                        profile
-                    </buttom>
-                </div>
-                <div class="col-2">
-                    <p>ชื่อ ${doc.fname}</p><p class="ms-2"> ${doc.lname}</p>
-                    <p>เพศ : ${doc.gender}</p>
-                    <p>อายุ : ${calculateAge(doc.birthday)}</p>
-                </div>
-                <div class="col-3 my-1">
-                    <img src="/get/image?img=/submit/${doc.image_submit}" style="width: 150px; height: 100px;" alt=".">
-                </div>
-                <div class="col-2 text-center">
-                    <button class="btn btn-success bt_pri btn-sm" onClick="setStatusRegisterUser('${pid}','${doc.aid}',1)">อนุมัติ</button>
-                    <div class="mb-2"></div>
-                    <button class="btn btn-danger bt_pri btn-sm mb-2" onClick="setStatusRegisterUser('${pid}','${doc.aid}',0)">ปฏิเสธ</button>
-                </div>
-                <div class="col-2 ">
-                    ${status}
-                </div>
-            </div>`;
-    });
-
-    let e = `
-        <div class="content" style="width:50%;">
-            <div class="header">
-                <div>
-                    <label class="title-header">ตรวจสอบรูปภาพ</label><br>
-                </div>
-                <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
-            </div>
-            <div class="body">
-                <div>
-                    ${user}
-                </div>
-            </div>
-        </div>`;
-    model.innerHTML = e;
-}
-
 async function SelectDtailUser(pid,uid) {
     openPopUp("Modal_user_data_1");
     try{
@@ -351,7 +257,7 @@ async function SelectDtailUser(pid,uid) {
             icon: "error"
         });
     }
-}
+};
 function setModal_user_data_1(result){
     const Modal_user_data_1 = document.getElementById('Modal_user_data_1');
     if(result.status!=200){
@@ -391,7 +297,7 @@ function setModal_user_data_1(result){
             </div>
         </div>`
     Modal_user_data_1.innerHTML = e;
-}
+};
 async function setStatusRegisterUser(pid,uid,status) {
     const conf = await Swal.fire({
         title: "ชี้แจง?",
@@ -446,7 +352,7 @@ async function setStatusRegisterUser(pid,uid,status) {
             });
         }
     }
-}   
+}; 
 async function DeletePost(pid,title) {
     const conf = await Swal.fire({
         title: "ชี้แจง?",
@@ -465,5 +371,5 @@ async function DeletePost(pid,title) {
     if(conf){
         window.location.href = `/activity/delete?pid=${pid}`
     }
-}  
+};
 
