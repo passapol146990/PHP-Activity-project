@@ -160,31 +160,31 @@ class ACTIVITY{
     function update(){
         isLogin();
         if (!isset($_POST["title"]) || empty($_POST["title"])) {
-            header("Location:/activity/edit?status=warnign&message=กรุณาใส่ชื่อกิจกรรม.");
+            header("location:/activity/create/show?status=warnign&message=กรุณาใส่ชื่อกิจกรรม.");
             exit();
         }
         if (!isset($_POST["description"]) || empty($_POST["description"])) {
-            header("Location:/activity/edit?status=warnign&message=กรุณาใส่รายละเอียดกิจกรรม.");
+            header("location:/activity/create/show?status=warnign&message=กรุณาใส่รายละเอียดกิจกรรม.");
             exit();
         }
         if (!isset($_POST["max_count"]) || empty($_POST["max_count"])) {
-            header("Location:/activity/edit?status=warnign&message=กรุณาใส่จำนวนคนที่รับ.");
+            header("location:/activity/create/show?status=warnign&message=กรุณาใส่จำนวนคนที่รับ.");
             exit();
         }
         if (!isset($_POST["start_date"]) || empty($_POST["start_date"])) {
-            header("Location:/activity/edit?status=warnign&message=กรุณาใส่วันที่เริ่มกิจกรรม.");
+            header("location:/activity/create/show?status=warnign&message=กรุณาใส่วันที่เริ่มกิจกรรม.");
             exit();
         }
         if (!isset($_POST["end_date"]) || empty($_POST["end_date"])) {
-            header("Location:/activity/edit?status=warnign&message=กรุณาใส่วันที่สิ้นสุดกิจกรรม.");
+            header("location:/activity/create/show?status=warnign&message=กรุณาใส่วันที่สิ้นสุดกิจกรรม.");
             exit();
         }
         if (!isset($_POST["location"]) || empty($_POST["location"])) {
-            header("Location:/activity/edit?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
+            header("location:/activity/create/show?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
             exit();
         }
         if (!isset($_POST["p_give"]) || empty($_POST["p_give"])) {
-            header("Location:/activity/edit?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
+            header("location:/activity/create/show?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
             exit();
         }
         $aid = $_SESSION["login_token"];
@@ -199,7 +199,7 @@ class ACTIVITY{
         if (isset($_FILES['images']) || !empty($_FILES['images']['name'][0])) {
             $Countimage = getCountImageByIdpostAndIduser($p_id,$aid);
             if (count($_FILES['images']['tmp_name'])+ $Countimage["count"] > 10) {
-                header("Location:/activity/create?status=warning&message=อัปโหลดได้สูงสุด 10 รูป.");
+                header("location:/activity/create/show?status=warning&message=อัปโหลดได้สูงสุด 10 รูป.");
                 exit();
             }
             foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
