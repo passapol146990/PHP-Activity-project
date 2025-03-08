@@ -58,45 +58,127 @@
             </div>
             <div class="body">
                 <a class="p-3" href="/">กลับหน้าแรก</a>
-                <a class="p-3" href="/">สรุปรวม</a>
-                <a class="p-3" href="/">กิจกรรมของฉัน</a>
-                <a class="p-3" href="/">กิจกรรมที่เข้าร่วม</a>
+                <!-- <a class="p-3" href="/">สรุปรวม</a> -->
+                <!-- <a class="p-3" href="/">กิจกรรมของฉัน</a>
+                <a class="p-3" href="/">กิจกรรมที่เข้าร่วม</a> -->
             </div>
             <div class="footer"></div>
         </div>
         <div class="div-content col-9">
-            <div class="header bg-white d-flex">
-                <canvas id="Chart1" style="width:100%;max-width:600px"></canvas>
-                <canvas id="Chart2" style="width:100%;max-width:600px"></canvas>
+            <div class="header bg-white p-5">
+                <canvas id="Chart1" style="width:100%;height: 300px;"></canvas>
+                <canvas id="Chart2" style="width:100%;height: 300px;"></canvas>
+                <div class="d-flex justify-content-center gap-2">
+                    <canvas id="Chart3" class="border rounded" style="max-width: 450px;"></canvas>
+                    <canvas id="Chart4" class="border rounded" style="max-width: 450px;"></canvas>
+                </div>
                 <script>
-                    async function setChart1(canid,title){
+                    function setChartTop10MyActivity(id,title){
                         const xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
                         const yValues = [55, 49, 44, 24, 15];
+                        const barColors = ["red", "green","blue","orange","brown"];
+
+                        new Chart(id, {
+                        type: "bar",
+                        data: {
+                            labels: xValues,
+                            datasets: [{
+                            backgroundColor: barColors,
+                            data: yValues
+                            }]
+                        },
+                        options: {
+                            legend: {display: false},
+                            scales: {
+                            yAxes: [{
+                                ticks: {
+                                beginAtZero: true
+                                }
+                            }]
+                            },
+
+                            title: {
+                            display: true,
+                            text: title
+                            }
+                        }
+                        });
+                    }
+                    setChartTop10MyActivity("Chart1","10 อันดับกิจกรรมของคุณที่มีคนเข้าร่วมมากที่สุด");
+                    function setRegMyActivity(id,title){
+                        const xValues = ["ม.ค.","ก.พ.","มี.ค","เม.ย","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+                        new Chart(id, {
+                        type: "line",
+                        data: {
+                            labels: xValues,
+                            datasets: [{ 
+                                data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
+                                borderColor: "red",
+                                fill: false
+                            }]
+                        },
+                        options: {
+                            title:{
+                                display:true,
+                                text:title
+                            },
+                            legend:{display:false}
+                        }
+                        });
+                    }
+                    setRegMyActivity('Chart2',"คำขอเข้าร่วมกิจกรรมที่คุณสร้าง")
+                    function setChartCicleMyStatus(canid,title){
+                        const xValues = ["รอดำเนินการ", "อนุมัติ", "ปฏิเสธ"];
+                        const yValues = [55, 49, 44];
                         const barColors = [
-                            "#b91d47",
-                            "#00aba9",
-                            "#2b5797",
-                            "#e8c3b9",
-                            "#1e7145"
+                            "#f1c40f",
+                            "#2ecc71",
+                            "#e74c3c"
                         ];
                         new Chart(canid, {
                             type: "doughnut",
                             data: {
                                 labels: xValues,
                                 datasets: [{
-                                backgroundColor: barColors,
-                                data: yValues
+                                    backgroundColor: barColors,
+                                    data: yValues
                                 }]
                             },
                             options: {
                                 title: {
-                                display: true,
-                                text: title
+                                    display: true,
+                                    text: title
                                 }
                             }
                         });
                     }
-                    setChart1("Chart1","10 อันดับกิจกรรมที่สร้างยอดคนสมัครเยอะที่สุด")
+                    setChartCicleMyStatus("Chart3","สถานะคำขอของคนอื่น ที่ขอเข้าร่วมกิจกรรมของคุณ")
+                    function setChartCicleMyReg(canid,title){
+                        const xValues = ["รอดำเนินการ", "อนุมัติ", "ปฏิเสธ"];
+                        const yValues = [55, 49, 44];
+                        const barColors = [
+                            "#f1c40f",
+                            "#2ecc71",
+                            "#e74c3c"
+                        ];
+                        new Chart(canid, {
+                            type: "doughnut",
+                            data: {
+                                labels: xValues,
+                                datasets: [{
+                                    backgroundColor: barColors,
+                                    data: yValues
+                                }]
+                            },
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: title
+                                }
+                            }
+                        });
+                    }
+                    setChartCicleMyReg("Chart4","สถานะคำขอของคุณ ที่ขอเข้าร่วมกิจกรรมของคนอื่น")
                 </script>
             </div>
         </div>
