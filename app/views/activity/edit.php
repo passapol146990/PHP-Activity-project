@@ -126,7 +126,6 @@
             <div class="p-2 mb-3">
                 <a href="/activity/create/show" class="btn btn-primary">&larr; กลับ</a>
             </div>
-            <? print_r($result['images']) ?>
             <h2 class="mb-3">แก้ไขกิจกรรม : <?= htmlspecialchars($result['post_name'] ?? '') ?></h2>
             <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($p_id); ?>">
             <div class="mb-3">
@@ -198,7 +197,6 @@
                 removeBtn.onclick = function() {
                     
                     const urlParams = new URLSearchParams(window.location.search);
-                    // console.log(urlParams.get("pid"));
                     const pid = urlParams.get("pid");
                     div.remove();
                     DeleteImage(pid,image);
@@ -223,7 +221,6 @@
                 };
                 let res = await fetch("/api/delete/image", requestOptions);
                 res = await res.json();
-                console.log(res);
             }
         });
 
@@ -242,7 +239,7 @@
 
                 if (file.size > maxSize) {
                     alert(`ไฟล์ ${file.name} มีขนาดเกิน 2MB!`);
-                    continue; // ข้ามไฟล์นี้
+                    continue;
                 }
 
                 const reader = new FileReader();
