@@ -252,12 +252,8 @@ class ACTIVITY{
             header("location:/activity/register/show?status=warning&message=pid is null");
             exit();
         }
-        if ((!isset($_FILES['images']) || empty($_FILES['images']['name'][0]))&&$_FILES['image']['error'] == 0) {
+        if ((!isset($_FILES['image']) || empty($_FILES['image']['name'][0]))&&$_FILES['image']['error'] == 0) {
             header("Location:/activity/register/show?status=warning&message=กรุณาใส่รูปภาพ.");
-            exit();
-        }
-        if (count($_FILES['images']['tmp_name']) > 1) {
-            header("Location:/activity/register/show?status=warning&message=อัปโหลดได้สูงสุด 1 รูป.");
             exit();
         }
         $pid = $_POST['pid'];
