@@ -36,6 +36,24 @@ class POST{
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
         exit();
     }
+    function DeleteImage(){
+        isLogin();
+        if (!isset($_POST["pid"]) || empty($_POST["pid"])){
+            echo json_encode(["status"=> 400,"message"=> "pid is null!"], JSON_UNESCAPED_UNICODE);
+            exit();
+        }
+        if (!isset($_POST["image"]) || empty($_POST["image"])) {
+            echo json_encode(["status"=> 400,"message"=> "image is null!"], JSON_UNESCAPED_UNICODE);
+            exit();
+        }
+        $pid = $_POST["pid"];
+        $id = $_SESSION["login_token"];
+        $image = $_POST["image"];
+        $resolt = deleteImage($image,$pid, $id);
+        // echo json_encode($resolt, JSON_UNESCAPED_UNICODE);
+        echo json_encode(["pid"=> $pid,"login_token"=> $id, "image"=> $image], JSON_UNESCAPED_UNICODE);
+        exit();
+    }
 }
 $Post = new Post();
 ?>

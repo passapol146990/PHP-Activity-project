@@ -196,7 +196,55 @@ class ACTIVITY{
         $end_date = $_POST["end_date"];
         $location = $_POST["location"];
         $p_give = $_POST["p_give"];
-        $data = updatePost($p_id, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
+        if (isset($_FILES['images']) || !empty($_FILES['images']['name'][0])) {
+            $Countimage = getCountImageByIdpostAndIduser($p_id,$aid);
+            if (count($_FILES['images']['tmp_name'])+ $Countimage["count"] > 10) {
+                header("Location:/activity/create?status=warning&message=อัปโหลดได้สูงสุด 10 รูป.");
+                exit();
+            }
+            foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+                if ($_FILES['images']['error'][$key] === 0) {
+                    $name = date('Ymd') . $_SESSION["login_token"] . '_' . uniqid() . '.png';
+                    $fileName = $_FILES['images']['name'][$key];
+                    $fileSize = $_FILES['images']['size'][$key];
+                    $fileTmp = $_FILES['images']['tmp_name'][$key];
+                    $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                    $allowedExtensions = ['jpg', 'png'];
+    
+                    if (in_array($fileExt, $allowedExtensions)) {
+                        if ($fileSize < 2000000) {
+                            if ($fileExt === 'jpg' || $fileExt === 'jpeg') {
+                                $image = imagecreatefromjpeg($fileTmp);
+                            } elseif ($fileExt === 'png') {
+                                $image = imagecreatefrompng($fileTmp);
+                            }
+                            if ($image) {
+                                $width = imagesx($image);
+                                $height = imagesy($image);
+                                $newWidth = intval($width * 0.5);
+                                $newHeight = intval($height * 0.5);
+                                $newImage = imagecreatetruecolor($newWidth, $newHeight);
+                                imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                                $destination = '../image/post/' . $name;
+                                if ($fileExt === 'png') {
+                                    imagepng($newImage, $destination);
+                                } else {
+                                    imagejpeg($newImage, $destination, 50);
+                                }
+                                imagedestroy($image);
+                                imagedestroy($newImage);
+                                createImage($name, $p_id);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+       
+        
+        updatePost($p_id, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
+        
+        
         header("location:/activity/create/show?status=success&message=อัพเดทกิจกรรมสำเร็จ");
         exit();
     }

@@ -113,6 +113,9 @@ if ($method == "GET") {
         case '/api/get/userdetail':
             $User->get();
             break;
+        case '/api/delete/image':
+            $Post->DeleteImage();
+            break;
         default:
             header("Location:/");
             break;
