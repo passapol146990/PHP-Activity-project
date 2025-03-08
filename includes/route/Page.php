@@ -41,6 +41,16 @@ class PAGE{
         require_once('../app/views/user/setting.php');
         exit();
     }
+    function dashboard(){
+        isLogin();
+        // $login_token = $_SESSION["login_token"];
+        // $total_registers = getCountWaitRegister($login_token);
+        // $waitReg = getWaitRegister($login_token);
+        // $getaccount = getAccountID($login_token);
+        // $account = $getaccount['data']->fetch_assoc();
+        require_once('../app/views/dashboard/page.php');
+        exit();
+    }
 }
 $Page = new PAGE();
 ?>

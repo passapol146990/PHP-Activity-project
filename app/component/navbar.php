@@ -190,6 +190,9 @@
             </script>
         </div>
         <div class="menu-user">
+            <a class="menu" href="/user/dashboard">
+                <span>แดชบอร์ด</span>
+            </a>
             <a class="menu" href="/user/setting">
                 <span>ตั้งค่า</span>
             </a>

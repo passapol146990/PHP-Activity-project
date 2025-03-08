@@ -52,6 +52,9 @@ if ($method == "GET") {
         case '/register/cancel':
             $Register->cancelRegister();
             break;
+        case '/user/dashboard':
+            $Page->dashboard();
+            break;
         case '/get/image':
             $img = $_GET['img'] ?? '';
             $file = "../image/$img";
