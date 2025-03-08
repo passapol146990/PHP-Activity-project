@@ -131,7 +131,7 @@
             <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($p_id); ?>">
             <div class="mb-3">
                 <label for="image-upload" class="form-label">รูปภาพกิจกรรม</label>
-                <!-- <input type="file" class="form-control" id="image-upload" name="images[]" accept="image/*" multiple> -->
+                <input type="file" class="form-control" id="image-upload" name="images[]" accept="image/*" multiple>
                 <div id="image-preview" class="image-preview-container" data-existing-images="<?= htmlspecialchars($result['images'] ?? '') ?>"></div>
             </div>
             <div class="p-2">
@@ -224,18 +224,51 @@
                 res = await res.json();
                 console.log(res);
             }
-            // document.getElementById("image-upload").addEventListener("change", function(event) {
-            //     const files = event.target.files;
-            //     for (let i = 0; i < files.length; i++) {
-            //         const file = files[i];
-            //         if (!file.type.match("image.*")) continue;
-            //         const reader = new FileReader();
-            //         reader.onload = function(e) {
-            //             addImageToPreview(e.target.result);
-            //         };
-            //         reader.readAsDataURL(file);
-            //     }
-            // });
+        });
+
+        document.getElementById('image-upload').addEventListener('change', function(event) {
+            const preview = document.getElementById('image-preview');
+            preview.innerHTML = '';
+            const files = event.target.files;
+            const maxSize = 2 * 1024 * 1024; // 2MB
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                if (!file.type.match('image.*')) {
+                    continue;
+                }
+
+                if (file.size > maxSize) {
+                    alert(`ไฟล์ ${file.name} มีขนาดเกิน 2MB!`);
+                    continue; // ข้ามไฟล์นี้
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'image-preview-item';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-image';
+                    img.title = file.name;
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-btn';
+                    removeBtn.innerHTML = '×';
+                    removeBtn.title = 'ลบรูปนี้';
+                    removeBtn.onclick = function() {
+                        div.remove();
+                        return false;
+                    };
+
+                    div.appendChild(img);
+                    div.appendChild(removeBtn);
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            }
         });
     </script>
 </body>

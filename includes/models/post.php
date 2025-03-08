@@ -352,6 +352,43 @@ function updatePost($p_id, $p_aid, $p_name, $p_about, $p_max, $p_address, $p_dat
     }
     return ["status" => 200, "message" => "Updated successfully."];
 };
+function Updateimage($image, $pid, $postAid) {
+    global $conn;
+    
+    
+    $check_sql = 'SELECT COUNT(*) FROM post WHERE p_id = ? AND p_aid = ?';
+    $check_stmt = $conn->prepare($check_sql);
+    if (!$check_stmt) {
+        return ["status" => 400, "message" => "Prepare error (check ownership)!"];
+    }
+    $check_stmt->bind_param('ss', $pid, $postAid);
+    $check_stmt->execute();
+    $check_stmt->bind_result($count);
+    $check_stmt->fetch();
+    $check_stmt->close();
+    
+    if ($count == 0) {
+        return ["status" => 403, "message" => "Permission denied!"];
+    }
+
+    
+    $sql = 'UPDATE image SET image = ? WHERE pid = ?';
+    $stmt = $conn->prepare($sql);
+    
+    if (!$stmt) {
+        return ["status" => 400, "message" => "Prepare error (update image)!"];
+    }
+    
+    $stmt->bind_param('ss', $image, $pid);
+    
+    if (!$stmt->execute()) {
+        return ["status" => 400, "message" => "Execute error (update image)!"];
+    }
+    
+    return ["status" => 200, "message" => "Successfully updated."];
+}
+
+
 function getPosttoedit($p_id, $p_aid)
 {
     global $conn;

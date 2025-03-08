@@ -59,5 +59,20 @@
         if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
         return ["status"=>200,"message"=>"ลบรูปภาพสำเร็จ!"];
     }
+    function getCountImageByIdpostAndIduser($pid,$aid) {
+        global $conn;
+        $sql = "SELECT COUNT(*) as count
+        FROM image 
+        JOIN post ON post.p_id = image.pid
+        WHERE post.p_id = ? 
+        AND post.p_aid = ?";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $pid, $aid);
+        $stmt->execute();
+        $count = $stmt->get_result();
+        $count = $count->fetch_assoc();
+        return $count;
+    }
     
 ?>
