@@ -424,9 +424,6 @@
         let modalId = `Modal_submit_pic_${pid}`;
         let modalElement = document.getElementById(modalId);
 
-        console.log("modalId:", modalId);
-        console.log("modalElement:", modalElement);
-
         if (modalElement) {
             let modal = new bootstrap.Modal(modalElement);
             modal.show();
