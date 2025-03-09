@@ -5,11 +5,12 @@ function openPopUp(id){
 }
 function closePopUp(){
     modal.pop().classList.remove("show");
+    window.location.reload();
 }
 window.addEventListener("click", (e) => {
     try{
         if (e.target === modal[modal.length-1]) {
-            modal.pop().classList.remove("show");
+            closePopUp()
         }
     }catch{}
 });

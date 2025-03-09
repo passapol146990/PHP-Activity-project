@@ -63,8 +63,16 @@ class ACTIVITY{
             header("Location:/activity/create?status=warning&message=กรุณาใส่ชื่อกิจกรรม.");
             exit();
         }
+        if (strlen($_POST["title"]) > 50) {
+            header("Location:/activity/create?status=warning&message=ชื่อกิจกรรมต้องไม่เกิน 50 ตัวอักษร.");
+            exit();
+        }
         if (!isset($_POST["description"]) || empty($_POST["description"])) {
             header("Location:/activity/create?status=warning&message=กรุณาใส่รายละเอียดกิจกรรม.");
+            exit();
+        }
+        if (strlen($_POST["description"]) > 2000) {
+            header("Location:/activity/create?status=warning&message=รายละเอียดกิจกรรม 2000 ตัวอักษร.");
             exit();
         }
         if (!isset($_POST["max_count"]) || empty($_POST["max_count"])) {
