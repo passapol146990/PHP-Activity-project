@@ -323,6 +323,54 @@ function getCountWaitRegister($pid)
     $data = $result->fetch_all(MYSQLI_ASSOC);
     return $data[0]["total_registers"];
 };
+function getCountNumberApproveRegisterFromPost($pid)
+{
+    global $conn;
+    $page = isset($page) ? (int)$page : 1;
+    $limit = isset($limit) ? (int)$limit : 10;
+    $offset = ($page - 1) * $limit;
+    $stmt = $conn->prepare("
+            SELECT COUNT(*) AS total_registers
+            FROM register
+            JOIN post ON post.p_id = register.pid
+            WHERE post.p_id = ?
+            AND register.status = 'อนุมัติ';
+        ");
+    if (!$stmt) {
+        return ["status" => 400, "message" => "prepare error!"];
+    }
+    $stmt->bind_param("s", $pid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows === 0) {
+        return 0;
+    }
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    return $data[0]["total_registers"];
+};
+function getMaxCountNumberFromPost($pid)
+{
+    global $conn;
+    $page = isset($page) ? (int)$page : 1;
+    $limit = isset($limit) ? (int)$limit : 10;
+    $offset = ($page - 1) * $limit;
+    $stmt = $conn->prepare("
+            SELECT p_max as max_count
+                FROM post
+                WHERE p_id = ?
+        ");
+    if (!$stmt) {
+        return ["status" => 400, "message" => "prepare error!"];
+    }
+    $stmt->bind_param("s", $pid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows === 0) {
+        return 0;
+    }
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    return $data[0]["max_count"];
+};
 function getCounApproveRegister($pid)
 {
     global $conn;
