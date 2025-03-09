@@ -1,5 +1,6 @@
 <?php
 require_once("../includes/models/register.php");
+require_once("../includes/models/post.php");
 class REGISTER{
     function Show(){
         isLogin();
@@ -60,6 +61,12 @@ class REGISTER{
         }
         if (!isset($_POST["status"]) || empty(isset($_POST["status"]))) {
             echo json_encode(["status" => 400, "message" => "status is null!"], JSON_UNESCAPED_UNICODE);
+            exit();
+        }
+        $p_id = $_POST["pid"] ?? "";
+        $ApproveRegister = getCountNumberApproveRegisterFromPost($p_id);
+        if ((int)$_POST["max_count"] < (int)$ApproveRegister){
+            echo json_encode(["status"=> 400,"message"=> "กรุณาใส่จำนวนคนมากกว่าที่อนุมัติ"], JSON_UNESCAPED_UNICODE);
             exit();
         }
         $pid = $_POST["pid"];

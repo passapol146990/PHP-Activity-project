@@ -173,6 +173,13 @@ class ACTIVITY{
             header("location:/activity/create/show?status=warnign&message=กรุณาใส่จำนวนคนที่รับ.");
             exit();
         }
+        $p_id = $_POST["p_id"] ?? "";
+        $ApproveRegister = getCountNumberApproveRegisterFromPost($p_id);
+        // print_r($ApproveRegister);  
+        if ((int)$_POST["max_count"] < (int)$ApproveRegister){
+            header("location:/activity/create/show?status=warnign&message=กรุณาใส่จำนวนคนมากกว่าที่อนุมัติ.");
+            exit();
+        }
         if (!isset($_POST["start_date"]) || empty($_POST["start_date"])) {
             header("location:/activity/create/show?status=warnign&message=กรุณาใส่วันที่เริ่มกิจกรรม.");
             exit();
@@ -190,8 +197,7 @@ class ACTIVITY{
             exit();
         }
         
-        $aid = $_SESSION["login_token"];
-        $p_id = $_POST["p_id"] ?? "";
+        $aid = $_SESSION["login_token"];  
         $title = $_POST["title"];
         $description = $_POST["description"];
         $max_count = (int)$_POST["max_count"];
