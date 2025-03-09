@@ -195,17 +195,19 @@ function updateRegisterStatusSubmit($pid,$uid,$login_token,$status){
     $stmt->execute();
     return ["status" => 200, "message" => "อัพเดทสถานะส่งภาพยืนยันสำเร็จแล้ว"];
 }
-function getTop10register(){
+function getTop10register($login_token){
     global $conn;
     $sql = 'SELECT
             COUNT(register.status) AS total_regis,
             post.p_name
             FROM register
             JOIN post ON register.pid = post.p_id
+            WHERE post.p_aid = ?
             GROUP BY register.pid, post.p_name
             ORDER BY total_regis DESC
             LIMIT 10';
     $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s",$login_token);
     if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
     if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
     $result = $stmt->get_result();

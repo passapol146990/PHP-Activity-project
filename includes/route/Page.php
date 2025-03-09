@@ -44,7 +44,7 @@ class PAGE{
     function dashboard(){
         isLogin();
         $login_token = $_SESSION["login_token"];
-        $getTop10 = getTop10register();
+        $getTop10 = getTop10register($login_token);
         $getReqMonth = getRegisterByMonth($login_token);
         $total_Countstatus_1 = getCountStatus_1($login_token);
         $total_Countstatus_2 = getCountStatus_2($login_token);
