@@ -3,14 +3,21 @@ function openPopUp(id){
     modal.push(document.getElementById(id));
     modal[modal.length-1].classList.add("show");
 }
-function closePopUp(){
+function closePopUp(reload){
     modal.pop().classList.remove("show");
-    window.location.reload();
+    if(reload){
+        window.location.reload();
+    }
 }
 window.addEventListener("click", (e) => {
     try{
         if (e.target === modal[modal.length-1]) {
-            closePopUp()
+            const Modal_user_data_1 = document.getElementById('Modal_user_data_1');
+            if(e.target!=Modal_user_data_1){
+                closePopUp(1)
+            }else{
+                closePopUp()
+            }
         }
     }catch{}
 });
@@ -77,11 +84,22 @@ async function getDetailPost(id){
     }
 }
 function setModal_Activity_1(result) {
-    if(result.status!=200){
-        return 
+    const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
+    if (result.status != 200) {
+        return Modal_Activity_1.innerHTML = `
+        <div class="content">
+            <div class="header mb-3">
+                <div>
+                    <label class="title-header">รายละเอียดกิจกรรม</label>:<br>
+                </div>
+                <button class="close-btn" onClick="closePopUp(1)">&times;</button>
+            </div>
+            <div class="body text-center p-5">
+                <h5>ไม่พบรายละเอียดกิจกรรม</h5>
+            </div>
+        </div>`;
     }
     const data = result.data;
-    const Modal_Activity_1 = document.getElementById('Modal_Activity_1');
     const create_date = formatThaiDate(data.post_create);
     const activity_date = `${formatThaiDate(data.post_start)} - ${formatThaiDate(data.post_end)}`;
     let images = ""
@@ -165,7 +183,7 @@ function setReq_activity_1(result, pid) {
                 <div>
                     <label class="title-header">คำขอเข้าร่วมกิจกรรม</label>:<br>
                 </div>
-                <button class="close-btn" onClick="closePopUp()">&times;</button>
+                <button class="close-btn" onClick="closePopUp(1)">&times;</button>
             </div>
             <div class="body text-center p-5">
                 <h5>ไม่พบคำขอร่วมในกิจกรรมนี้</h5>
@@ -220,9 +238,9 @@ function setReq_activity_1(result, pid) {
                 <div>
                     <label class="title-header">คำขอเข้าร่วมกิจกรรม</label>:<label> <h5 class="card-title">${title}</h5></label><br>
                 </div>
-                <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
+                <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp(1)">&times;</button>
             </div>
-            <div class="body">
+            <div class="body" style="overflow:hidden;height:550px;">
                 <div>
                     <table class="table">
                         <tr style="font-size: meduim;">
@@ -232,6 +250,8 @@ function setReq_activity_1(result, pid) {
                             <td style="width: 15%;">ปฏิเสธ : ${rejected}</td>
                         </tr>
                     </table>
+                </div>
+                <div style="overflow-y: auto;overflow-x: none;height: 90%;">
                     ${user}
                 </div>
             </div>
@@ -399,7 +419,7 @@ function setCheck_pic(result, pid) {
                 <div>
                     <label class="title-header">ตรวจสอบรูปภาพ</label>:<br>
                 </div>
-                <button class="close-btn" onClick="closePopUp()">&times;</button>
+                <button class="close-btn" onClick="closePopUp(1)">&times;</button>
             </div>
             <div class="body text-center p-5">
                 <h5>ไม่มีรูปภาพยืนยันผู้เข้าร่วมกิจกกรรม</h5>
@@ -442,15 +462,15 @@ function setCheck_pic(result, pid) {
             </div>`;
     });
     let e = `
-        <div class="content">
+        <div class="content" >
             <div class="header">
                 <div>
                     <label class="title-header">ตรวจสอบรูปภาพ</label><br>
                 </div>
-                <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
+                <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp(1)">&times;</button>
             </div>
-            <div class="body">
-                <div>
+            <div class="body" style="overflow:hidden;height:550px;">
+                <div style="overflow-y: auto;overflow-x: none;height: 100%;">
                     ${user}
                 </div>
             </div>

@@ -87,7 +87,7 @@
                 <div>
                     <label class="title-header">คำขอเข้าร่วมกิจกรรม</label>:<br>
                 </div>
-                <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
+                <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp(1)">&times;</button>
             </div>
             <div class="body"></div>
         </div>
@@ -98,7 +98,7 @@
                 <div>
                     <label class="title-header">ตรวจสอบรูปภาพ</label>:<br>
                 </div>
-                <button class="close-btn" onClick="closePopUp()">&times;</button>
+                <button class="close-btn" onClick="closePopUp(1)">&times;</button>
             </div>
             <div class="body text-center p-5">
                 <h5>ไม่พบรูปภาพผู้ขอเข้าร่วม</h5>
@@ -111,16 +111,16 @@
                 <div>
                     <label class="title-header">ข้อมูลผู้ใช้</label>:<br>
                 </div>
-                <button class="close-btn" onClick="closePopUp()">&times;</button>
+                <button class="close-btn" onClick="closePopUp(1)">&times;</button>
             </div>
             <div class="body text-center p-5">
                 <h5>ไม่พบข้อมูลของผู้ใช้</h5>
             </div>
         </div>
     </div>
-    <?php if(count($data["data"])>=10){
+    <?php if(count($data["data"])>=10||(isset($_GET["page"]))){
         require_once '../app/component/buttonPage.php';
-    } ?>
+    }?>
     <script src="../../js/activity/showx.js"></script>
 </body>
 </html>

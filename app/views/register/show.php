@@ -130,7 +130,7 @@
             </div>
         </div>
     </div> 
-    <?php if(count($myactivities["data"])>=10){
+    <?php if(count($myactivities["data"])>=10||(isset($_GET["page"]))){
         require_once '../app/component/buttonPage.php';
     }?>
     <script src="../../js/register/show.js"></script>
