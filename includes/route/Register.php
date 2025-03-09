@@ -13,7 +13,6 @@ class REGISTER{
         $total_registers = getCountWaitRegister($login_token);
         $waitReg = getWaitRegister($login_token);
         
-        // $myactivities = getRegisteredActivities($login_token, 10, $page);
         $myactivities = getRegisteredActivities($login_token, 10, $page, $keyword, $date_start, $date_end);
         require_once('../app/views/register/show.php');
         exit();

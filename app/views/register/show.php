@@ -64,15 +64,19 @@
                                 switch($doc["register_status"]){
                                     case 'รอการตรวจสอบ':
                                         $text = "<span class='text-warning'>".htmlspecialchars($doc["register_status"])."</span>";
-                                        $action = '<button onClick="cancelRegister('."'$rid','$pid','$title'".')" class="btn btn-danger bt_pri btn-sm">ลบ</button>';
+                                        $action = '<button onClick="cancelRegister('."'$rid','$pid','$title'".')" class="btn btn-danger">ลบ</button>';
                                         break;
                                     case 'อนุมัติ':
                                         $text = "<span class='text-success'>".htmlspecialchars($doc["register_status"])."</span>";
-                                        $action = '<button onClick="openModal(\'' . $pid . '\')" class="btn btn-warning bt_pri btn-sm">ส่งรูปภาพ</button>';
+                                        if(!isset($doc["reg_image"])){
+                                            $action = '<button onClick="openModal(\'' . $pid . '\')" class="btn btn-success">ส่งรูปภาพ</button>';
+                                        }else{
+                                            $action = '<button onClick="openModal(\'' . $pid . '\')" class="btn btn-success">ส่งรูปภาพ</button>';
+                                        }
                                         break;
                                     case 'ปฏิเสธ':
                                         $text = "<span class='text-danger'>".htmlspecialchars($doc["register_status"])."</span>";
-                                        $action = '<button onClick="cancelRegister('."'$rid','$pid','$title'".')" class="btn btn-danger bt_pri btn-sm">ลบ</button>';
+                                        $action = '<button onClick="cancelRegister('."'$rid','$pid','$title'".')" class="btn btn-danger">ลบ</button>';
                                         break;
                                 }
                                 echo "<td>{$text}</td>";
@@ -102,6 +106,7 @@
                                         </div>
 
                                         <div class="success-pad">
+                                            <?= htmlspecialchars($doc["reg_image"]) ?>
                                             <button id="submit-btn-<?= $pid ?>" type="submit" class="btn btn-success disabled" style="width: 100px; height: 50px; pointer-events: none; opacity: 0.5;">ส่งรูปภาพ</button>
                                         </div>
                                     </form>

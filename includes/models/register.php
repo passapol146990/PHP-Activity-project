@@ -100,7 +100,7 @@ function getRegisteredActivities($aid, $limit, $page, $keyword = '', $date_start
 
     $where = "register.aid = ?";
     $params = [$aid];
-    $param_types = "s"; // $aid เป็น string
+    $param_types = "s";
 
     if (!empty($keyword)) {
         $where .= " AND post.p_name LIKE ?";
@@ -141,7 +141,8 @@ function getRegisteredActivities($aid, $limit, $page, $keyword = '', $date_start
                 SELECT COUNT(*) 
                 FROM register 
                 WHERE register.pid = post.p_id AND register.status = 'อนุมัติ'
-            ) AS approved_registers
+            ) AS approved_registers,
+            register.image_submit as reg_image
         FROM register
         JOIN post ON register.pid = post.p_id
         JOIN account ON post.p_aid = account.aid
@@ -155,7 +156,6 @@ function getRegisteredActivities($aid, $limit, $page, $keyword = '', $date_start
         return ["status" => 400, "message" => "prepare error!"];
     }
 
-    // เพิ่ม offset และ limit
     $params[] = $offset;
     $params[] = $limit;
     $param_types .= "ii"; 
@@ -173,8 +173,6 @@ function getRegisteredActivities($aid, $limit, $page, $keyword = '', $date_start
     $data = $result->fetch_all(MYSQLI_ASSOC);
     return ["status" => 200, "message" => "successfully.", "data" => $data];
 }
-
-
 function DeleteRegister($rid,$pid,$aid) {
     global $conn;
     $stmt = $conn->prepare("DELETE FROM register WHERE id = ? AND pid = ? AND aid = ?;");
@@ -182,7 +180,6 @@ function DeleteRegister($rid,$pid,$aid) {
     $stmt->execute();
     return ["status" => 200, "message" => "ยกเลิกคำขอเข้าร่วมสำเร็จ"];
 }
-
 function updateRegisterStatusSubmit($pid,$uid,$login_token,$status){
     isLogin();
     global $conn;

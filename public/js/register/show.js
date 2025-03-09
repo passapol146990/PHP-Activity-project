@@ -209,55 +209,55 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   fileInput.addEventListener("change", previewImage);
-  });
+});
 
-  function openModal(pid) {
-  let modalId = `Modal_submit_pic_${pid}`;
-  let modalElement = document.getElementById(modalId);
+function openModal(pid) {
+let modalId = `Modal_submit_pic_${pid}`;
+let modalElement = document.getElementById(modalId);
 
-  if (modalElement) {
-      let modal = new bootstrap.Modal(modalElement);
-      modal.show();
-  } else {
-      console.error("Modal not found: " + modalId);
-  }
-  }
+if (modalElement) {
+    let modal = new bootstrap.Modal(modalElement);
+    modal.show();
+} else {
+    console.error("Modal not found: " + modalId);
+}
+}
 
-  function triggerFileInput(inputId) {
+function triggerFileInput(inputId) {
   document.getElementById(inputId).click();
-  }
+}
 
-  function previewImage(input, pid) {
-  const file = input.files[0];
-  const previewImg = document.getElementById(`preview-img-${pid}`);
-  const uploadBtn = document.getElementById(`upload-btn-${pid}`);
-  const previewContainer = document.getElementById(`image-preview-${pid}`);
-  const fileNameDisplay = document.getElementById(`file-name-${pid}`);
-  const submitBtn = document.getElementById(`submit-btn-${pid}`);
-  const maxSize = 2 * 1024 * 1024; // 2MB
+function previewImage(input, pid) {
+const file = input.files[0];
+const previewImg = document.getElementById(`preview-img-${pid}`);
+const uploadBtn = document.getElementById(`upload-btn-${pid}`);
+const previewContainer = document.getElementById(`image-preview-${pid}`);
+const fileNameDisplay = document.getElementById(`file-name-${pid}`);
+const submitBtn = document.getElementById(`submit-btn-${pid}`);
+const maxSize = 2 * 1024 * 1024; // 2MB
 
-  if (!file.type.match("image.*")) {
-      alert("กรุณาอัปโหลดเฉพาะไฟล์รูปภาพ!");
-      return;
-  }
+if (!file.type.match("image.*")) {
+    alert("กรุณาอัปโหลดเฉพาะไฟล์รูปภาพ!");
+    return;
+}
 
-  if (file.size > maxSize) {
-      alert(`ไฟล์ ${file.name} มีขนาดเกิน 2MB!`);
-      return;
-  }
+if (file.size > maxSize) {
+    alert(`ไฟล์ ${file.name} มีขนาดเกิน 2MB!`);
+    return;
+}
 
-  const reader = new FileReader();
-  reader.onload = function (e) {
-      previewImg.src = e.target.result;
-      previewImg.style.display = "block";
-      uploadBtn.style.display = "none";
-      previewContainer.style.cursor = "pointer";
+const reader = new FileReader();
+reader.onload = function (e) {
+    previewImg.src = e.target.result;
+    previewImg.style.display = "block";
+    uploadBtn.style.display = "none";
+    previewContainer.style.cursor = "pointer";
 
-      fileNameDisplay.textContent = `ไฟล์ที่เลือก: ${file.name}`;
-      fileNameDisplay.style.display = "block";
+    fileNameDisplay.textContent = `ไฟล์ที่เลือก: ${file.name}`;
+    fileNameDisplay.style.display = "block";
 
-      submitBtn.removeAttribute("disabled");
-      submitBtn.style.pointerEvents = "auto";
-  };
-  reader.readAsDataURL(file);
-  }
+    submitBtn.removeAttribute("disabled");
+    submitBtn.style.pointerEvents = "auto";
+};
+reader.readAsDataURL(file);
+}
