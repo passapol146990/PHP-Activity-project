@@ -82,8 +82,8 @@ class REGISTER{
             echo json_encode(["status" => 400, "message" => "pid is null!"], JSON_UNESCAPED_UNICODE);
             exit();
         }
-        if(!isset($_POST["aid"])||empty($_POST["aid"])){
-            echo json_encode(["status" => 400, "message" => "aid is null!"], JSON_UNESCAPED_UNICODE);
+        if(!isset($_POST["uid"])||empty($_POST["uid"])){
+            echo json_encode(["status" => 400, "message" => "uid is null!"], JSON_UNESCAPED_UNICODE);
             exit();
         }
         if(!isset($_POST["status"])||empty($_POST["status"])){
@@ -92,9 +92,9 @@ class REGISTER{
         }
         $login_token = $_SESSION["login_token"];
         $pid = $_POST["pid"];
-        $aid = $_POST["aid"];
+        $uid = $_POST["uid"];
         $status = ($_POST["status"]==1)?"ผ่านกิจกรรม":"ไม่ผ่านกิจกรรม";
-        $res = updateRegisterStatusSubmit($pid,$aid,$login_token,$status);
+        $res = updateRegisterStatusSubmit($pid,$uid,$login_token,$status);
         echo json_encode($res , JSON_UNESCAPED_UNICODE);
         exit();
     }

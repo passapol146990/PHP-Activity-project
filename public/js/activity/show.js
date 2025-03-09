@@ -41,15 +41,11 @@ function formatThaiDate(dateString) {
 async function getDetailPost(id){
     try{
         openPopUp("Modal_Activity_1");
-        const myHeaders = new Headers();
-        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
-    
         const formdata = new FormData();
         formdata.append("id_post", id);
     
         const requestOptions = {
         method: "POST",
-        headers: myHeaders,
         body: formdata,
         redirect: "follow"
         };
@@ -57,13 +53,10 @@ async function getDetailPost(id){
         res = await res.json();
         setModal_Activity_1(res)
     }catch{
-        Swal.fire({
-            title: "Error",
-            text: "เกิดข้อผิดพลาดในการอัพเดทสถานะของผู้ใช้ กรุณารีหน้าเว็บแล้วลองใหม่อีกครั้ง",
-            icon: "error"
-        });
+        
     }
-}function setModal_Activity_1(result) {
+}
+function setModal_Activity_1(result) {
     if(result.status!=200){
         return 
     }
@@ -113,17 +106,13 @@ async function getDetailPost(id){
         </div>`
     Modal_Activity_1.innerHTML = e;
 }
-//
 async function API_RegisterPost(id,page) {
     try{
-        const myHeaders = new Headers();
-        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
         const formdata = new FormData();
         formdata.append("id_post", id);
         formdata.append("page", page);
         const requestOptions = {
             method: "POST",
-            headers: myHeaders,
             body: formdata,
             redirect: "follow"
         };
@@ -179,7 +168,7 @@ function setReq_activity_1(result, pid) {
         <div class="container">
             <div class="d-flex justify-content-between align-items-center" style="width:100%;">
                 <div class="col-2">
-                    <label>${thaiDate}</label> <!-- แสดงวันที่ในรูปแบบไทย -->
+                    <label>${thaiDate}</label>
                 </div>
                 <div class="col-2 justify-content-center align-items-center">
                     <img src="/get/image?img=/user/${doc.image}" style="width: 50px; height: 50px; border-radius: 50%;" alt=".">
@@ -229,20 +218,15 @@ function setReq_activity_1(result, pid) {
         </div>`;
     req_activity_1.innerHTML = e;
 }
-
 async function SelectDtailUser(pid,uid) {
     openPopUp("Modal_user_data_1");
     try{
-        const myHeaders = new Headers();
-        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
-    
         const formdata = new FormData();
         formdata.append("pid", pid);
         formdata.append("uid", uid);
     
         const requestOptions = {
             method: "POST",
-            headers: myHeaders,
             body: formdata,
             redirect: "follow"
         };
@@ -315,15 +299,12 @@ async function setStatusRegisterUser(pid,uid,status) {
     });
     if(conf){
         try{
-            const myHeaders = new Headers();
-            myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
             const formdata = new FormData();
             formdata.append("pid", pid);
             formdata.append("uid", uid);
             formdata.append("status", status);
             const requestOptions = {
                 method: "POST",
-                headers: myHeaders,
                 body: formdata,
                 redirect: "follow"
             };
@@ -372,3 +353,101 @@ async function DeletePost(pid,title) {
         window.location.href = `/activity/delete?pid=${pid}`
     }
 };
+async function API_getcheckImg(id) {
+    const formdata = new FormData();
+    formdata.append("pid", id);
+    const requestOptions = {
+        method: "POST",
+        body: formdata,
+        redirect: "follow"
+    };
+    let res = await fetch("/api/get/picSubmit", requestOptions);
+    res = await res.json();
+    return res;
+};
+async function checkSubpic(id){
+    openPopUp("check_pic");
+    const res = await API_getcheckImg(id);
+    setCheck_pic(res,id)
+};
+function setCheck_pic(result, pid) {
+    const checkSubpic = document.getElementById('check_pic');
+    if (result.status != 200) {
+        return checkSubpic.innerHTML = `
+        <div class="content">
+            <div class="header mb-3">
+                <div>
+                    <label class="title-header">ตรวจสอบรูปภาพ</label>:<br>
+                </div>
+                <button class="close-btn" onClick="closePopUp()">&times;</button>
+            </div>
+            <div class="body text-center p-5">
+                <h5>ไม่มีรูปภาพยืนยันผู้เข้าร่วมกิจกกรรม</h5>
+            </div>
+        </div>`;
+    
+    }
+    let user = "";
+    const data = result.data;
+    data.forEach(doc => {
+        const status = (doc.status_submit == "รอการตรวจสอบ") ? `<div class="text-warning">${doc.status_submit}</div>` : ((doc.status_submit == "ผ่านกิจกรรม") ? `<div class="text-success">${doc.status_submit}</div>` : `<div class="text-danger">${doc.status_submit}</div>`);
+        const thaiDate = formatThaiDate(doc.datetime_submit);
+        const image = (doc.image_submit!=null)?`<a target="_blank" href="/get/image?img=/submit/${doc.image_submit}"><img src="/get/image?img=/submit/${doc.image_submit}" style="width: 150px; height: 100px;" alt="."></a>`:`<label>ยังไม่ส่งรูปภาพ</label>`
+        user += `
+            <div class="d-flex justify-content-between align-items-center" style="width:1000px;">
+                <div class="col-1">
+                    <label>${thaiDate}</label>
+                </div>
+                <div class="col-1 justify-content-center align-items-center">
+                    <img src="/get/image?img=/user/${doc.image_user}" style="width: 50px; height: 50px; border-radius: 50%;" alt=".">
+                    <buttom class="link-about-user-passpol" onClick="SelectDtailUser('${pid}','${doc.aid}')">
+                        <img src="https://cdn-icons-png.flaticon.com/512/6388/6388049.png" alt=".">
+                        profile
+                    </buttom>
+                </div>
+                <div class="col-2">
+                    <p>ชื่อ : ${doc.fname} ${doc.lname}</p>
+                    <p>เพศ : ${doc.gender}</p>
+                    <p>อายุ : ${calculateAge(doc.birthday)}</p>
+                </div>
+                <div class="col-3 my-1 text-center">${image}</div>
+                <div class="col-2 text-center">
+                    <button class="btn btn-success bt_pri btn-sm" onClick="setStatusSubmitUser('${pid}','${doc.aid}',1)">ผ่าน</button>
+                    <div class="mb-2"></div>
+                    <button class="btn btn-danger bt_pri btn-sm mb-2" onClick="setStatusSubmitUser('${pid}','${doc.aid}',-1)">ไม่ผ่าน</button>
+                </div>
+                <div class="col-2" id="status:${doc.aid}">
+                    ${status}
+                </div>
+            </div>`;
+    });
+    let e = `
+        <div class="content">
+            <div class="header">
+                <div>
+                    <label class="title-header">ตรวจสอบรูปภาพ</label><br>
+                </div>
+                <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
+            </div>
+            <div class="body">
+                <div>
+                    ${user}
+                </div>
+            </div>
+        </div>`;
+    checkSubpic.innerHTML = e;
+};
+async function setStatusSubmitUser(pid,uid,status) {
+    const formdata = new FormData();
+    formdata.append("pid", pid);
+    formdata.append("uid", uid);
+    formdata.append("status", status);
+    const requestOptions = {
+        method: "POST",
+        body: formdata,
+        redirect: "follow"
+    };
+    await fetch("/api/update/register/status", requestOptions);
+    const eStatus = (status == 1) ? `<div class="text-success">ผ่านกิจกรรม</div>` : `<div class="text-danger">ไม่ผ่านกิจกรรม</div>`;
+    document.getElementById(`status:${uid}`).innerHTML = eStatus;
+}; 

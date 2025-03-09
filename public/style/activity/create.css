@@ -1,0 +1,35 @@
+.preview-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin: 5px;
+}
+.image-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+.image-preview-item {
+    position: relative;
+}
+.remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#image-preview {
+    margin-top: 20px;
+}
