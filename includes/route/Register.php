@@ -77,9 +77,8 @@ class REGISTER
         $status = "รอการตรวจสอบ";
         if ($pstatus == 1) {
             $status = "อนุมัติ";
-            $ApproveRegister = getCountNumberApproveRegisterFromPost($pid);
-            $max_count = getMaxCountNumberFromPost($pid);
-            if ((int)$max_count <= (int)$ApproveRegister) {
+            $count = getCounApproveRegister($pid);
+            if(!$count){
                 echo json_encode(["status" => 400, "message" => "จำนวนคนที่อนุมัติเต็มแล้ว กรุณาขยายจำนวนคนเพิ่มก่อน"], JSON_UNESCAPED_UNICODE);
                 exit();
             }

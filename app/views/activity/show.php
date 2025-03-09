@@ -121,6 +121,6 @@
     <?php if(count($data["data"])>=10){
         require_once '../app/component/buttonPage.php';
     } ?>
-    <script src="../../js/activity/show.js"></script>
+    <script src="../../js/activity/showx.js"></script>
 </body>
 </html>

@@ -125,7 +125,7 @@
     <?php if (count($posts["data"]) >= 10) {
         require_once '../app/component/buttonPage.php';
     } ?>
-    <script src="../js/home.js"></script>
+    <script src="../js/homex.js"></script>
 </body>
 
 </html>

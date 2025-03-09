@@ -13,6 +13,21 @@ window.addEventListener("click", (e) => {
         }
     }catch{}
 });
+function escapeHtml(unsafe) {
+    if (typeof unsafe !== "string") return "";
+    let safe = unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  
+    return safe;
+  }
+function stribwird(text) {
+    if (typeof text !== "string") return "";
+    return text.length > 20 ? text.substring(0, 20) + "..." : text;
+}
 function calculateAge(birthday) {
     const birthDate = new Date(birthday);
     const today = new Date();
@@ -77,7 +92,7 @@ function setModal_Activity_1(result) {
         <div class="content" style="width:50%;">
             <div class="header mb-3">
                 <div>
-                    <label class="title-header">รายละเอียดกิจกรรม</label>:<label> <h5 class="card-title">${data.post_name}</h5></label><br>
+                    <label class="title-header">รายละเอียดกิจกรรม</label>:<label> <h5 class="card-title">${stribwird(escapeHtml(data.post_name))}</h5></label><br>
                     <label class="small-text">${(create_date)}</label>
                 </div>
                 <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
@@ -93,14 +108,14 @@ function setModal_Activity_1(result) {
                     <div class="container">
                         <div class="card">
                             <div class="card-body" style="overflow-y: auto; max-height:300px;">
-                                <h5 class="card-title">${data.post_name}</h5>
+                                <h5 class="card-title">${stribwird(escapeHtml(data.post_name))}</h5>
                                 <p class="card-text">
-                                <b>ชื่อกิจกรรม:</b> ${data.post_name}<br>
+                                <b>ชื่อกิจกรรม:</b> ${escapeHtml(data.post_name)}<br>
                                 <b>ช่วงเวลา:</b> ${activity_date}<br>
-                                <b>รายละเอียด:</b> ${data.post_about}<br>
-                                <b>สถานที่:</b> ${data.post_address}<br>
-                                <b>สิ่งที่ได้:</b> ${data.post_give}<br>
-                                <b>จำนวนที่เปิดรับ:</b> ${data.post_people} คน<br>
+                                <b>รายละเอียด:</b> ${escapeHtml(data.post_about)}<br>
+                                <b>สถานที่:</b> ${escapeHtml(data.post_address)}<br>
+                                <b>สิ่งที่ได้:</b> ${escapeHtml(data.post_give)}<br>
+                                <b>จำนวนที่เปิดรับ:</b> ${escapeHtml(data.post_people)} คน<br>
                                 </p>
                             </div>
                         </div>
@@ -167,7 +182,7 @@ function setReq_activity_1(result, pid) {
     let user = "";
     data.forEach(doc => {
         const status = (doc.status == "รอการตรวจสอบ") ? `<div class="text-warning">${doc.status}</div>` : ((doc.status == "อนุมัติ") ? `<div class="text-success">${doc.status}</div>` : `<div class="text-danger">${doc.status}</div>`);
-        const thaiDate = formatThaiDate(doc.datetime); // แปลงวันที่เป็นรูปแบบไทย
+        const thaiDate = formatThaiDate(doc.datetime);
         user += `
         <div class="container">
             <div class="d-flex justify-content-between align-items-center" style="width:100%;">
@@ -182,7 +197,7 @@ function setReq_activity_1(result, pid) {
                     </buttom>
                 </div>
                 <div class="col-3">
-                    <p>ชื่อ ${doc.fname} ${doc.lname}</p>
+                    <p>ชื่อ ${escapeHtml(doc.fname)} ${escapeHtml(doc.lname)}</p>
                     <p>เพศ : ${doc.gender}</p>
                     <p>อายุ : ${calculateAge(doc.birthday)}</p>
                 </div>
@@ -267,7 +282,7 @@ function setModal_user_data_1(result){
     e = `<div class="content" style="width:50%;min-height:30%;">
             <div class="header">
                 <div>
-                    <label class="title-header">ข้อมูลเพิ่มเติม</label>:<label> <h5>${data.fname} ${data.lname}</h5></label><br>
+                    <label class="title-header">ข้อมูลเพิ่มเติม</label>:<label> <h5>${escapeHtml(data.fname)} ${escapeHtml(data.lname)}</h5></label><br>
                 </div>
                 <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
             </div>
@@ -275,8 +290,8 @@ function setModal_user_data_1(result){
                 <div class="d-flex justify-content-center align-items-center p-5">
                     <img src="/get/image?img=/user/${data.image}" class="rounded-circle border me-4" width="150" height="150" alt="Profile Image">
                     <div class="ms-5 text-start">
-                        <label><strong>ชื่อ:</strong> ${data.fname}</label><br>
-                        <label><strong>นามสกุล:</strong> ${data.lname}</label><br>
+                        <label><strong>ชื่อ:</strong> ${escapeHtml(data.fname)}</label><br>
+                        <label><strong>นามสกุล:</strong> ${escapeHtml(data.lname)}</label><br>
                         <label><strong>วันเกิด:</strong> ${formatThaiDate(data.birthday)}</label><br>
                         <label><strong>อายุ:</strong> ${calculateAge(data.birthday)}</label><br>
                         <label><strong>เพศ:</strong> ${data.gender}</label><br>
@@ -410,7 +425,7 @@ function setCheck_pic(result, pid) {
                     </buttom>
                 </div>
                 <div class="col-2">
-                    <p>ชื่อ : ${doc.fname} ${doc.lname}</p>
+                    <p>ชื่อ : ${escapeHtml(doc.fname)} ${escapeHtml(doc.lname)}</p>
                     <p>เพศ : ${doc.gender}</p>
                     <p>อายุ : ${calculateAge(doc.birthday)}</p>
                 </div>
