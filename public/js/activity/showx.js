@@ -240,7 +240,7 @@ function setReq_activity_1(result, pid) {
                 </div>
                 <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp(1)">&times;</button>
             </div>
-            <div class="body" style="overflow:hidden;height:550px;">
+            <div class="body" style="overflow:hidden;max-height:550px;">
                 <div>
                     <table class="table">
                         <tr style="font-size: meduim;">
@@ -430,7 +430,7 @@ function setCheck_pic(result, pid) {
     let user = "";
     const data = result.data;
     data.forEach(doc => {
-        const status = (doc.status_submit == "รอการตรวจสอบ") ? `<div class="text-warning">${doc.status_submit}</div>` : ((doc.status_submit == "ผ่านกิจกรรม") ? `<div class="text-success">${doc.status_submit}</div>` : `<div class="text-danger">${doc.status_submit}</div>`);
+        const status = (doc.status_submit == "รอตรวจสอบ") ? `<div class="text-warning">${doc.status_submit}</div>` : ((doc.status_submit == "ผ่านกิจกรรม") ? `<div class="text-success">${doc.status_submit}</div>` : `<div class="text-danger">${doc.status_submit}</div>`);
         const thaiDate = formatThaiDate(doc.datetime_submit);
         const image = (doc.image_submit!=null)?`<a target="_blank" href="/get/image?img=/submit/${doc.image_submit}"><img src="/get/image?img=/submit/${doc.image_submit}" style="width: 150px; height: 100px;" alt="."></a>`:`<label>ยังไม่ส่งรูปภาพ</label>`
         user += `
@@ -469,7 +469,7 @@ function setCheck_pic(result, pid) {
                 </div>
                 <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp(1)">&times;</button>
             </div>
-            <div class="body" style="overflow:hidden;height:550px;">
+            <div class="body" style="overflow:hidden;max-height:550px;">
                 <div style="overflow-y: auto;overflow-x: none;height: 100%;">
                     ${user}
                 </div>

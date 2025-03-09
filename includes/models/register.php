@@ -142,7 +142,8 @@ function getRegisteredActivities($aid, $limit, $page, $keyword = '', $date_start
                 FROM register 
                 WHERE register.pid = post.p_id AND register.status = 'อนุมัติ'
             ) AS approved_registers,
-            register.image_submit as reg_image
+            register.image_submit as reg_image,
+            register.status_submit as reg_status
         FROM register
         JOIN post ON register.pid = post.p_id
         JOIN account ON post.p_aid = account.aid

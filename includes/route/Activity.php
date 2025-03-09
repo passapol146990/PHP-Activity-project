@@ -285,8 +285,8 @@ class ACTIVITY
             header("location:/activity/register/show?status=warning&message=pid is null");
             exit();
         }
-        if ((!isset($_FILES['image']) || empty($_FILES['image']['name'][0])) && $_FILES['image']['error'] == 0) {
-            header("location:/activity/register/show?status=warning&message=กรุณาใส่รูปภาพ.");
+        if ((!isset($_FILES['image']))) {
+            header("location:/activity/register/show?status=warning&message=กรุณาใส่รูปภาพ3.");
             exit();
         }
         $pid = $_POST['pid'];

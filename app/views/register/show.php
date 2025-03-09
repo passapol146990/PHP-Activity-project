@@ -71,12 +71,16 @@
                                         if(!isset($doc["reg_image"])){
                                             $action = '<button onClick="openModal(\'' . $pid . '\')" class="btn btn-success">ส่งรูปภาพ</button>';
                                         }else{
-                                            $action = '<a target="_blank" href="/get/image?img=/submit/'.htmlentities($doc["reg_image"]).'" class="btn text-primary">ดูรูปภาพ</a>';
+                                            $class = ($doc["reg_status"]=="รอตรวจสอบ")?"text-warning":(($doc["reg_status"]=="ผ่านกิจกรรม")?"text-success":"text-danger");
+                                            $status = "<span class='".$class."'>".htmlspecialchars($doc["reg_status"])."</span>";
+                                            $btn = '<a target="_blank" href="/get/image?img=/submit/'.htmlentities($doc["reg_image"]).'" class="btn text-primary">ดูรูปภาพ</a><br>';
+                                            $action = $btn.$status;
                                         }
                                         break;
                                     case 'ปฏิเสธ':
                                         $text = "<span class='text-danger'>".htmlspecialchars($doc["register_status"])."</span>";
-                                        $action = '<button onClick="cancelRegister('."'$rid','$pid','$title'".')" class="btn btn-danger">ลบ</button>';
+                                        // $action = '<button onClick="cancelRegister('."'$rid','$pid','$title'".')" class="btn btn-danger">ลบ</button>';
+                                        $action = '';
                                         break;
                                 }
                                 echo "<td>{$text}</td>";
