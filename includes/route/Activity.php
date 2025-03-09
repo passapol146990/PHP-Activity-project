@@ -2,8 +2,10 @@
 require_once("../includes/models/accout.php");
 require_once("../includes/models/post.php");
 require_once("../includes/models/register.php");
-class ACTIVITY{
-    function PageShow(){
+class ACTIVITY
+{
+    function PageShow()
+    {
         isLogin();
         $login_token = $_SESSION["login_token"];
         $total_registers = getCountWaitRegister($login_token);
@@ -13,16 +15,17 @@ class ACTIVITY{
         $date_start = $_GET['start_date'] ?? "";
         $date_end = $_GET['end_date'] ?? "";
         $page = $_GET['page'] ?? 1;
-        
-        $data = getPostUserCreateX($login_token, 10, $page, $keyword, $date_start, $date_end); 
-        if($data["status"]!=200){
+
+        $data = getPostUserCreateX($login_token, 10, $page, $keyword, $date_start, $date_end);
+        if ($data["status"] != 200) {
             $data["data"] = [];
         }
 
         require_once('../app/views/activity/show.php');
         exit();
     }
-    function PageCreate(){
+    function PageCreate()
+    {
         isLogin();
         $login_token = $_SESSION["login_token"];
         $total_registers = getCountWaitRegister($login_token);
@@ -30,7 +33,8 @@ class ACTIVITY{
         require_once('../app/views/activity/create.php');
         exit();
     }
-    function PageUpdate(){
+    function PageUpdate()
+    {
         isLogin();
         if (!isset($_GET["pid"]) || empty($_GET["pid"])) {
             header("location:/");
@@ -47,7 +51,8 @@ class ACTIVITY{
         require_once('../app/views/activity/edit.php');
         exit();
     }
-    function Delete(){
+    function Delete()
+    {
         isLogin();
         $login_token = $_SESSION["login_token"];
         $total_registers = getCountWaitRegister($login_token);
@@ -57,7 +62,8 @@ class ACTIVITY{
         header("location:/activity/create/show?status=success&message=ลบกิจกรรมสำเร็จ");
         exit();
     }
-    function create(){
+    function create()
+    {
         isLogin();
         if (!isset($_POST["title"]) || empty($_POST["title"])) {
             header("Location:/activity/create?status=warning&message=กรุณาใส่ชื่อกิจกรรม.");
@@ -91,6 +97,12 @@ class ACTIVITY{
             header("Location:/activity/create?status=warning&message=กรุณาใส่วันที่สิ้นสุดกิจกรรม.");
             exit();
         }
+        $start_date_chk = strtotime($_POST["start_date"]);
+        $end_date_chk = strtotime($_POST["end_date"]);
+        if ($start_date_chk > $end_date_chk) {
+            header("Location:/activity/create?status=warning&message=วันที่เริ่มกิจกรรมต้องไม่มาหลังวันที่สิ้นสุด.");
+            exit();
+        }
         if (!isset($_POST["location"]) || empty($_POST["location"])) {
             header("Location:/activity/create?status=warning&message=กรุณาใส่สถานที่จัดกิจกรรม.");
             exit();
@@ -117,8 +129,8 @@ class ACTIVITY{
             $start_date = $_POST["start_date"];
             $end_date = $_POST["end_date"];
             $location = $_POST["location"];
-            $p_give = $_POST["p_give"] ?? ""; 
-            
+            $p_give = $_POST["p_give"] ?? "";
+
             createPost($pid, $aid, $title, $description, $max_count, $location, $start_date, $end_date, $p_give);
 
             foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
@@ -163,11 +175,11 @@ class ACTIVITY{
             header("Location:/?status=error&message=เกิดปัญหาไม่สามารถสร้างกิจกรรมได้");
             exit();
         }
-       header("Location:/?status=success&message=สร้างกิจกรรมสำเร็จ");
+        header("Location:/?status=success&message=สร้างกิจกรรมสำเร็จ");
         exit();
-        
     }
-    function update(){
+    function update()
+    {
         isLogin();
         if (!isset($_POST["title"]) || empty($_POST["title"])) {
             header("location:/activity/create/show?status=warnign&message=กรุณาใส่ชื่อกิจกรรม.");
@@ -183,8 +195,7 @@ class ACTIVITY{
         }
         $p_id = $_POST["p_id"] ?? "";
         $ApproveRegister = getCountNumberApproveRegisterFromPost($p_id);
-        // print_r($ApproveRegister);  
-        if ((int)$_POST["max_count"] < (int)$ApproveRegister){
+        if ((int)$_POST["max_count"] < (int)$ApproveRegister) {
             header("location:/activity/create/show?status=warnign&message=กรุณาใส่จำนวนคนมากกว่าที่อนุมัติ.");
             exit();
         }
@@ -196,6 +207,12 @@ class ACTIVITY{
             header("location:/activity/create/show?status=warnign&message=กรุณาใส่วันที่สิ้นสุดกิจกรรม.");
             exit();
         }
+        $start_date_chk = strtotime($_POST["start_date"]);
+        $end_date_chk = strtotime($_POST["end_date"]);
+        if ($start_date_chk > $end_date_chk) {
+            header("Location:/activity/create?status=warning&message=วันที่เริ่มกิจกรรมต้องไม่มาหลังวันที่สิ้นสุด.");
+            exit();
+        }
         if (!isset($_POST["location"]) || empty($_POST["location"])) {
             header("location:/activity/create/show?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
             exit();
@@ -204,8 +221,8 @@ class ACTIVITY{
             header("location:/activity/create/show?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
             exit();
         }
-        
-        $aid = $_SESSION["login_token"];  
+
+        $aid = $_SESSION["login_token"];
         $title = $_POST["title"];
         $description = $_POST["description"];
         $max_count = (int)$_POST["max_count"];
@@ -214,8 +231,8 @@ class ACTIVITY{
         $location = $_POST["location"];
         $p_give = $_POST["p_give"];
         if (isset($_FILES['images']) || !empty($_FILES['images']['name'][0])) {
-            $Countimage = getCountImageByIdpostAndIduser($p_id,$aid);
-            if (count($_FILES['images']['tmp_name'])+ $Countimage["count"] > 10) {
+            $Countimage = getCountImageByIdpostAndIduser($p_id, $aid);
+            if (count($_FILES['images']['tmp_name']) + $Countimage["count"] > 10) {
                 header("location:/activity/create/show?status=warning&message=อัปโหลดได้สูงสุด 10 รูป.");
                 exit();
             }
@@ -227,7 +244,7 @@ class ACTIVITY{
                     $fileTmp = $_FILES['images']['tmp_name'][$key];
                     $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
                     $allowedExtensions = ['jpg', 'png'];
-    
+
                     if (in_array($fileExt, $allowedExtensions)) {
                         if ($fileSize < 2000000) {
                             if ($fileExt === 'jpg' || $fileExt === 'jpeg') {
@@ -261,13 +278,14 @@ class ACTIVITY{
         header("location:/activity/create/show?status=success&message=อัพเดทกิจกรรมสำเร็จ");
         exit();
     }
-    function userSubmitpic() {
+    function userSubmitpic()
+    {
         isLogin();
-        if (!isset($_POST['pid'])||empty($_POST["pid"])) {
+        if (!isset($_POST['pid']) || empty($_POST["pid"])) {
             header("location:/activity/register/show?status=warning&message=pid is null");
             exit();
         }
-        if ((!isset($_FILES['image']) || empty($_FILES['image']['name'][0]))&&$_FILES['image']['error'] == 0) {
+        if ((!isset($_FILES['image']) || empty($_FILES['image']['name'][0])) && $_FILES['image']['error'] == 0) {
             header("location:/activity/register/show?status=warning&message=กรุณาใส่รูปภาพ.");
             exit();
         }
@@ -277,7 +295,7 @@ class ACTIVITY{
         $fileName = $_FILES['image']['name'];
         $fileSize = $_FILES['image']['size'];
         $aid = $_SESSION["login_token"];
-        
+
         $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         $allowedExtensions = ['jpg', 'png'];
 
@@ -312,4 +330,3 @@ class ACTIVITY{
     }
 }
 $Activity = new Activity();
-?>
