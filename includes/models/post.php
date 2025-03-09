@@ -53,7 +53,7 @@ function getPostx($limit, $page, $keyword = '', $date_start = '', $date_end = ''
         $data[] = $row;
     }
 
-    return ["status" => 200, "message" => "successfully.", "data" => $data];
+    // return ["status" => 200, "message" => "successfully.", "data" => $data];
 }
 
 function getPost($limit, $page)

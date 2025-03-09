@@ -71,7 +71,7 @@
                                         if(!isset($doc["reg_image"])){
                                             $action = '<button onClick="openModal(\'' . $pid . '\')" class="btn btn-success">ส่งรูปภาพ</button>';
                                         }else{
-                                            $action = '<button onClick="openModal(\'' . $pid . '\')" class="btn btn-success">ส่งรูปภาพ</button>';
+                                            $action = '<a target="_blank" href="/get/image?img=/submit/'.htmlentities($doc["reg_image"]).'" class="btn text-primary">ดูรูปภาพ</a>';
                                         }
                                         break;
                                     case 'ปฏิเสธ':
@@ -83,8 +83,7 @@
                                 echo "<td>{$action}</td>";
                             ?>
                         </tr>
-
-                        <div class="modal fade text-font" id="Modal_submit_pic_<?= $pid ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade text-font" id="Modal_submit_pic_<?= $pid ?>">
                             <div class="modal-dialog modal-dialog-scrollable modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -93,8 +92,7 @@
                                     </div>
                                     <form action="/image/submit" method="POST" enctype="multipart/form-data">
                                         <input type="hidden" name="pid" value="<?= $pid ?>">
-                                        <h2 id="file-name-<?= $pid ?>" class="text-muted text-center" style="display: none;"></h2>
-                                        
+                                        <label id="file-name-<?= $pid ?>" class="text-muted text-center" style="display: none;"></label>
                                         <div class="image-upload-container">
                                             <div id="image-preview-<?= $pid ?>" class="image-preview" 
                                                 style="width: 550px; height: 280px; display: flex; align-items: center; justify-content: center; border: 1px dashed #ccc; position: relative; cursor: pointer;" 
@@ -104,18 +102,14 @@
                                             </div>
                                             <input id="file-upload-<?= $pid ?>" type="file" accept="image/*" name="image" style="display: none;" onchange="previewImage(this, '<?= $pid ?>')">
                                         </div>
-
                                         <div class="success-pad">
-                                            <?= htmlspecialchars($doc["reg_image"]) ?>
-                                            <button id="submit-btn-<?= $pid ?>" type="submit" class="btn btn-success disabled" style="width: 100px; height: 50px; pointer-events: none; opacity: 0.5;">ส่งรูปภาพ</button>
+                                            <button id="submit-btn-<?= $pid ?>" type="submit" class="btn btn-success" disabled>ส่งรูปภาพ</button>
                                         </div>
                                     </form>
-
                                 </div>
                             </div>
                         </div>
                     <? } ?>
-
                 </tbody>
             </table>
         </div>

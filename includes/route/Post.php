@@ -50,8 +50,7 @@ class POST{
         $id = $_SESSION["login_token"];
         $image = $_POST["image"];
         $resolt = deleteImage($image,$pid, $id);
-        // echo json_encode($resolt, JSON_UNESCAPED_UNICODE);
-        echo json_encode(["pid"=> $pid,"login_token"=> $id, "image"=> $image], JSON_UNESCAPED_UNICODE);
+        echo json_encode($resolt, JSON_UNESCAPED_UNICODE);
         exit();
     }
 }
