@@ -29,7 +29,7 @@
                                 <img src="/get/image?img=/post/<?= htmlspecialchars($post["image"]) ?>" alt="Event Image" width="100%" loading="lazy">
                             </div>
                             <div class="text-start event-info p-2 d-flex flex-column flex-grow-1">
-                                <label class="limited-text"><?= htmlspecialchars($post["p_name"] ?? "") ?></label>
+                                <label class="limited-text"><?= htmlspecialchars(mb_strimwidth($post["p_name"] ?? "", 0, 50, "...")) ?></label>
                                 <p class="limited-text">
                                     <?= htmlspecialchars(formatThaiDate($post["p_date_start"])) ?> -
                                     <?= htmlspecialchars(formatThaiDate($post["p_date_end"])) ?>
