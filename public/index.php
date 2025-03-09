@@ -8,5 +8,4 @@ function formatThaiDate($d) {
 
 
 require_once '../includes/router.php';
-// print("แก้แปป");
 ?>

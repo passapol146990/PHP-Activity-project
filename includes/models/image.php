@@ -36,11 +36,59 @@
         }
         return false;
     }
-    function deleteImage($filename) {
-        $filename = basename(filename);
+    function deleteImageInfolder($filename) {
+        $filename = basename($filename);
         $file = "../image/$filename";
         if (file_exists($file)) {
             unlink($file);
+        }
+    }
+    function deleteImage($imageName, $postId, $postAid) {
+        global $conn;
+        $sql = "DELETE image 
+                FROM image 
+                JOIN post ON post.p_id = image.pid  
+                WHERE image.image = ? 
+                AND post.p_id = ? 
+                AND post.p_aid = ?";
+        
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+        $stmt->bind_param("sss", $imageName, $postId, $postAid);
+        deleteImageInfolder("post/".$imageName);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        return ["status"=>200,"message"=>"ลบรูปภาพสำเร็จ!"];
+    }
+    function getCountImageByIdpostAndIduser($pid,$aid) {
+        global $conn;
+        $sql = "SELECT COUNT(*) as count
+        FROM image 
+        JOIN post ON post.p_id = image.pid
+        WHERE post.p_id = ? 
+        AND post.p_aid = ?";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $pid, $aid);
+        $stmt->execute();
+        $count = $stmt->get_result();
+        $count = $count->fetch_assoc();
+        return $count;
+    }
+    function submitRegister($name, $pid, $aid){
+        global $conn;
+        $sql = "UPDATE  register 
+                SET     datetime_submit = CONVERT_TZ(NOW(), 'UTC', 'Asia/Bangkok') , image_submit = ? , status_submit = 'รอตรวจสอบ'
+                WHERE   pid = ? AND aid = ?";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+                return ["status" => 400, "message" => "Prepare error: " . $conn->error];
+        }
+        $stmt->bind_param('sss', $name, $pid, $aid);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        if ($stmt->affected_rows > 0) {
+            return ["status" => 200, "message" => "ส่งรูปภาพเรียบร้อย."];
+        } else {
+            return ["status" => 204, "message" => "No changes made."];
         }
     }
     

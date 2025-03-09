@@ -25,6 +25,9 @@ if ($method == "GET") {
         case '/logout':
             $Page->logout();
             break;
+        case '/privacy-policy':
+            $Page->privacyPolicy();
+            break;
         case '/auth/google':
             $Auth->auth();
             break;
@@ -86,17 +89,8 @@ if ($method == "GET") {
         case '/update/user/data':
             $User->update();
             break;
-        case '/save/image/submit':
-            // isLogin();
-            // if ($_FILES['image']['error'] == UPLOAD_ERR_OK) {
-            //     $name = date('Ymd') . $_SESSION["login_token"] . '_' . uniqid() . '.png';
-            //     $fileTmp = $_FILES['image']['tmp_name'];
-            //     $destination = '../image/submit/' . $name;
-            //     resizeImage($fileTmp, $destination, 300, 300);
-            //     echo "อัปโหลดสำเร็จ!";
-            // } else {
-            //     echo "อัปโหลดล้มเหลว!";
-            // }
+        case '/image/submit':
+            $Activity->userSubmitpic();
             break;
         case '/api/get/post':
             $Post->get();
@@ -116,9 +110,11 @@ if ($method == "GET") {
         case '/api/get/userdetail':
             $User->get();
             break;
-        // case '/api/get/userdetail':
-        //     $Register->getTop10register();
-        //     break;
+        case '/api/delete/image':
+            $Post->DeleteImage();
+        case '/api/get/picSubmit':
+            $Register->getsubmitRegister();
+            break;
         default:
             header("Location:/");
             break;

@@ -1,12 +1,24 @@
+function escapeHtml(unsafe) {
+    if (typeof unsafe !== "string") return "";
+    let safe = unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    return safe;
+}
+function stribwird(text) {
+    if (typeof text !== "string") return "";
+    return text.length > 20 ? text.substring(0, 20) + "..." : text;
+}
 async function registerPost(id) {
     try{
-        const myHeaders = new Headers();
-        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
         const formdata = new FormData();
         formdata.append("id_post", id);
         const requestOptions = {
             method: "POST",
-            headers: myHeaders,
             body: formdata,
             redirect: "follow"
         };
@@ -53,15 +65,11 @@ function formatThaiDate(dateString) {
 }
 async function getDetailPost(id) {
     try{
-        const myHeaders = new Headers();
-        myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
-    
         const formdata = new FormData();
         formdata.append("id_post", id);
     
         const requestOptions = {
             method: "POST",
-            headers: myHeaders,
             body: formdata,
             redirect: "follow"
         };
@@ -101,15 +109,15 @@ function setModal_Activity_1(result) {
         buttonHtml = `<button class="btn btn-success col-6" onClick="registerPost('${data.post_id}')">เข้าร่วม</button>`;
     } else if (data.user_status === "อนุมัติ") {
         buttonHtml = `<div
-                                            class="text-success col-6 d-flex justify-content-center align-items-center fw-bold">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" class="me-2"
-                                                style="stroke: green; fill: white;">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M5 13l4 4L19 7" />
-                                            </svg>
-                                            เข้าร่วมกิจกรรมแล้ว
-                                        </div>`;
+                        class="text-success col-6 d-flex justify-content-center align-items-center fw-bold">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" class="me-2"
+                            style="stroke: green; fill: white;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 13l4 4L19 7" />
+                        </svg>
+                        เข้าร่วมกิจกรรมแล้ว
+                    </div>`;
     } else if (data.user_status === "รอการตรวจสอบ") {
         buttonHtml = `<div class="text-warning col-6 d-flex justify-content-center align-items-center fw-bold">
                         <svg class="me-2" width="24px" height="24px" viewBox="0 0 24 24" fill="none"
@@ -156,7 +164,7 @@ function setModal_Activity_1(result) {
                         <div class="col-2 text-start"><strong>ผู้สร้าง:</strong></div>
                         <div class="col-10 d-flex align-items-center">
                             <img src="/get/image?img=/user/${data.img}" style="width: 75px; height: 75px; border-radius: 50%;" alt="รูปโปรไฟล์" loading="lazy">
-                            <h3 class="d-inline-block ms-3 mb-0">${data.fname} ${data.lname}</h3>
+                            <h3 class="d-inline-block ms-3 mb-0">${escapeHtml(data.fname)} ${escapeHtml(data.lname)}</h3>
                         </div>
                     </div>
                     <div class="row d-flex align-items-center mb-3">
@@ -167,12 +175,12 @@ function setModal_Activity_1(result) {
                         </div>
                     </div>
                     <div class="text-start">
-                        <p><strong>ชื่อกิจกรรม:</strong> ${data.post_name}</p>
+                        <p><strong>ชื่อกิจกรรม:</strong> ${escapeHtml(data.post_name)}</p>
                         <p><strong>ช่วงเวลา:</strong> ${activity_date}</p>
-                        <p><strong>รายละเอียด:</strong> ${data.post_about}</p>
-                        <p><strong>สถานที่:</strong> ${data.post_address}</p>
-                        <p><strong>สิ่งที่ได้:</strong> ${data.post_give}</p>
-                        <p><strong>จำนวนที่เปิดรับ:</strong> ${data.post_people} คน</p>
+                        <p><strong>รายละเอียด:</strong> ${escapeHtml(data.post_about)}</p>
+                        <p><strong>สถานที่:</strong> ${escapeHtml(data.post_address)}</p>
+                        <p><strong>สิ่งที่ได้:</strong> ${escapeHtml(data.post_give)}</p>
+                        <p><strong>จำนวนที่เปิดรับ:</strong> ${escapeHtml(data.post_people)} คน</p>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center">

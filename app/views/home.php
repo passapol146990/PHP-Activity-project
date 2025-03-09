@@ -23,19 +23,17 @@
                 <? foreach ($posts["data"] as $key => $post) { ?>
                     <div class="col-md-4 mb-4 d-flex">
                         <div class="card p-2 d-flex flex-column flex-grow-1">
-                            <div class="text-end quota"><?= htmlspecialchars($post["approved"] . "/" . $post["p_max"]) ?>
+                            <div class="text-end quota"><?= htmlspecialchars($post["approved_count"] . "/" . $post["p_max"]) ?>
                             </div>
                             <div class="event-image">
-                                <img src="/get/image?img=/post/<?= htmlspecialchars($post["image"]) ?>" alt="Event Image"
-                                    width="100%" loading="lazy">
+                                <img src="/get/image?img=/post/<?= htmlspecialchars($post["image"]) ?>" alt="Event Image" width="100%" loading="lazy">
                             </div>
                             <div class="text-start event-info p-2 d-flex flex-column flex-grow-1">
-                                <label class="limited-text"><?= htmlspecialchars($post["p_name"] ?? "") ?></label>
+                                <label class="limited-text"><?= htmlspecialchars(mb_strimwidth($post["p_name"] ?? "", 0, 50, "...")) ?></label>
                                 <p class="limited-text">
                                     <?= htmlspecialchars(formatThaiDate($post["p_date_start"])) ?> -
                                     <?= htmlspecialchars(formatThaiDate($post["p_date_end"])) ?>
                                 </p>
-
                                 <div class="mt-auto d-flex justify-content-between gap-2 ">
                                     <?php
                                     if (!isset($post["user_status"]) || empty($post["user_status"])) {
@@ -124,10 +122,10 @@
             </div>
         </div>
     </div>
-    <?php if (count($posts["data"]) >= 10) {
+    <?php if (count($posts["data"]) >= 10||(isset($_GET["page"]))) {
         require_once '../app/component/buttonPage.php';
     } ?>
-    <script src="../js/home.js"></script>
+    <script src="../js/homex.js"></script>
 </body>
 
 </html>

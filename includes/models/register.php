@@ -100,7 +100,7 @@ function getRegisteredActivities($aid, $limit, $page, $keyword = '', $date_start
 
     $where = "register.aid = ?";
     $params = [$aid];
-    $param_types = "s"; // $aid เป็น string
+    $param_types = "s";
 
     if (!empty($keyword)) {
         $where .= " AND post.p_name LIKE ?";
@@ -141,7 +141,9 @@ function getRegisteredActivities($aid, $limit, $page, $keyword = '', $date_start
                 SELECT COUNT(*) 
                 FROM register 
                 WHERE register.pid = post.p_id AND register.status = 'อนุมัติ'
-            ) AS approved_registers
+            ) AS approved_registers,
+            register.image_submit as reg_image,
+            register.status_submit as reg_status
         FROM register
         JOIN post ON register.pid = post.p_id
         JOIN account ON post.p_aid = account.aid
@@ -155,7 +157,6 @@ function getRegisteredActivities($aid, $limit, $page, $keyword = '', $date_start
         return ["status" => 400, "message" => "prepare error!"];
     }
 
-    // เพิ่ม offset และ limit
     $params[] = $offset;
     $params[] = $limit;
     $param_types .= "ii"; 
@@ -173,8 +174,6 @@ function getRegisteredActivities($aid, $limit, $page, $keyword = '', $date_start
     $data = $result->fetch_all(MYSQLI_ASSOC);
     return ["status" => 200, "message" => "successfully.", "data" => $data];
 }
-
-
 function DeleteRegister($rid,$pid,$aid) {
     global $conn;
     $stmt = $conn->prepare("DELETE FROM register WHERE id = ? AND pid = ? AND aid = ?;");
@@ -182,22 +181,20 @@ function DeleteRegister($rid,$pid,$aid) {
     $stmt->execute();
     return ["status" => 200, "message" => "ยกเลิกคำขอเข้าร่วมสำเร็จ"];
 }
-
-function updateStatusSubmit($pid,$aid,$login_token,$status){
+function updateRegisterStatusSubmit($pid,$uid,$login_token,$status){
     isLogin();
     global $conn;
-    $sql  = `UPDATE 	register
+    $sql  = 'UPDATE 	register
     JOIN 	post ON post.p_id = register.pid
     SET 	status_submit = ?
     WHERE 	post.p_id = ?
     AND		register.aid = ?
-    AND		post.p_aid = ?`;
+    AND		post.p_aid = ?';
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssss",$status,$pid,$aid,$login_token);
+    $stmt->bind_param("ssss",$status,$pid,$uid,$login_token);
     $stmt->execute();
     return ["status" => 200, "message" => "อัพเดทสถานะส่งภาพยืนยันสำเร็จแล้ว"];
 }
-
 function getTop10register(){
     global $conn;
     $sql = 'SELECT
@@ -288,4 +285,51 @@ function getCountStatus_2($login_token){
      return ["status"=>200,"message"=>"successfully.","data"=>$data];
 
 }
+function getSubpicBy_User($login_token, $pid, $aid){
+    global $conn;
+    $stmt = $conn->prepare("SELECT 	register.datetime_submit as datetime_submit,
+                                    register.image_submit as image_submit,
+                                    register.status_submit as status_submit
+                            FROM 	`register`
+                            JOIN	post ON post.p_id = register.pid
+                            WHERE 	post.p_aid = ?
+                            AND 	post.p_id = ?
+                            AND 	register.aid = ?");
+    $stmt->bind_param("sss", $login_token, $pid, $aid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows === 0) {
+        return ["status" => 201, "message" => "ไม่มีรูปภาพ", "data" => []];
+    }
+
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    return ["status" => 200, "message" => "successfully.", "data" => $data];
+}
+function getSubpicBy_Creater($login_token, $pid){
+    global $conn;
+    $stmt = $conn->prepare("SELECT 	register.datetime_submit as datetime_submit,
+                                    register.image_submit as image_submit,
+                                    register.status_submit as status_submit,
+                                    account.image as image_user,
+                                    account.fname as fname,
+                                    account.lname as lname,
+                                    account.gender as gender,
+                                    account.birthday as birthday,
+                                    account.aid as aid
+                            FROM 	`register`
+                            JOIN	post ON post.p_id = register.pid
+                            JOIN	account ON register.aid = account.aid
+                            WHERE 	post.p_aid = ?
+                            AND 	post.p_id = ?");
+    $stmt->bind_param("ss", $login_token, $pid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows === 0) {
+        return ["status" => 201, "message" => "ไม่มีรูปภาพ", "data" => []];
+    }
+
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    return ["status" => 200, "message" => "successfully.", "data" => $data];
+}
+
 ?>

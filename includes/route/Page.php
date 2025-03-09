@@ -13,7 +13,7 @@ class PAGE{
         $date_end = $_GET['end_date'] ?? "";
         $total_registers = getCountWaitRegister($login_token);
         $waitReg = getWaitRegister($login_token);
-        $posts = getPostx(10, $page, $keyword, $date_start, $date_end, $login_token);
+        $posts = getPostx($login_token,10, $page, $keyword, $date_start, $date_end,);
         require_once('../app/views/home.php');
         exit();
     }
@@ -41,7 +41,6 @@ class PAGE{
         require_once('../app/views/user/setting.php');
         exit();
     }
-
     function dashboard(){
         isLogin();
         $login_token = $_SESSION["login_token"];
@@ -52,11 +51,10 @@ class PAGE{
         require_once('../app/views/dashboard/page.php');
         exit();
     }
-    
-    
-    
-
-    
+    function privacyPolicy(){
+        require_once('../app/views/user/privacyPolicy.html');
+        exit();
+    }
 }
 $Page = new PAGE();
 ?>
