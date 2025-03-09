@@ -99,7 +99,6 @@
                                         onClick="getDetailPost('<?= htmlspecialchars($post["p_id"]) ?>')"
                                         data-bs-toggle="modal" data-bs-target="#Modal_Activity_1">รายละเอียด</button>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -125,7 +124,7 @@
     <?php if (count($posts["data"]) >= 10||(isset($_GET["page"]))) {
         require_once '../app/component/buttonPage.php';
     } ?>
-    <script src="../js/homex.js"></script>
+    <script src="../js/home/home.js"></script>
 </body>
 
 </html>

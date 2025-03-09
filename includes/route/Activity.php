@@ -55,8 +55,6 @@ class ACTIVITY
     {
         isLogin();
         $login_token = $_SESSION["login_token"];
-        $total_registers = getCountWaitRegister($login_token);
-        $waitReg = getWaitRegister($login_token);
         $pid = $_GET["pid"];
         deletePostByIdPostAndIdUser($pid, $login_token);
         header("location:/activity/create/show?status=success&message=ลบกิจกรรมสำเร็จ");
@@ -69,7 +67,7 @@ class ACTIVITY
             header("Location:/activity/create?status=warning&message=กรุณาใส่ชื่อกิจกรรม.");
             exit();
         }
-        if (strlen($_POST["title"]) > 50) {
+        if (mb_strlen($_POST["title"],"UTF-8") > 50) {
             header("Location:/activity/create?status=warning&message=ชื่อกิจกรรมต้องไม่เกิน 50 ตัวอักษร.");
             exit();
         }
@@ -77,18 +75,27 @@ class ACTIVITY
             header("Location:/activity/create?status=warning&message=กรุณาใส่รายละเอียดกิจกรรม.");
             exit();
         }
-        if (strlen($_POST["description"]) > 2000) {
+        if (mb_strlen($_POST["description"],"UTF-8") > 2000) {
             header("Location:/activity/create?status=warning&message=รายละเอียดกิจกรรม 2000 ตัวอักษร.");
             exit();
         }
-        if (!isset($_POST["max_count"]) || empty($_POST["max_count"])) {
-            header("Location:/activity/create?status=warning&message=กรุณาใส่จำนวนคนที่รับ.");
+        if (!isset($_POST["location"]) || empty($_POST["location"])) {
+            header("Location:/activity/create?status=warning&message=กรุณาใส่สถานที่จัดกิจกรรม.");
             exit();
         }
-        if ($_POST["max_count"] > 1000) {
-            header("Location:/activity/create?status=warning&message=กรุณาใส่จำนวนคนไม่เกิน 1000.");
+        if (mb_strlen($_POST["location"],"UTF-8") > 500) {
+            header("Location:/activity/create?status=warning&message=สถานที่ต้องน้อยกวา 500 ตัวอักษร.");
             exit();
         }
+        if (!isset($_POST["p_give"]) || empty($_POST["p_give"])) {
+            header("Location:/activity/create?status=warning&message=กรุณาใส่ของรางวัล.");
+            exit();
+        }
+        if (mb_strlen($_POST["p_give"],"UTF-8") > 500) {
+            header("Location:/activity/create?status=warning&message=ของรางวัลต้องน้อยกว่า 500 ตัวอักษร.");
+            exit();
+        }
+
         if (!isset($_POST["start_date"]) || empty($_POST["start_date"])) {
             header("Location:/activity/create?status=warning&message=กรุณาใส่วันที่เริ่มกิจกรรม.");
             exit();
@@ -97,18 +104,18 @@ class ACTIVITY
             header("Location:/activity/create?status=warning&message=กรุณาใส่วันที่สิ้นสุดกิจกรรม.");
             exit();
         }
+        if (!isset($_POST["max_count"]) || empty($_POST["max_count"])) {
+            header("Location:/activity/create?status=warning&message=กรุณาใส่จำนวนคนที่รับ.");
+            exit();
+        }
+        if ($_POST["max_count"] > 100000) {
+            header("Location:/activity/create?status=warning&message=กรุณาใส่จำนวนคนไม่เกิน 100000.");
+            exit();
+        }
         $start_date_chk = strtotime($_POST["start_date"]);
         $end_date_chk = strtotime($_POST["end_date"]);
         if ($start_date_chk > $end_date_chk) {
             header("Location:/activity/create?status=warning&message=วันที่เริ่มกิจกรรมต้องไม่มาหลังวันที่สิ้นสุด.");
-            exit();
-        }
-        if (!isset($_POST["location"]) || empty($_POST["location"])) {
-            header("Location:/activity/create?status=warning&message=กรุณาใส่สถานที่จัดกิจกรรม.");
-            exit();
-        }
-        if (!isset($_POST["p_give"]) || empty($_POST["p_give"])) {
-            header("Location:/activity/create?status=warning&message=กรุณาใส่ของรางวัล.");
             exit();
         }
         if (!isset($_FILES['images']) || empty($_FILES['images']['name'][0])) {
@@ -181,12 +188,32 @@ class ACTIVITY
     function update()
     {
         isLogin();
-        if (!isset($_POST["title"]) || empty($_POST["title"])) {
-            header("location:/activity/create/show?status=warnign&message=กรุณาใส่ชื่อกิจกรรม.");
+        if (mb_strlen($_POST["title"],"UTF-8") > 50) {
+            header("Location:/activity/create/show?status=warning&message=ชื่อกิจกรรมต้องต้องน้อยกว่า 50 ตัวอักษร.");
             exit();
         }
         if (!isset($_POST["description"]) || empty($_POST["description"])) {
-            header("location:/activity/create/show?status=warnign&message=กรุณาใส่รายละเอียดกิจกรรม.");
+            header("Location:/activity/create/show?status=warning&message=กรุณาใส่รายละเอียดกิจกรรม.");
+            exit();
+        }
+        if (mb_strlen($_POST["description"],"UTF-8") > 2000) {
+            header("Location:/activity/create/show?status=warning&message=รายละเอียดกิจกรรมต้องน้อยกว่า 2000 ตัวอักษร.");
+            exit();
+        }
+        if (!isset($_POST["location"]) || empty($_POST["location"])) {
+            header("location:/activity/create/show?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
+            exit();
+        }
+        if (mb_strlen($_POST["location"],"UTF-8") > 500) {
+            header("Location:/activity/create/show?status=warning&message=สถานที่จัดกิจกรรมต้องน้อยกว่า 500 ตัวอักษร.");
+            exit();
+        }
+        if (!isset($_POST["p_give"]) || empty($_POST["p_give"])) {
+            header("location:/activity/create/show?status=warnign&message=กรุณาใส่สิ่งที่จะได้รับ.");
+            exit();
+        }
+        if (mb_strlen($_POST["p_give"],"UTF-8") > 500) {
+            header("Location:/activity/create/show?status=warning&message=สิ่งที่จะได้รับต้องน้อยกว่า 500 ตัวอักษร.");
             exit();
         }
         if (!isset($_POST["max_count"]) || empty($_POST["max_count"])) {
@@ -210,15 +237,7 @@ class ACTIVITY
         $start_date_chk = strtotime($_POST["start_date"]);
         $end_date_chk = strtotime($_POST["end_date"]);
         if ($start_date_chk > $end_date_chk) {
-            header("Location:/activity/create?status=warning&message=วันที่เริ่มกิจกรรมต้องไม่มาหลังวันที่สิ้นสุด.");
-            exit();
-        }
-        if (!isset($_POST["location"]) || empty($_POST["location"])) {
-            header("location:/activity/create/show?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
-            exit();
-        }
-        if (!isset($_POST["p_give"]) || empty($_POST["p_give"])) {
-            header("location:/activity/create/show?status=warnign&message=กรุณาใส่สถานที่จัดกิจกรรม.");
+            header("Location:/activity/create/show?status=warning&message=วันที่เริ่มกิจกรรมต้องไม่มาหลังวันที่สิ้นสุด.");
             exit();
         }
 

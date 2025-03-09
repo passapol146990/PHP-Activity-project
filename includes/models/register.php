@@ -209,7 +209,7 @@ function getTop10register(){
     if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
     if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
     $result = $stmt->get_result();
-    if($result->num_rows === 0){return ["status"=>201,"message"=>"ไม่พบข้อมูล"];}
+    if($result->num_rows === 0){return ["status"=>201,"message"=>"ไม่พบข้อมูล","data"=>[]];}
     $data = $result->fetch_all(MYSQLI_ASSOC);
     return ["status"=>200,"message"=>"successfully.","data"=>$data];
 }

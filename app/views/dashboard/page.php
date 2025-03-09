@@ -68,138 +68,138 @@
                     <canvas id="Chart3" class="border rounded" style="max-width: 450px;"></canvas>
                     <canvas id="Chart4" class="border rounded" style="max-width: 450px;"></canvas>
                 </div>
-                <script>
-                    function setChartTop10MyActivity(id,title){
-                        const data = <?= json_encode($getTop10["data"], JSON_UNESCAPED_UNICODE); ?>;
-                                const xValues = [];
-                                const yValues = [];
-                                data.forEach(function(item) {
-                                    xValues.push(item.p_name);
-                                    yValues.push(item.total_regis);  
-                                });
-                        const barColors = ["red", "green","blue","orange","brown","yellow","lime","pink","black","skyblue"];
-
-                        new Chart(id, {
-                        type: "bar",
-                        data: {
-                            labels: xValues,
-                            datasets: [{
-                            backgroundColor: barColors,
-                            data: yValues
-                            }]
-                        },
-                        options: {
-                            legend: {display: false},
-                            scales: {
-                            yAxes: [{
-                                ticks: {
-                                beginAtZero: true
-                                }
-                            }]
-                            },
-
-                            title: {
-                            display: true,
-                            text: title
-                            }
-                        }
-                        });
-                    }
-                    setChartTop10MyActivity("Chart1","10 อันดับกิจกรรมของคุณที่มีคนเข้าร่วมมากที่สุด");
-                    
-                    function setRegMyActivity(id,title){
-                        const xValues = ["ม.ค.","ก.พ.","มี.ค","เม.ย","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
-                        new Chart(id, {
-                        type: "line",
-                        data: {
-                            labels: xValues,
-                            datasets: [{ 
-                                data: <?= json_encode($getReqMonth, JSON_UNESCAPED_UNICODE); ?>,
-                                borderColor: "red",
-                                fill: false
-                            }]
-                        },
-                        options: {
-                            title:{
-                                display:true,
-                                text:title
-                            },
-                            legend:{display:false}
-                        }
-                        });
-                    }
-                    setRegMyActivity('Chart2',"คำขอเข้าร่วมกิจกรรมที่คุณสร้าง") //คนอื่นขอเรา
-                    function setChartCicleMyStatus(canid,title){
-                        const data = <?= json_encode($total_Countstatus_1["data"], JSON_UNESCAPED_UNICODE); ?>;
-                        const yValues = [];
-
-                            const xValues = ["รอดำเนินการ", "อนุมัติ", "ปฏิเสธ"];
-
-                            data.forEach(function(item) {
-                                yValues.push(item.pending);  
-                                yValues.push(item.approved); 
-                                yValues.push(item.rejected);
-                            });
-                        const barColors = [
-                            "#f1c40f",
-                            "#2ecc71",
-                            "#e74c3c"
-                        ];
-                        new Chart(canid, {
-                            type: "doughnut",
-                            data: {
-                                labels: xValues,
-                                datasets: [{
-                                    backgroundColor: barColors,
-                                    data: yValues
-                                }]
-                            },
-                            options: {
-                                title: {
-                                    display: true,
-                                    text: title
-                                }
-                            }
-                        });
-                    }
-                    setChartCicleMyStatus("Chart3","สถานะคำขอของคนอื่น ที่ขอเข้าร่วมกิจกรรมของคุณ") //เราขอคนอื่น
-                    function setChartCicleMyReg(canid,title){
-                        const data = <?= json_encode($total_Countstatus_2["data"], JSON_UNESCAPED_UNICODE); ?>;
-                            const yValues = [];
-
-                            const xValues = ["รอดำเนินการ", "อนุมัติ", "ปฏิเสธ"];
-
-                            data.forEach(function(item) {
-                                yValues.push(item.pending); 
-                                yValues.push(item.approved); 
-                                yValues.push(item.rejected); 
-                            });
-                        const barColors = [
-                            "#f1c40f",
-                            "#2ecc71",
-                            "#e74c3c"
-                        ];
-                        new Chart(canid, {
-                            type: "doughnut",
-                            data: {
-                                labels: xValues,
-                                datasets: [{
-                                    backgroundColor: barColors,
-                                    data: yValues
-                                }]
-                            },
-                            options: {
-                                title: {
-                                    display: true,
-                                    text: title
-                                }
-                            }
-                        });
-                    }
-                    setChartCicleMyReg("Chart4","สถานะคำขอของคุณ ที่ขอเข้าร่วมกิจกรรมของคนอื่น")
-                </script>
             </div>
         </div>
     </div>
+    <script>
+        function setChartTop10MyActivity(id,title){
+            const data = <?= json_encode($getTop10["data"], JSON_UNESCAPED_UNICODE); ?>;
+                    const xValues = [];
+                    const yValues = [];
+                    data.forEach(function(item) {
+                        xValues.push(item.p_name);
+                        yValues.push(item.total_regis);  
+                    });
+            const barColors = ["red", "green","blue","orange","brown","yellow","lime","pink","black","skyblue"];
+
+            new Chart(id, {
+            type: "bar",
+            data: {
+                labels: xValues,
+                datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+                }]
+            },
+            options: {
+                legend: {display: false},
+                scales: {
+                yAxes: [{
+                    ticks: {
+                    beginAtZero: true
+                    }
+                }]
+                },
+
+                title: {
+                display: true,
+                text: title
+                }
+            }
+            });
+        }
+        setChartTop10MyActivity("Chart1","10 อันดับกิจกรรมของคุณที่มีคนเข้าร่วมมากที่สุด");
+        
+        function setRegMyActivity(id,title){
+            const xValues = ["ม.ค.","ก.พ.","มี.ค","เม.ย","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+            new Chart(id, {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{ 
+                    data: <?= json_encode($getReqMonth, JSON_UNESCAPED_UNICODE); ?>,
+                    borderColor: "red",
+                    fill: false
+                }]
+            },
+            options: {
+                title:{
+                    display:true,
+                    text:title
+                },
+                legend:{display:false}
+            }
+            });
+        }
+        setRegMyActivity('Chart2',"คำขอเข้าร่วมกิจกรรมที่คุณสร้าง") //คนอื่นขอเรา
+        function setChartCicleMyStatus(canid,title){
+            const data = <?= json_encode($total_Countstatus_1["data"], JSON_UNESCAPED_UNICODE); ?>;
+            const yValues = [];
+
+                const xValues = ["รอดำเนินการ", "อนุมัติ", "ปฏิเสธ"];
+
+                data.forEach(function(item) {
+                    yValues.push(item.pending);  
+                    yValues.push(item.approved); 
+                    yValues.push(item.rejected);
+                });
+            const barColors = [
+                "#f1c40f",
+                "#2ecc71",
+                "#e74c3c"
+            ];
+            new Chart(canid, {
+                type: "doughnut",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        backgroundColor: barColors,
+                        data: yValues
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: title
+                    }
+                }
+            });
+        }
+        setChartCicleMyStatus("Chart3","สถานะคำขอของคนอื่น ที่ขอเข้าร่วมกิจกรรมของคุณ") //เราขอคนอื่น
+        function setChartCicleMyReg(canid,title){
+            const data = <?= json_encode($total_Countstatus_2["data"], JSON_UNESCAPED_UNICODE); ?>;
+                const yValues = [];
+
+                const xValues = ["รอดำเนินการ", "อนุมัติ", "ปฏิเสธ"];
+
+                data.forEach(function(item) {
+                    yValues.push(item.pending); 
+                    yValues.push(item.approved); 
+                    yValues.push(item.rejected); 
+                });
+            const barColors = [
+                "#f1c40f",
+                "#2ecc71",
+                "#e74c3c"
+            ];
+            new Chart(canid, {
+                type: "doughnut",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        backgroundColor: barColors,
+                        data: yValues
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: title
+                    }
+                }
+            });
+        }
+        setChartCicleMyReg("Chart4","สถานะคำขอของคุณ ที่ขอเข้าร่วมกิจกรรมของคนอื่น")
+    </script>
 </body>
 </html>

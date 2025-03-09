@@ -28,11 +28,11 @@
             </div>
             <div class="p-2">
                 <label class="form-label ms-1"> ชื่อกิจกรรม :</label>
-                <input type="text" class="form-control mb-1" id="title" name="title" placeholder="ชื่อกิจกรรมของคุณ..." value="<?= htmlspecialchars($result['post_name'] ?? '') ?> " required>
+                <input type="text" class="form-control mb-1" id="title" name="title" placeholder="ชื่อกิจกรรมของคุณ..." value="<?= htmlspecialchars($result['post_name'] ?? '') ?> " required maxlength="50">
             </div>
             <div class="p-2">
                 <label for="description" class="form-label">รายละเอียดกิจกรรม</label>
-                <textarea class="form-control" id="description" name="description" rows="4" required><?= htmlspecialchars($result['post_about'] ?? '') ?></textarea>
+                <textarea class="form-control" id="description" name="description" rows="4" required maxlength="2000"><?= htmlspecialchars($result['post_about'] ?? '') ?></textarea>
             </div>
             <div class="p-2">
                 <label class="form-label ms-1"> จำนวนที่รับสมัคร :</label>
@@ -50,11 +50,11 @@
             </div>
             <div class="p-2">
                 <label class="form-label ms-1"> สถานที่จัดกิจกรรม :</label>
-                <input type="text" class="form-control" id="location" name="location" placeholder="สถานที่จัดกิจกรรมของคุณ..." value="<?= htmlspecialchars($result['post_address']) ?>" required>
+                <input type="text" class="form-control" id="location" name="location" placeholder="สถานที่จัดกิจกรรมของคุณ..." value="<?= htmlspecialchars($result['post_address']) ?>" required maxlength="500">
             </div>
             <div class="p-2">
                 <label for="location" class="form-label">สิ่งที่ผู้เข้าร่วมจะได้รับ</label>
-                <input type="text" class="form-control" id="p_give" name="p_give" value="<?= htmlspecialchars($result['post_give']) ?>" required>
+                <input type="text" class="form-control" id="p_give" name="p_give" value="<?= htmlspecialchars($result['post_give']) ?>" required maxlength="500">
             </div>
             <div class="p-2 d-flex justify-content-end mt-3">
                 <button type="submit" class="btn btn-warning">แก้ไขกิจกรรม</button>
