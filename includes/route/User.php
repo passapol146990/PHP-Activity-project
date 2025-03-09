@@ -46,6 +46,10 @@ class USER{
             echo json_encode(["status"=>400,"message"=>"อายุของท่าต้องมากว่า 12 ปีถึงจะสามารถเข้าใช้งานระบบได้"], JSON_UNESCAPED_UNICODE);
             exit();
         }
+        if ($age > 80) {
+            echo json_encode(["status"=>400,"message"=>"อายุของท่าต้องน้อยว่า 80 ปีถึงจะสามารถเข้าใช้งานระบบได้"], JSON_UNESCAPED_UNICODE);
+            exit();
+        }
         $id = $_SESSION["login_token"];
         $fname = $_POST["fname"];
         $lname = $_POST["lname"];

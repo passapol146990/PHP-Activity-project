@@ -41,6 +41,10 @@ class PAGE{
         require_once('../app/views/user/setting.php');
         exit();
     }
+    function privacyPolicy(){
+        require_once('../app/views/user/privacyPolicy.html');
+        exit();
+    }
 }
 $Page = new PAGE();
 ?>

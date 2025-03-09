@@ -63,6 +63,6 @@
             </div>
         </form>
     </div>
-    <script src="../../js/user/user.js"></script>
+    <script src="../../js/user/userx.js"></script>
 </body>
 </html>

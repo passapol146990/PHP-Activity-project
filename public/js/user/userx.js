@@ -18,9 +18,6 @@ from.addEventListener("submit", async (e) => {
         });
         return;
     }
-    const myHeaders = new Headers();
-    myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
-
     const formdata = new FormData();
     formdata.append("fname", fname);
     formdata.append("lname", lname);
@@ -29,12 +26,15 @@ from.addEventListener("submit", async (e) => {
 
     const requestOptions = {
         method: "POST",
-        headers: myHeaders,
         body: formdata,
         redirect: "follow"
     };
     let res = await fetch("/update/user/data", requestOptions);
     res = await res.json();
+    if(res.status==440){
+        window.location.href = "/logout";
+        return
+    }
     Swal.fire({
         icon: (res.status==200)?'success':'warning',
         title: (res.status==200)?'สำเร็จ':'แจ้งเตือน',

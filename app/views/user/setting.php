@@ -27,7 +27,7 @@
                 <lable><b>วันเกิดของคุณ:</b> <?= htmlspecialchars(formatThaiDate($account["birthday"])) ?></lable>
             </div>
             <div class="text-end mt-5">
-                <a href="#">ติดต่อผู้ดูแลระบบ</a>
+                <a href="https://www.facebook.com/passapol.sutatam" target="_blank">ติดต่อผู้ดูแลระบบ</a>
             </div>
         </div>
     </div>

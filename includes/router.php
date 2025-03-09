@@ -25,6 +25,9 @@ if ($method == "GET") {
         case '/logout':
             $Page->logout();
             break;
+        case '/privacy-policy':
+            $Page->privacyPolicy();
+            break;
         case '/auth/google':
             $Auth->auth();
             break;
