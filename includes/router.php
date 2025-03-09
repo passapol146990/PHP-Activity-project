@@ -116,6 +116,9 @@ if ($method == "GET") {
         case '/api/get/userdetail':
             $User->get();
             break;
+        // case '/api/get/userdetail':
+        //     $Register->getTop10register();
+        //     break;
         default:
             header("Location:/");
             break;

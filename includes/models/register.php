@@ -197,4 +197,61 @@ function updateStatusSubmit($pid,$aid,$login_token,$status){
     $stmt->execute();
     return ["status" => 200, "message" => "อัพเดทสถานะส่งภาพยืนยันสำเร็จแล้ว"];
 }
+
+function getTop10register(){
+    global $conn;
+    $sql = 'SELECT
+            COUNT(register.status) AS total_regis,
+            post.p_name
+            FROM register
+            JOIN post ON register.pid = post.p_id
+            GROUP BY register.pid, post.p_name
+            ORDER BY total_regis DESC
+            LIMIT 10';
+    $stmt = $conn->prepare($sql);
+    if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+    if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+    $result = $stmt->get_result();
+    if($result->num_rows === 0){return ["status"=>201,"message"=>"ไม่พบข้อมูล"];}
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    return ["status"=>200,"message"=>"successfully.","data"=>$data];
+}
+ 
+function getCountStatus_1($login_token){
+    global $conn;
+    $sql = "SELECT 
+                    SUM(CASE WHEN status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved,
+                    SUM(CASE WHEN status = 'ปฏิเสธ' THEN 1 ELSE 0 END) AS rejected,
+                    SUM(CASE WHEN status = 'รอการตรวจสอบ' THEN 1 ELSE 0 END) AS pending
+                    FROM register
+                    WHERE pid IN (SELECT p_id FROM post WHERE p_aid = ?)";
+     $stmt = $conn->prepare($sql);
+     if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+     $stmt->bind_param("s", $login_token);
+     if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+     $result = $stmt->get_result();
+     
+     $data = $result->fetch_all(MYSQLI_ASSOC);
+     return ["status"=>200,"message"=>"successfully.","data"=>$data];
+
+}
+
+function getCountStatus_2($login_token){
+    global $conn;
+    $sql = "SELECT   SUM(CASE WHEN status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved,
+                    SUM(CASE WHEN status = 'ปฏิเสธ' THEN 1 ELSE 0 END) AS rejected,
+                    SUM(CASE WHEN status = 'รอการตรวจสอบ' THEN 1 ELSE 0 END) AS pending
+                    FROM register
+                    WHERE aid = ? ";
+     $stmt = $conn->prepare($sql);
+     if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+     $stmt->bind_param("s", $login_token);
+     if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+     $result = $stmt->get_result();
+     
+     $data = $result->fetch_all(MYSQLI_ASSOC);
+     return ["status"=>200,"message"=>"successfully.","data"=>$data];
+
+}
+
 ?>

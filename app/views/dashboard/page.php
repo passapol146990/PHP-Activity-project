@@ -13,7 +13,7 @@
     <style>
         body {
             font-family: 'Prompt', sans-serif;
-            background: #242524;
+            background:rgb(253, 5, 5)
         }
         .div-menu{
             height: 100vh;
@@ -58,8 +58,8 @@
             </div>
             <div class="body">
                 <a class="p-3" href="/">กลับหน้าแรก</a>
-                <!-- <a class="p-3" href="/">สรุปรวม</a> -->
-                <!-- <a class="p-3" href="/">กิจกรรมของฉัน</a>
+                <!-- <a class="p-3" href="/">สรุปรวม</a>
+                <a class="p-3" href="/">กิจกรรมของฉัน</a>
                 <a class="p-3" href="/">กิจกรรมที่เข้าร่วม</a> -->
             </div>
             <div class="footer"></div>
@@ -74,9 +74,14 @@
                 </div>
                 <script>
                     function setChartTop10MyActivity(id,title){
-                        const xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
-                        const yValues = [55, 49, 44, 24, 15];
-                        const barColors = ["red", "green","blue","orange","brown"];
+                        const data = <?= json_encode($getTop10["data"], JSON_UNESCAPED_UNICODE); ?>;
+                                const xValues = [];
+                                const yValues = [];
+                                data.forEach(function(item) {
+                                    xValues.push(item.p_name);
+                                    yValues.push(item.total_regis);  
+                                });
+                        const barColors = ["red", "green","blue","orange","brown","yellow","lime","pink","black","skyblue"];
 
                         new Chart(id, {
                         type: "bar",
@@ -105,6 +110,7 @@
                         });
                     }
                     setChartTop10MyActivity("Chart1","10 อันดับกิจกรรมของคุณที่มีคนเข้าร่วมมากที่สุด");
+                    
                     function setRegMyActivity(id,title){
                         const xValues = ["ม.ค.","ก.พ.","มี.ค","เม.ย","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
                         new Chart(id, {
@@ -112,7 +118,7 @@
                         data: {
                             labels: xValues,
                             datasets: [{ 
-                                data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
+                                data: [860,1140,900,1060,1070,1110,1330,2210,7830,2478],
                                 borderColor: "red",
                                 fill: false
                             }]
@@ -126,10 +132,18 @@
                         }
                         });
                     }
-                    setRegMyActivity('Chart2',"คำขอเข้าร่วมกิจกรรมที่คุณสร้าง")
+                    setRegMyActivity('Chart2',"คำขอเข้าร่วมกิจกรรมที่คุณสร้าง") //คนอื่นขอเรา
                     function setChartCicleMyStatus(canid,title){
-                        const xValues = ["รอดำเนินการ", "อนุมัติ", "ปฏิเสธ"];
-                        const yValues = [55, 49, 44];
+                        const data = <?= json_encode($total_Countstatus_1["data"], JSON_UNESCAPED_UNICODE); ?>;
+                        const yValues = [];
+
+                            const xValues = ["รอดำเนินการ", "อนุมัติ", "ปฏิเสธ"];
+
+                            data.forEach(function(item) {
+                                yValues.push(item.pending);  
+                                yValues.push(item.approved); 
+                                yValues.push(item.rejected);
+                            });
                         const barColors = [
                             "#f1c40f",
                             "#2ecc71",
@@ -152,10 +166,18 @@
                             }
                         });
                     }
-                    setChartCicleMyStatus("Chart3","สถานะคำขอของคนอื่น ที่ขอเข้าร่วมกิจกรรมของคุณ")
+                    setChartCicleMyStatus("Chart3","สถานะคำขอของคนอื่น ที่ขอเข้าร่วมกิจกรรมของคุณ") //เราขอคนอื่น
                     function setChartCicleMyReg(canid,title){
-                        const xValues = ["รอดำเนินการ", "อนุมัติ", "ปฏิเสธ"];
-                        const yValues = [55, 49, 44];
+                        const data = <?= json_encode($total_Countstatus_2["data"], JSON_UNESCAPED_UNICODE); ?>;
+                            const yValues = [];
+
+                            const xValues = ["รอดำเนินการ", "อนุมัติ", "ปฏิเสธ"];
+
+                            data.forEach(function(item) {
+                                yValues.push(item.pending); 
+                                yValues.push(item.approved); 
+                                yValues.push(item.rejected); 
+                            });
                         const barColors = [
                             "#f1c40f",
                             "#2ecc71",

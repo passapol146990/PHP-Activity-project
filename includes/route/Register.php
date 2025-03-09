@@ -98,6 +98,7 @@ class REGISTER{
         echo json_encode($res , JSON_UNESCAPED_UNICODE);
         exit();
     }
+
 }
 $Register = new REGISTER();
 ?>
