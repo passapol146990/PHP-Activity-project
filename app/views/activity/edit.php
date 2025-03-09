@@ -18,7 +18,7 @@
             <div class="p-2 mb-3">
                 <a href="/activity/create/show" class="btn btn-primary">&larr; กลับ</a>
             </div>
-            <h2 class="mb-3">แก้ไขกิจกรรม : <?= htmlspecialchars($result['post_name'] ?? '') ?></h2>
+            <h2 class="mb-3">แก้ไขกิจกรรม : <?= htmlspecialchars(mb_strimwidth($result['post_name'] ?? '',0,20,"...")) ?></h2>
                 <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($p_id); ?>">
             <div class="mb-3">
                 <label for="image-upload" class="form-label">รูปภาพกิจกรรม</label>

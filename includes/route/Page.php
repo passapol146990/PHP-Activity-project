@@ -13,7 +13,7 @@ class PAGE{
         $date_end = $_GET['end_date'] ?? "";
         $total_registers = getCountWaitRegister($login_token);
         $waitReg = getWaitRegister($login_token);
-        $posts = getPostx(10, $page, $keyword, $date_start, $date_end, $login_token);
+        $posts = getPostx($login_token,10, $page, $keyword, $date_start, $date_end,);
         require_once('../app/views/home.php');
         exit();
     }

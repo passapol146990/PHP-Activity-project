@@ -1,6 +1,6 @@
 <?php
 require_once '../includes/db.php';
-function getPostx($limit, $page, $keyword = '', $date_start = '', $date_end = '', $user_aid = null) {
+function getPostx($user_aid, $limit, $page, $keyword = '', $date_start = '', $date_end = '') {
     global $conn;
     $page = isset($page) ? (int)$page : 1;
     $limit = isset($limit) ? (int)$limit : 10;
@@ -19,28 +19,28 @@ function getPostx($limit, $page, $keyword = '', $date_start = '', $date_end = ''
     }
 
     $sql = "SELECT 
-            post.*, 
-            (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image, 
-            COUNT(register.pid) AS total_registers,
-            SUM(CASE WHEN register.status = 'รอการตรวจสอบ' THEN 1 ELSE 0 END) AS waiting,
-            SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved,
-            SUM(CASE WHEN register.status = 'ปฏิเสธ' THEN 1 ELSE 0 END) AS rejected,
-            MAX(register.status) AS user_status
-        FROM post
-        LEFT JOIN register ON register.pid = post.p_id AND register.aid = ?
-        WHERE $where
-        GROUP BY post.p_id
-        ORDER BY post.p_datetime DESC
-        LIMIT ?, ?";
+                post.*, 
+                (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image, 
+                (SELECT status FROM register 
+                WHERE register.pid = post.p_id 
+                AND register.aid = ? 
+                LIMIT 1) AS user_status,
+                COUNT(register.pid) AS total_registers,
+                SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved_count
+            FROM post
+            LEFT JOIN register ON register.pid = post.p_id
+            WHERE $where
+            GROUP BY post.p_id
+            ORDER BY post.p_datetime DESC
+            LIMIT ?, ?";
 
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
         die("Error preparing statement: " . $conn->error);
     }
 
-    // กำหนดประเภทและผูกค่าออโต้
     $param_types = "s" . str_repeat("s", count($params)) . "ii";
-    array_unshift($params, $user_aid); // เพิ่ม `$user_aid` เป็นพารามิเตอร์แรก
+    array_unshift($params, $user_aid);
     $params[] = $offset;
     $params[] = $limit;
 
@@ -55,6 +55,63 @@ function getPostx($limit, $page, $keyword = '', $date_start = '', $date_end = ''
 
     return ["status" => 200, "message" => "successfully.", "data" => $data];
 }
+
+
+// function getPostx($limit, $page, $keyword = '', $date_start = '', $date_end = '', $user_aid = null) {
+//     global $conn;
+//     $page = isset($page) ? (int)$page : 1;
+//     $limit = isset($limit) ? (int)$limit : 10;
+//     $offset = ($page - 1) * $limit;
+//     $where = "1=1";
+//     $params = [];
+
+//     if (!empty($keyword)) {
+//         $where .= " AND post.p_name LIKE ?";
+//         $params[] = "%$keyword%";
+//     }
+//     if (!empty($date_start) && !empty($date_end)) {
+//         $where .= " AND (post.p_date_start >= ? AND post.p_date_end <= ?)";
+//         $params[] = $date_start;
+//         $params[] = $date_end;
+//     }
+
+//     $sql = "SELECT 
+//             post.*, 
+//             (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image, 
+//             COUNT(register.pid) AS total_registers,
+//             SUM(CASE WHEN register.status = 'รอการตรวจสอบ' THEN 1 ELSE 0 END) AS waiting,
+//             SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved,
+//             SUM(CASE WHEN register.status = 'ปฏิเสธ' THEN 1 ELSE 0 END) AS rejected,
+//             MAX(register.status) AS user_status
+//         FROM post
+//         LEFT JOIN register ON register.pid = post.p_id AND register.aid = ?
+//         WHERE $where
+//         GROUP BY post.p_id
+//         ORDER BY post.p_datetime DESC
+//         LIMIT ?, ?";
+
+//     $stmt = $conn->prepare($sql);
+//     if ($stmt === false) {
+//         die("Error preparing statement: " . $conn->error);
+//     }
+
+//     // กำหนดประเภทและผูกค่าออโต้
+//     $param_types = "s" . str_repeat("s", count($params)) . "ii";
+//     array_unshift($params, $user_aid); // เพิ่ม `$user_aid` เป็นพารามิเตอร์แรก
+//     $params[] = $offset;
+//     $params[] = $limit;
+
+//     $stmt->bind_param($param_types, ...$params);
+//     $stmt->execute();
+//     $result = $stmt->get_result();
+//     $data = [];
+
+//     while ($row = $result->fetch_assoc()) {
+//         $data[] = $row;
+//     }
+
+//     return ["status" => 200, "message" => "successfully.", "data" => $data];
+// }
 
 function getPost($limit, $page)
 {

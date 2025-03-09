@@ -53,7 +53,11 @@ async function getDetailPost(id){
         res = await res.json();
         setModal_Activity_1(res)
     }catch{
-        
+        Swal.fire({
+            title: "Error",
+            text: "เกิดข้อผิดพลาดในการอัพเดทสถานะของผู้ใช้ กรุณารีหน้าเว็บแล้วลองใหม่อีกครั้ง",
+            icon: "error"
+        });
     }
 }
 function setModal_Activity_1(result) {

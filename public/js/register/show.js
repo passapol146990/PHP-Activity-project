@@ -1,6 +1,19 @@
 var modal = [];
 function openPopUp(id) {
-  modal.push(document.getElementById(id));
+  const e = document.getElementById(id);
+  e.innerHTML = `<div class="modal-dialog modal-dialog-centered modal-lg bg-white p-3" style="width: 50%;height:20%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title" id="exampleModalLabel">กำลังโหลดรายละเอียดกิจกรรม...</h5>
+                    </div>
+                    <button type="button" class="btn-close" onClick="closePopUp()"></button>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>`
+  modal.push(e);
   modal[modal.length - 1].classList.add("show");
 }
 function closePopUp() {
@@ -13,31 +26,20 @@ window.addEventListener("click", (e) => {
     }
   } catch {}
 });
-async function getDetailPost(id) {
-  openPopUp("Modal_Activity_1");
-  try {
-    const myHeaders = new Headers();
-    myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
+function escapeHtml(unsafe) {
+  if (typeof unsafe !== "string") return "";
+  let safe = unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
-    const formdata = new FormData();
-    formdata.append("id_post", id);
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-      redirect: "follow",
-    };
-    let res = await fetch("/api/get/post", requestOptions);
-    res = await res.json();
-    setModal_Activity_1(res);
-  } catch {
-    Swal.fire({
-      title: "Error",
-      text: "เกิดข้อผิดพลาดในการอัพเดทสถานะของผู้ใช้ กรุณารีหน้าเว็บแล้วลองใหม่อีกครั้ง",
-      icon: "error",
-    });
-  }
+  return safe;
+}
+function stribwird(text) {
+  if (typeof text !== "string") return "";
+  return text.length > 20 ? text.substring(0, 20) + "..." : text;
 }
 function formatThaiDate(dateString) {
   if (!dateString) return "";
@@ -63,6 +65,30 @@ function formatThaiDate(dateString) {
   const year = date.getFullYear() + 543;
   return `${day} ${month} ${year}`;
 }
+async function getDetailPost(id) {
+  openPopUp("Modal_Activity_1");
+  try {
+    const formdata = new FormData();
+    formdata.append("id_post", id);
+
+    const requestOptions = {
+      method: "POST",
+      body: formdata,
+      redirect: "follow",
+    };
+    let res = await fetch("/api/get/post", requestOptions);
+    res = await res.json();
+    console.log(res)
+    setModal_Activity_1(res);
+  } catch {
+    Swal.fire({
+      title: "Error",
+      text: "เกิดข้อผิดพลาดในการอัพเดทสถานะของผู้ใช้ กรุณารีหน้าเว็บแล้วลองใหม่อีกครั้ง",
+      icon: "error",
+    });
+    closePopUp()
+  }
+}
 function setModal_Activity_1(result) {
   if (result.status != 200) {
     return;
@@ -70,9 +96,7 @@ function setModal_Activity_1(result) {
   const data = result.data;
   const Modal_Activity_1 = document.getElementById("Modal_Activity_1");
   const create_date = formatThaiDate(data.post_create);
-  const activity_date = `${formatThaiDate(data.post_start)} - ${formatThaiDate(
-    data.post_end
-  )}`;
+  const activity_date = `${formatThaiDate(data.post_start)} - ${formatThaiDate(data.post_end)}`;
   let images = "";
   for (let i = 0; i < data.images.length; i++) {
     images += `<img src="/get/image?img=/post/${data.images[i]}" alt="${data.images[i]}" class="mx-2 rounded border" style="width: 300px; height: 250px; object-fit: cover;">`;
@@ -82,8 +106,8 @@ function setModal_Activity_1(result) {
         <div class="content" style="width:50%;">
             <div class="header mb-3">
                 <div>
-                    <label class="title-header">รายละเอียดกิจกรรม</label>:<label> <h5 class="card-title">${data.post_name}</h5></label><br>
-                    <label class="small-text">${create_date}</label>
+                    <label class="title-header">รายละเอียดกิจกรรม</label>:<label> <h5 class="card-title">${stribwird(escapeHtml(data.post_name))}</h5></label><br>
+                    <label class="small-text">${escapeHtml(create_date)}</label>
                 </div>
                 <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
             </div>
@@ -98,14 +122,14 @@ function setModal_Activity_1(result) {
                     <div class="container">
                         <div class="card">
                             <div class="card-body" style="overflow-y: auto; max-height:300px;">
-                                <h5 class="card-title">${data.post_name}</h5>
+                                <h5 class="card-title">${escapeHtml(data.post_name)}</h5>
                                 <p class="card-text">
-                                <b>ชื่อกิจกรรม:</b> ${data.post_name}<br>
-                                <b>ช่วงเวลา:</b> ${activity_date}<br>
-                                <b>รายละเอียด:</b> ${data.post_about}<br>
-                                <b>สถานที่:</b> ${data.post_address}<br>
-                                <b>สิ่งที่ได้:</b> ${data.post_give}<br>
-                                <b>จำนวนที่เปิดรับ:</b> ${data.post_people} คน<br>
+                                <b>ชื่อกิจกรรม:</b> ${escapeHtml(data.post_name)}<br>
+                                <b>ช่วงเวลา:</b> ${escapeHtml(activity_date)}<br>
+                                <b>รายละเอียด:</b> ${escapeHtml(data.post_about)}<br>
+                                <b>สถานที่:</b> ${escapeHtml(data.post_address)}<br>
+                                <b>สิ่งที่ได้:</b> ${escapeHtml(data.post_give)}<br>
+                                <b>จำนวนที่เปิดรับ:</b> ${escapeHtml(data.post_people)} คน<br>
                                 </p>
                             </div>
                         </div>
@@ -144,15 +168,12 @@ async function cancelRegister(rid, pid, title) {
 }
 async function updateStatusRegister(pid, aid, status) {
   try {
-    const myHeaders = new Headers();
-    myHeaders.append("Cookie", "PHPSESSID=db9575d5f43d4160441b3bed57e062fe");
     const formdata = new FormData();
     formdata.append("pid", pid);
     formdata.append("aid", aid);
     formdata.append("status", status);
     const requestOptions = {
       method: "POST",
-      headers: myHeaders,
       body: formdata,
       redirect: "follow",
     };
@@ -185,79 +206,64 @@ document.addEventListener("DOMContentLoaded", function () {
   previewImg.addEventListener("click", function () {
       fileInput.click();
   });
-  function previewImage(event) {
-      const files = event.target.files;
-      const maxSize = 2 * 1024 * 1024; // 2MB
-      if (files.length === 0) return;
-      const file = files[0];
-      fileNameLabel.innerText = file.name;
-      if (!file.type.match("image.*")) {
-      alert("กรุณาอัปโหลดไฟล์รูปภาพเท่านั้น");
-      return;
-      }
-      if (file.size > maxSize) {
-      alert(`ไฟล์ ${file.name} มีขนาดเกิน 2MB!`);
-      return;
-      }
-      const reader = new FileReader();
-      reader.onload = function (e) {
-      previewImg.src = e.target.result;
-      previewImg.style.display = "block";
-      uploadBtn.style.display = "none";
-      };
-      reader.readAsDataURL(file);
-  }
-
   fileInput.addEventListener("change", previewImage);
-  });
+});
 
-  function openModal(pid) {
-  let modalId = `Modal_submit_pic_${pid}`;
-  let modalElement = document.getElementById(modalId);
+function openModal(pid) {
+let modalId = `Modal_submit_pic_${pid}`;
+let modalElement = document.getElementById(modalId);
 
-  if (modalElement) {
-      let modal = new bootstrap.Modal(modalElement);
-      modal.show();
-  } else {
-      console.error("Modal not found: " + modalId);
-  }
-  }
+if (modalElement) {
+    let modal = new bootstrap.Modal(modalElement);
+    modal.show();
+} else {
+    console.error("Modal not found: " + modalId);
+}
+}
 
-  function triggerFileInput(inputId) {
+function triggerFileInput(inputId) {
   document.getElementById(inputId).click();
-  }
+}
 
-  function previewImage(input, pid) {
-  const file = input.files[0];
-  const previewImg = document.getElementById(`preview-img-${pid}`);
-  const uploadBtn = document.getElementById(`upload-btn-${pid}`);
-  const previewContainer = document.getElementById(`image-preview-${pid}`);
-  const fileNameDisplay = document.getElementById(`file-name-${pid}`);
-  const submitBtn = document.getElementById(`submit-btn-${pid}`);
-  const maxSize = 2 * 1024 * 1024; // 2MB
+function previewImage(input, pid) {
+const file = input.files[0];
+const previewImg = document.getElementById(`preview-img-${pid}`);
+const uploadBtn = document.getElementById(`upload-btn-${pid}`);
+const previewContainer = document.getElementById(`image-preview-${pid}`);
+const fileNameDisplay = document.getElementById(`file-name-${pid}`);
+const submitBtn = document.getElementById(`submit-btn-${pid}`);
+const maxSize = 2 * 1024 * 1024;
 
-  if (!file.type.match("image.*")) {
-      alert("กรุณาอัปโหลดเฉพาะไฟล์รูปภาพ!");
-      return;
-  }
+if (!file.type.match("image.*")) {
+    Swal.fire({
+      title: "warnign",
+      text: "กรุณาอัปโหลดเฉพาะไฟล์รูปภาพ",
+      icon: "warnign"
+    });
+    return;
+}
 
-  if (file.size > maxSize) {
-      alert(`ไฟล์ ${file.name} มีขนาดเกิน 2MB!`);
-      return;
-  }
+if (file.size > maxSize) {
+    Swal.fire({
+      title: "warnign",
+      text: "ไฟล์ภาพต้องมีขนาดไม่เกิน 2MB!",
+      icon: "warnign"
+    });
+    return;
+}
 
-  const reader = new FileReader();
-  reader.onload = function (e) {
-      previewImg.src = e.target.result;
-      previewImg.style.display = "block";
-      uploadBtn.style.display = "none";
-      previewContainer.style.cursor = "pointer";
+const reader = new FileReader();
+reader.onload = function (e) {
+    previewImg.src = e.target.result;
+    previewImg.style.display = "block";
+    uploadBtn.style.display = "none";
+    previewContainer.style.cursor = "pointer";
 
-      fileNameDisplay.textContent = `ไฟล์ที่เลือก: ${file.name}`;
-      fileNameDisplay.style.display = "block";
+    fileNameDisplay.textContent = `ไฟล์ที่เลือก: ${file.name}`;
+    fileNameDisplay.style.display = "block";
 
-      submitBtn.removeAttribute("disabled");
-      submitBtn.style.pointerEvents = "auto";
-  };
-  reader.readAsDataURL(file);
-  }
+    submitBtn.removeAttribute("disabled");
+    submitBtn.style.pointerEvents = "auto";
+};
+reader.readAsDataURL(file);
+}

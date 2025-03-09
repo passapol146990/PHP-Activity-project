@@ -248,12 +248,13 @@ class ACTIVITY{
         exit();
     }
     function userSubmitpic() {
+        isLogin();
         if (!isset($_POST['pid'])||empty($_POST["pid"])) {
             header("location:/activity/register/show?status=warning&message=pid is null");
             exit();
         }
         if ((!isset($_FILES['image']) || empty($_FILES['image']['name'][0]))&&$_FILES['image']['error'] == 0) {
-            header("Location:/activity/register/show?status=warning&message=กรุณาใส่รูปภาพ.");
+            header("location:/activity/register/show?status=warning&message=กรุณาใส่รูปภาพ.");
             exit();
         }
         $pid = $_POST['pid'];
@@ -292,7 +293,7 @@ class ACTIVITY{
                 }
             }
         }
-        header("location:/activity/create/show?status=success&message=ส่งรูปภาพสำเร็จ");
+        header("location:/activity/register/show?status=success&message=ส่งรูปภาพสำเร็จ");
         exit();
     }
 }
