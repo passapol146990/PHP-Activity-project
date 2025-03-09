@@ -13,7 +13,6 @@
     <style>
         body {
             font-family: 'Prompt', sans-serif;
-            background:rgb(253, 5, 5)
         }
         .div-menu{
             height: 100vh;
@@ -50,7 +49,7 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-dark">
     <div class="d-flex">
         <div class="div-menu col-3 bg-dark">
             <div class="header">
@@ -58,9 +57,6 @@
             </div>
             <div class="body">
                 <a class="p-3" href="/">กลับหน้าแรก</a>
-                <!-- <a class="p-3" href="/">สรุปรวม</a>
-                <a class="p-3" href="/">กิจกรรมของฉัน</a>
-                <a class="p-3" href="/">กิจกรรมที่เข้าร่วม</a> -->
             </div>
             <div class="footer"></div>
         </div>
@@ -118,7 +114,7 @@
                         data: {
                             labels: xValues,
                             datasets: [{ 
-                                data: [860,1140,900,1060,1070,1110,1330,2210,7830,2478],
+                                data: <?= json_encode($getReqMonth, JSON_UNESCAPED_UNICODE); ?>,
                                 borderColor: "red",
                                 fill: false
                             }]

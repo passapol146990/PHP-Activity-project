@@ -216,6 +216,42 @@ function getTop10register(){
     $data = $result->fetch_all(MYSQLI_ASSOC);
     return ["status"=>200,"message"=>"successfully.","data"=>$data];
 }
+function getCountUser_reqRoundYear($login_token, $month) {
+    global $conn;
+    $sql = "SELECT 
+                MONTH(r.datetime) AS month, 
+                COUNT(*) AS total_requests
+            FROM register r
+            JOIN post p ON p.p_id = r.pid
+            WHERE p.p_aid = ? 
+            AND YEAR(r.datetime) = YEAR(CURDATE()) 
+            AND MONTH(r.datetime) = ?
+            GROUP BY MONTH(r.datetime)
+            ORDER BY month;";
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return ["status" => 400, "message" => "prepare error!"];
+    }
+    $stmt->bind_param("si", $login_token, $month);
+    
+    if (!$stmt->execute()) {
+        return ["status" => 400, "message" => "execute error!"];
+    }
+    $result = $stmt->get_result();
+    if($result->num_rows == 0){
+        return 0;
+    }
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    return  $data[0]["total_requests"];
+}
+function getRegisterByMonth($login_token){
+    $data = [];
+    for($i=1;$i<13;$i++){
+        $data[] = getCountUser_reqRoundYear($login_token,$i);
+    }
+    return $data;
+}
  
 function getCountStatus_1($login_token){
     global $conn;
@@ -233,7 +269,6 @@ function getCountStatus_1($login_token){
      
      $data = $result->fetch_all(MYSQLI_ASSOC);
      return ["status"=>200,"message"=>"successfully.","data"=>$data];
-
 }
 
 function getCountStatus_2($login_token){
@@ -253,5 +288,4 @@ function getCountStatus_2($login_token){
      return ["status"=>200,"message"=>"successfully.","data"=>$data];
 
 }
-
 ?>

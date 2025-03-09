@@ -44,9 +44,9 @@ class PAGE{
 
     function dashboard(){
         isLogin();
-         $login_token = $_SESSION["login_token"];
+        $login_token = $_SESSION["login_token"];
         $getTop10 = getTop10register();
-        // $getreq_RoundYear = getCountUser_reqRoundYear($login_token);
+        $getReqMonth = getRegisterByMonth($login_token);
         $total_Countstatus_1 = getCountStatus_1($login_token);
         $total_Countstatus_2 = getCountStatus_2($login_token);
         require_once('../app/views/dashboard/page.php');
