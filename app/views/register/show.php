@@ -37,7 +37,7 @@
                        
                         <tr>
                             <td>
-                                <lable style="font-size:12px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars(formatThaiDate($doc['register_datetime'])) ?> </lable>
+                                <lable style="font-size:12px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars(formatThaiDateTime($doc['register_datetime'])) ?> </lable>
                             </td>
                             <td class="text-center">
                                 <img src="/get/image?img=/post/<?= htmlspecialchars($doc['post_image']) ?>" class="img-thumbnail" alt="กิจกรรม"><br>

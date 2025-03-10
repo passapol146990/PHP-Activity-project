@@ -61,6 +61,25 @@ function formatThaiDate(dateString) {
     const year = date.getFullYear() + 543; 
     return `${day} ${month} ${year}`;
 }
+function formatThaiDateTime(dateString) {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const thaiMonths = [
+        'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน',
+        'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม',
+        'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+    ];
+
+    const day = date.getDate();
+    const month = thaiMonths[date.getMonth()];
+    const year = date.getFullYear() + 543;
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    
+    return `${day} ${month} ${year} ${hours}:${minutes}:${seconds}`;
+}
 async function getDetailPost(id){
     try{
         openPopUp("Modal_Activity_1");
@@ -100,7 +119,7 @@ function setModal_Activity_1(result) {
         </div>`;
     }
     const data = result.data;
-    const create_date = formatThaiDate(data.post_create);
+    const create_date = formatThaiDateTime(data.post_create);
     const activity_date = `${formatThaiDate(data.post_start)} - ${formatThaiDate(data.post_end)}`;
     let images = ""
     for(let i = 0;i<data.images.length;i++){
@@ -201,7 +220,7 @@ function setReq_activity_1(result, pid) {
     let user = "";
     data.forEach(doc => {
         const status = (doc.status == "รอการตรวจสอบ") ? `<div class="text-warning">${doc.status}</div>` : ((doc.status == "อนุมัติ") ? `<div class="text-success">${doc.status}</div>` : `<div class="text-danger">${doc.status}</div>`);
-        const thaiDate = formatThaiDate(doc.datetime);
+        const thaiDate = formatThaiDateTime(doc.datetime);
         user += `
         <div class="container">
             <div class="d-flex justify-content-between align-items-center" style="width:100%;">
@@ -303,7 +322,7 @@ function setModal_user_data_1(result){
     e = `<div class="content" style="width:50%;min-height:30%;">
             <div class="header">
                 <div>
-                    <label class="title-header">ข้อมูลเพิ่มเติม</label>:<label> <h5>${escapeHtml(data.fname)} ${escapeHtml(data.lname)}</h5></label><br>
+                    <label class="title-header">ข้อมูลเพิ่มเติม</label>:<label> <h5>${stribwird(escapeHtml(data.fname))} ${stribwird(escapeHtml(data.lname))}</h5></label><br>
                 </div>
                 <button class="close-btn" style="margin-top:-10px;" onClick="closePopUp()">&times;</button>
             </div>
@@ -431,12 +450,12 @@ function setCheck_pic(result, pid) {
     const data = result.data;
     data.forEach(doc => {
         const status = (doc.status_submit == "รอตรวจสอบ") ? `<div class="text-warning">${doc.status_submit}</div>` : ((doc.status_submit == "ผ่านกิจกรรม") ? `<div class="text-success">${doc.status_submit}</div>` : `<div class="text-danger">${doc.status_submit}</div>`);
-        const thaiDate = formatThaiDate(doc.datetime_submit);
+        const thaiDate = formatThaiDateTime(doc.datetime_submit);
         const image = (doc.image_submit!=null)?`<a target="_blank" href="/get/image?img=/submit/${doc.image_submit}"><img src="/get/image?img=/submit/${doc.image_submit}" style="width: 150px; height: 100px;" alt="."></a>`:`<label>ยังไม่ส่งรูปภาพ</label>`
         user += `
             <div class="d-flex justify-content-between align-items-center" style="width:1000px;">
                 <div class="col-1">
-                    <label>${thaiDate}</label>
+                    <label style="font-size:10px;">${thaiDate}</label>
                 </div>
                 <div class="col-1 justify-content-center align-items-center">
                     <img src="/get/image?img=/user/${doc.image_user}" style="width: 50px; height: 50px; border-radius: 50%;" alt=".">
@@ -446,7 +465,7 @@ function setCheck_pic(result, pid) {
                     </buttom>
                 </div>
                 <div class="col-2">
-                    <p>ชื่อ : ${escapeHtml(doc.fname)} ${escapeHtml(doc.lname)}</p>
+                    <p>ชื่อ : ${stribwird(escapeHtml(doc.fname))} ${stribwird(escapeHtml(doc.lname))}</p>
                     <p>เพศ : ${doc.gender}</p>
                     <p>อายุ : ${calculateAge(doc.birthday)}</p>
                 </div>

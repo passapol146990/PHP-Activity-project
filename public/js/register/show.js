@@ -65,6 +65,25 @@ function formatThaiDate(dateString) {
   const year = date.getFullYear() + 543;
   return `${day} ${month} ${year}`;
 }
+function formatThaiDateTime(dateString) {
+  if (!dateString) return '';
+
+  const date = new Date(dateString);
+  const thaiMonths = [
+      'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน',
+      'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม',
+      'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+  ];
+
+  const day = date.getDate();
+  const month = thaiMonths[date.getMonth()];
+  const year = date.getFullYear() + 543;
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+  
+  return `${day} ${month} ${year} ${hours}:${minutes}:${seconds}`;
+}
 async function getDetailPost(id) {
   openPopUp("Modal_Activity_1");
   try {
@@ -95,7 +114,7 @@ function setModal_Activity_1(result) {
   }
   const data = result.data;
   const Modal_Activity_1 = document.getElementById("Modal_Activity_1");
-  const create_date = formatThaiDate(data.post_create);
+  const create_date = formatThaiDateTime(data.post_create);
   const activity_date = `${formatThaiDate(data.post_start)} - ${formatThaiDate(data.post_end)}`;
   let images = "";
   for (let i = 0; i < data.images.length; i++) {

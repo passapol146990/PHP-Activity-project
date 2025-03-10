@@ -33,7 +33,7 @@
                     <tr>
                         <td class="text-center">
                             <img src="/get/image?img=/post/<?= htmlspecialchars($doc['image']) ?>" class="img-thumbnail" alt="กิจกรรม"><br>
-                            <lable style="font-size:12px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars(formatThaiDate($doc['p_datetime'])) ?> </lable>
+                            <lable style="font-size:12px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars(formatThaiDateTime($doc['p_datetime'])) ?> </lable>
                         </td>
                         <td id="title:<?= htmlspecialchars($doc["p_id"]) ?>">
                             <?= htmlspecialchars(mb_strimwidth($doc["p_name"] ?? "", 0, 20, "...")) ?>

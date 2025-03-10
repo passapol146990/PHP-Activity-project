@@ -5,6 +5,9 @@ header("Access-Control-Allow-Origin: *");
 function formatThaiDate($d) {
     return date("j ", strtotime($d)) . ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."][date("n", strtotime($d))-1] . " " . (date("Y", strtotime($d)) + 543);
 }
+function formatThaiDateTime($d) {
+    return date("j ", strtotime($d)) . ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."][date("n", strtotime($d))-1] . " " . (date("Y", strtotime($d)) + 543) . " " . date("H:i:s", strtotime($d));
+}
 
 
 require_once '../includes/router.php';
