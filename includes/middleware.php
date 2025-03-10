@@ -1,6 +1,7 @@
 <?php
-function isLogin(){
-    if(!isset($_SESSION["login_time"]) || !isset($_SESSION["login_token"])){
+function isLogin()
+{
+    if (!isset($_SESSION["login_time"]) || !isset($_SESSION["login_token"])) {
         header('Location:/logout');
         exit();
     }
@@ -17,14 +18,26 @@ function isLogin(){
         exit();
     }
     $getaccount = getAccountID($login_token);
+
+    if ($getaccount["status"] == 200) {
+        $row = $getaccount["data"]->fetch_assoc();
+        $account_status = $row["status"];
+        if ($account_status == "banned") {
+            header("Location:/logout");
+            exit();
+        }
+    } else {
+        echo "Error: " . $getaccount["message"];
+    }
+
     if ($getaccount["data"]->num_rows == 0) {
         header('Location:/logout');
         exit();
     }
+
     $account = $getaccount['data']->fetch_assoc();
     if (empty($account['birthday']) || empty($account['gender'])) {
         require_once('../app/views/user/update.php');
         exit();
     }
 };
-?>
