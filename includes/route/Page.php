@@ -31,6 +31,12 @@ class PAGE{
         header("Location:/login");
         exit();
     }
+    function banned(){
+        session_unset();
+        session_destroy();
+        require_once('../app/views/user/banned.php');
+        exit();
+    }
     function setting(){
         isLogin();
         $login_token = $_SESSION["login_token"];

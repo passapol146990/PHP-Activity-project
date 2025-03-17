@@ -26,7 +26,7 @@ function isLogin(){
         $account_status = $row["status"];
         
         if ($account_status == "banned") {
-            header("Location:/logout");
+            header("Location:/ban");
             exit();
         }
     } else {
