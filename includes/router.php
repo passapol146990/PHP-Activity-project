@@ -25,9 +25,6 @@ if ($method == "GET") {
         case '/logout':
             $Page->logout();
             break;
-        case '/ban':
-            $Page->banned();
-            break;
         case '/privacy-policy':
             $Page->privacyPolicy();
             break;

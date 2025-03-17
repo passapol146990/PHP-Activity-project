@@ -26,7 +26,7 @@ function isLogin(){
         $account_status = $row["status"];
         
         if ($account_status == "banned") {
-            header("Location:/ban");
+            require_once('../app/views/user/banned.php');
             exit();
         }
     } else {
