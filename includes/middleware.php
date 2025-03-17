@@ -21,8 +21,19 @@ function isLogin(){
         header('Location:/logout');
         exit();
     }
-    $account = $getaccount['data']->fetch_assoc();
-    if (empty($account['birthday']) || empty($account['gender'])) {
+    if ($getaccount["status"] == 200) {
+        $row = $getaccount["data"]->fetch_assoc();
+        $account_status = $row["status"];
+        
+        if ($account_status == "banned") {
+            header("Location:/logout");
+            exit();
+        }
+    } else {
+        echo "Error: " . $getaccount["message"];
+    }
+
+    if (empty( $row['birthday']) || empty( $row['gender'])) {
         require_once('../app/views/user/update.php');
         exit();
     }

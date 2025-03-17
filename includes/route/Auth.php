@@ -3,8 +3,8 @@ require_once("../includes/models/accout.php");
 class AUTH{
     private $google_client_id = "656159499613-m1ql830ogktmslu2pecormultjc8m9r0.apps.googleusercontent.com";
     private $google_client_secret = "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";
-    // private $google_redirect_uri = "http://localhost/auth/google/callback";
-    private $google_redirect_uri = "https://caiman-steady-flounder.ngrok-free.app/auth/google/callback";
+    private $google_redirect_uri = "http://localhost/auth/google/callback";
+    // private $google_redirect_uri = "https://caiman-steady-flounder.ngrok-free.app/auth/google/callback";
     // private $google_redirect_uri = "https://activity.xn--v3cavs8a.xn--o3cw4h/auth/google/callback";
     function auth(){
         $url = "https://accounts.google.com/o/oauth2/v2/auth?client_id={$this->google_client_id}&redirect_uri={$this->google_redirect_uri}&response_type=code&scope=profile email";
