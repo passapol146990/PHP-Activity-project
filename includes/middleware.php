@@ -26,11 +26,12 @@ function isLogin(){
         $account_status = $row["status"];
         
         if ($account_status == "banned") {
-            require_once('../app/views/user/banned.php');
+            require_once('../app/views/user/banned.html');
             exit();
         }
     } else {
-        echo "Error: " . $getaccount["message"];
+        header('Location:/logout');
+        exit();
     }
 
     if (empty( $row['birthday']) || empty( $row['gender'])) {
