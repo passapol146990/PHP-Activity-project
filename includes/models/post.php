@@ -12,18 +12,22 @@ function getPostx($user_aid, $limit, $page, $keyword = '', $date_start = '', $da
         $where .= " AND post.p_name LIKE ?";
         $params[] = "%$keyword%";
     }
+
     if (!empty($date_start) && !empty($date_end)) {
-        $where .= " AND (post.p_date_start <= ? AND post.p_date_end >= ?)";
-        $params[] = $date_end;
+        if ($date_start === $date_end) {
+            $where .= " AND (post.p_date_start = ? AND post.p_date_end = ?)";
+            $params[] = $date_start;
+            $params[] = $date_end;
+        }else {
+            $where .= " AND (post.p_date_start <= ? AND post.p_date_end >= ?)";
+            $params[] = $date_end;
+            $params[] = $date_start; 
+        }
+    } else if (!empty($date_start)) {
+        $where .= " AND post.p_date_end >= ?"; 
         $params[] = $date_start;
-    }else if (!empty($date_start)) {
-        $where .= " AND post.p_date_start >= ?";
-        $params[] = $date_start;
-    }else  if (!empty($date_end)) {
-        $where .= " AND post.p_date_end <= ?";
-        $params[] = $date_end;
     }
-    
+
     $sql = "SELECT 
                 post.*, 
                 (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image, 
