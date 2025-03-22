@@ -285,7 +285,7 @@ input[type="date"]::-webkit-datetime-edit-day-field{
         var dateFilter = document.getElementById("dateFilter");
         if (filterValue === "all") {
             const e = `<label for="start_date">วันที่:</label>
-            <input type="date" name="start_date" id="start_date" data-date-format="DD MMMM YYYY" value="2025-25-10">
+            <input type="date" name="start_date" id="start_date">
             <label for="end_date">ถึง:</label>
             <input type="date" name="end_date" id="end_date" >`
             dateFilter.innerHTML = e;
