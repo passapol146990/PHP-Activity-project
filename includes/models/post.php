@@ -12,19 +12,12 @@ function getPostx($user_aid, $limit, $page, $keyword = '', $date_start = '', $da
         $where .= " AND post.p_name LIKE ?";
         $params[] = "%$keyword%";
     }
-
     if (!empty($date_start) && !empty($date_end)) {
-        if ($date_start === $date_end) {
-            $where .= " AND (post.p_date_start = ? AND post.p_date_end = ?)";
-            $params[] = $date_start;
-            $params[] = $date_end;
-        }else {
-            $where .= " AND (post.p_date_start <= ? AND post.p_date_end >= ?)";
-            $params[] = $date_end;
-            $params[] = $date_start; 
-        }
+        $where .= " AND (post.p_date_start BETWEEN ? AND ?)";
+        $params[] = $date_start;
+        $params[] = $date_end;
     } else if (!empty($date_start)) {
-        $where .= " AND post.p_date_end >= ?"; 
+        $where .= " AND post.p_date_start >= ?";
         $params[] = $date_start;
     }
 
@@ -166,10 +159,14 @@ function getPostUserCreateX($id, $limit, $page, $keyword = '', $date_start = '',
         $param_types .= "s";
     }
     if (!empty($date_start) && !empty($date_end)) {
-        $where .= " AND (post.p_date_start <= ? AND post.p_date_end >= ?)";
-        $params[] = $date_end;  // เปลี่ยนเป็น date_end
-        $params[] = $date_start; // เปลี่ยนเป็น date_start
+        $where .= " AND (post.p_date_start BETWEEN ? AND ?)";
+        $params[] = $date_start;
+        $params[] = $date_end;
         $param_types .= "ss";
+    } else if (!empty($date_start)) {
+        $where .= " AND post.p_date_start >= ?";
+        $params[] = $date_start;
+        $param_types .= "s";
     }
 
     $sql = "
