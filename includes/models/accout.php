@@ -102,4 +102,21 @@
         return ["status"=>200,"message"=>"successfuly.","data"=>$data];
 
     };
+    function addStatusColumnIfNotExists() {
+        global $conn;
+        $checkColumnQuery = "SHOW COLUMNS FROM `account` LIKE 'status'";
+        $result = $conn->query($checkColumnQuery);
+    
+        if ($result->num_rows == 0) {
+            $alterTableQuery = "ALTER TABLE `account` 
+                                ADD COLUMN `status` ENUM('active', 'banned') 
+                                COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active'";
+             if ($conn->query($alterTableQuery) === TRUE) {
+                return ["status" => 200, "message" => "เพิ่มคอลัมน์ status สำเร็จ!"];
+            } else {
+                return ["status" => 500, "message" => "เกิดข้อผิดพลาดในการเพิ่มคอลัมน์: " . $conn->error];
+            }
+        }
+    }
+    
 ?>
