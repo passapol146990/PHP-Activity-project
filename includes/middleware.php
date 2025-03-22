@@ -21,10 +21,14 @@ function isLogin(){
         header('Location:/logout');
         exit();
     }
+    $row = $getaccount["data"]->fetch_assoc();
+    if (!array_key_exists("status", $row)) {
+        addStatusColumnIfNotExists();
+        header('Location: /logout');
+        exit();
+    }
     if ($getaccount["status"] == 200) {
-        $row = $getaccount["data"]->fetch_assoc();
         $account_status = $row["status"];
-        
         if ($account_status == "banned") {
             require_once('../app/views/user/banned.html');
             exit();
