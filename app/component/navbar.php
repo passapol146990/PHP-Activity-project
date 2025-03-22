@@ -103,6 +103,8 @@
                     align-items: center;
                     justify-content: center;
                 }
+
+                
             }
         }
         .search-container {
@@ -155,8 +157,39 @@
                     transform: scale(1.1);
                 }
             }
+            input[type="date"]::-webkit-datetime-edit, input[type="date"]::-webkit-inner-spin-button, input[type="date"]::-webkit-clear-button {
+  color: #fff;
+  position: relative;
+}
+
+input[type="date"]::-webkit-datetime-edit-year-field{
+  position: absolute !important;
+  border-left:1px solid #8c8c8c;
+  padding: 2px;
+  color:#000;
+  left: 56px;
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field{
+  position: absolute !important;
+  border-left:1px solid #8c8c8c;
+  padding: 2px;
+  color:#000;
+  left: 26px;
+}
+
+
+input[type="date"]::-webkit-datetime-edit-day-field{
+  position: absolute !important;
+  color:#000;
+  padding: 2px;
+  left: 4px;
+  
+}
+            
         }
     }
+    
 </style>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php if(isset($_GET["status"])){?>
@@ -228,13 +261,16 @@
             <option class="filter-text" value="all">เลือกวันที่</option>
         </select>
         <div class="filter-container" id="dateFilter" style="display: none;">
-            <? if(isset($_GET["start_date"])) { ?>
+            
                 <script>document.getElementById("dateFilter").style.display='block';</script>
+                <?php if(isset($_GET["start_date"])) { ?>
                 <label for="start_date">วันที่:</label>
                 <input type="date" name="start_date" id="start_date" value="<?= htmlspecialchars($_GET['start_date']) ?>">
+
                 <label for="end_date">ถึง:</label>
                 <input type="date" name="end_date" id="end_date" value="<?= htmlspecialchars($_GET['end_date']) ?>">
-            <? } ?>
+              <?php } ?>
+               
         </div>
         <button type="submit" class="search-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -249,7 +285,7 @@
         var dateFilter = document.getElementById("dateFilter");
         if (filterValue === "all") {
             const e = `<label for="start_date">วันที่:</label>
-            <input type="date" name="start_date" id="start_date">
+            <input type="date" name="start_date" id="start_date" data-date-format="DD MMMM YYYY" value="2025-25-10">
             <label for="end_date">ถึง:</label>
             <input type="date" name="end_date" id="end_date" >`
             dateFilter.innerHTML = e;
