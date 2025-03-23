@@ -24,8 +24,6 @@ function isLogin(){
     $row = $getaccount["data"]->fetch_assoc();
     if (!array_key_exists("status", $row)) {
         addStatusColumnIfNotExists();
-        header('Location: /logout');
-        exit();
     }
     if ($getaccount["status"] == 200) {
         $account_status = $row["status"];
