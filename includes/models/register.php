@@ -107,15 +107,12 @@ function getRegisteredActivities($aid, $limit, $page, $keyword = '', $date_start
         $params[] = "%$keyword%";
         $param_types .= "s";
     }
+
     if (!empty($date_start) && !empty($date_end)) {
-        $where .= " AND (post.p_date_start BETWEEN ? AND ?)";
+        $where .= " AND (DATE(register.datetime) BETWEEN ? AND ?)";
         $params[] = $date_start;
         $params[] = $date_end;
         $param_types .= "ss";
-    } else if (!empty($date_start)) {
-        $where .= " AND post.p_date_start >= ?";
-        $params[] = $date_start;
-        $param_types .= "s";
     }
 
     $sql = "
