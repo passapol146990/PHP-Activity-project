@@ -11,6 +11,27 @@ class AUTH{
         header("Location:{$url}");
         exit();
     }
+    function authNormal() {
+        // ตรวจสอบว่ามีข้อมูล email และ password ที่ส่งมาผ่าน POST
+        if (isset($_POST['email']) && isset($_POST['password'])) {
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+    
+            // เรียกใช้ฟังก์ชัน loginNormal และส่งอีเมลและรหัสผ่านไป
+            if (loginNormal($email, $password)) {
+                // หากล็อกอินสำเร็จ
+                header('location:/');// หรือหน้าที่คุณต้องการนำทางไปหลังจากล็อกอินสำเร็จ
+            } else {
+                // หากล็อกอินไม่สำเร็จ
+                header('Location: /login?message=Invalid credentials');
+            }
+        } else {
+            // หากไม่มี email หรือ password ใน POST
+            header('Location: /login?message=Please enter both email and password');
+        }
+        exit();
+    }
+    
     function callback(){
         $code = $_GET['code'] ?? null;
         if (!$code) {

@@ -25,6 +25,7 @@ class PAGE{
         require_once('../app/views/login.php');
         exit();
     }
+    
     function logout(){
         session_unset();
         session_destroy();

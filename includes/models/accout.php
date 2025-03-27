@@ -43,6 +43,38 @@
         $_SESSION['login_name'] = ($data["fname"] ?? "") . " " . ($data["lname"] ?? "");
         $_SESSION['login_time'] = time();
     };
+    function loginNormal($email, $password) {
+        // สร้างการเชื่อมต่อกับฐานข้อมูล
+        $conn = new mysqli('your_server', 'your_username', 'your_password', 'your_database');
+        
+        // ตรวจสอบการเชื่อมต่อ
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+    
+        // หลีกเลี่ยง SQL injection
+        $stmt = $conn->prepare("SELECT * FROM account WHERE gmail = ? AND password = ?");
+        $stmt->bind_param("ss", $email, $password);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        if ($result->num_rows === 0) {
+            // ไม่พบบัญชีผู้ใช้ หรืออีเมลและรหัสผ่านไม่ตรง
+            header('location:/login?message=Invalid email or password');
+            exit();
+        }
+    
+        // บัญชีผู้ใช้พบและรหัสผ่านตรง
+        $data = $result->fetch_assoc();
+    
+        // ตั้งค่า session ด้วยข้อมูลผู้ใช้
+        $_SESSION['login_token'] = $data['aid'];  // สมมติว่า 'aid' เป็น primary key
+        $_SESSION['login_image'] = $data['image'];  // เก็บรูปภาพผู้ใช้
+        $_SESSION['login_name'] = ($data['fname'] ?? "") . " " . ($data['lname'] ?? "");  // เก็บชื่อผู้ใช้
+        $_SESSION['login_time'] = time();  // เก็บเวลาที่เข้าสู่ระบบ
+    
+    };
+    
     function setBirthday($date,$id){
         global $conn;
         $sql = 'UPDATE account SET birthday = ? WHERE aid = ?';

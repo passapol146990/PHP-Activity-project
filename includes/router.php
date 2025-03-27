@@ -80,6 +80,9 @@ if ($method == "GET") {
     }
 } else if ($method == "POST") {
     switch ($path) {
+        case '/login':
+            $Auth->authNormal();
+            break;
         case '/activity/create':
             $Activity->create();
             break;

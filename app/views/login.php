@@ -16,11 +16,20 @@
         <p>Please Login with Google account</p>
     </div>
     <div class="login-form">
-        <a href="/auth/google" class="btn btn-light w-100 btn-google mb-3">
+        <!-- <a href="/auth/google" class="btn btn-light w-100 btn-google mb-3">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png"
                 alt="Google Logo" width="30" class="me-2">
             Sign in with Google
-        </a>
+        </a> -->
+        <form action="/login" method="post">
+            <div class="mb-3">
+                <input type="text" class="form-control" id="username" placeholder="Username" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" id="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
