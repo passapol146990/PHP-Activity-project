@@ -55,6 +55,38 @@ class PAGE{
         require_once('../app/views/user/privacyPolicy.html');
         exit();
     }
+    function searchAccount(){
+        isLogin();
+        $login_token = $_SESSION["login_token"];
+        $total_registers = getCountWaitRegister($login_token);
+        $waitReg = getWaitRegister($login_token);
+        $search_query = $_GET['search_query'] ?? "";
+        $data = searchAccountUser($search_query,$login_token);
+        if(count($data) == 0){
+            $data = [];
+        }
+        require_once('../app/views/user/search.php');
+        exit();
+    }
+    function profileByID(){
+        isLogin();
+        $login_token = $_SESSION["login_token"];
+        $total_registers = getCountWaitRegister($login_token);
+        $waitReg = getWaitRegister($login_token);
+        $aid = $_GET['user'] ?? "";
+        if($login_token == $aid){
+            header("Location:/setting");
+            exit();
+        }
+        $getaccount = getAccountID($aid);
+        $c_reg = getCountRegister($aid);
+        $c_post = getCountPost($aid);
+        $post = getPostByAid($aid);
+        $reg = getRegisteredActivitiesByAID($aid);
+        $account = $getaccount['data']->fetch_assoc();
+        require_once('../app/views/user/profile.php');
+        exit();
+    }
 }
 $Page = new PAGE();
 ?>

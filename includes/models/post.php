@@ -448,3 +448,105 @@ function getPosttoedit($p_id, $p_aid){
     $result = $data->fetch_assoc();
     return ["status" => 200, "message" => "Successfully.", "data" => $result];
 };
+function getPostByAid($user_aid) {
+    global $conn;
+    $sql = "SELECT 
+                post.*, 
+                account.*, 
+                (SELECT image.image FROM image WHERE image.pid = post.p_id LIMIT 1) AS image,
+                COUNT(register.pid) AS total_registers,
+                SUM(CASE WHEN register.status = 'อนุมัติ' THEN 1 ELSE 0 END) AS approved_count,
+                (SELECT status FROM register 
+                 WHERE register.pid = post.p_id 
+                 AND register.aid = ? 
+                 LIMIT 1) AS user_status
+            FROM post
+            INNER JOIN account ON post.p_aid = account.aid
+            LEFT JOIN register ON register.pid = post.p_id
+            WHERE account.aid = ?
+            GROUP BY post.p_id
+            ORDER BY post.p_datetime DESC";
+
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("Error preparing statement: " . $conn->error);
+    }
+    $stmt->bind_param("ss", $user_aid, $user_aid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = [];
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    return ["status" => 200, "message" => "successfully.", "data" => $data];
+}
+function getCountPost($id){
+    global $conn;
+    $sql = 'SELECT COUNT(*) as count FROM post WHERE p_aid = ?';
+    $stmt = $conn->prepare($sql);
+    if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+    $stmt->bind_param('s',$id);
+    if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+    $data = $stmt->get_result();
+    $data = $data->fetch_assoc();
+    return $data['count'];
+}
+
+function getRegisteredActivitiesByAID($aid) {
+    global $conn;
+
+    $sql = "
+        SELECT  
+            register.id AS register_id,
+            register.datetime AS register_datetime,
+            register.status AS register_status,
+            post.p_id AS post_id,
+            post.p_name AS post_name,
+            post.p_date_start AS post_date_start,
+            post.p_date_end AS post_date_end,
+            post.p_max AS post_max,
+            post.p_about AS post_about,
+            post.p_give AS post_give,
+            post.p_datetime AS post_datetime,
+            (
+                SELECT image 
+                FROM image 
+                WHERE image.pid = post.p_id 
+                LIMIT 1
+            ) AS post_image, 
+            account.fname AS creator_fname,
+            account.lname AS creator_lname,
+            account.image AS creator_image,
+            (
+                SELECT COUNT(*) 
+                FROM register 
+                WHERE register.pid = post.p_id AND register.status = 'อนุมัติ'
+            ) AS approved_registers,
+            register.image_submit AS reg_image,
+            register.status_submit AS reg_status
+        FROM register
+        JOIN post ON register.pid = post.p_id
+        JOIN account ON post.p_aid = account.aid
+        WHERE register.aid = ?
+        ORDER BY register.datetime DESC
+    "; 
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return ["status" => 400, "message" => "prepare error!"];
+    }
+
+    $stmt->bind_param("s", $aid);
+    if (!$stmt->execute()) {
+        return ["status" => 400, "message" => "execute error!"];
+    }
+
+    $result = $stmt->get_result();
+    if ($result->num_rows === 0) {
+        return ["status" => 201, "message" => "ไม่พบข้อมูล", "data" => []];
+    }
+
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    return ["status" => 200, "message" => "successfully.", "data" => $data];
+}
+?>

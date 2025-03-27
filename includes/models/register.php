@@ -333,5 +333,4 @@ function getSubpicBy_Creater($login_token, $pid){
     $data = $result->fetch_all(MYSQLI_ASSOC);
     return ["status" => 200, "message" => "successfully.", "data" => $data];
 }
-
 ?>

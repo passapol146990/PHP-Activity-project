@@ -74,6 +74,12 @@ if ($method == "GET") {
                 echo "ไม่พบรูปภาพ";
             }
             break;
+        case '/search/accout':
+            $Page->searchAccount();
+            break;
+        case '/profile':
+            $Page->profileByID();
+            break;
         default:
             header("Location:/");
             break;

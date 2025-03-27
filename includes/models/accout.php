@@ -118,5 +118,31 @@
             }
         }
     }
-    
+    function searchAccountUser($search_query,$login_token){
+        global $conn;
+        $sql = "SELECT account.image,account.fname,account.lname,account.aid, COUNT(post.p_aid) as count_post
+        FROM account 
+        LEFT JOIN post ON account.aid = post.p_aid
+        WHERE (CONCAT(account.fname, account.lname) LIKE CONCAT('%',?,'%'))
+        AND account.aid != ?
+        GROUP BY account.aid;";
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+        $stmt->bind_param('ss',$search_query,$login_token);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        $data = $stmt->get_result();
+        return ["status"=>200,"message"=>"successfuly.","data"=>$data];
+    }
+
+    function getCountRegister($id){
+        global $conn;
+        $sql = 'SELECT COUNT(*) as count FROM register WHERE aid = ?';
+        $stmt = $conn->prepare($sql);
+        if(!$stmt){return ["status"=>400,"message"=>"prepare error!"];}
+        $stmt->bind_param('s',$id);
+        if(!$stmt->execute()){return ["status"=>400,"message"=>"execute error!"];}
+        $data = $stmt->get_result();
+        $data = $data->fetch_assoc();
+        return $data['count'];
+    }
 ?>

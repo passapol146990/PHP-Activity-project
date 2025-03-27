@@ -34,7 +34,6 @@
                 </thead>
                 <tbody>
                     <? foreach ($myactivities["data"] as $key => $doc) { ?>
-                       
                         <tr>
                             <td>
                                 <lable style="font-size:12px; font-family: 'Prompt', sans-serif;"><?= htmlspecialchars(formatThaiDateTime($doc['register_datetime'])) ?> </lable>
