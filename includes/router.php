@@ -52,6 +52,9 @@ if ($method == "GET") {
         case '/activity/register/show':
             $Register->Show();
             break;
+        case '/activity/Showactivity':
+            $Activity->PageShowNew();
+            break;
         case '/register/cancel':
             $Register->cancelRegister();
             break;
@@ -85,6 +88,9 @@ if ($method == "GET") {
             break;
         case '/activity/edit':
             $Activity->update();
+            break;
+        case '/activity/Show':
+            $Activity->SearchUsers();
             break;
         case '/update/user/data':
             $User->update();

@@ -247,6 +247,11 @@ input[type="date"]::-webkit-datetime-edit-day-field{
                 <span class="notification-badge"><?= htmlspecialchars($waitReg) ?></span>
             <? } ?>
         </a>
+        <a href="/activity/Showactivity" class="nav-item">กิจกรรมตามชื่อล็อคอิน
+            <? if(isset($waitReg)&&$waitReg>0) { ?>
+                <span class="notification-badge"><?= htmlspecialchars($waitReg) ?></span>
+            <? } ?>
+        </a>
     </div>
     <form action="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>" method="get" class="search-container">
         <div class="search-box">

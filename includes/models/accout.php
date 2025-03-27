@@ -12,6 +12,30 @@
         $data = $stmt->get_result();
         return ["status"=>200,"message"=>"successfuly.","data"=>$data];
     };
+    function searchUsers($aid, $searchInput) {
+        global $conn;
+    
+        $sql = "SELECT * FROM account WHERE (fname LIKE ? OR lname LIKE ?) AND aid != ?";
+    
+        $stmt = $conn->prepare($sql);
+        $searchTerm = "%" . $searchInput . "%";
+        $stmt->bind_param("ssi", $searchTerm, $searchTerm, $aid);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $users = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $users[] = $row; 
+        }
+    }
+        return $users;
+    }
+    
+
+    
+    
+    
     function createAccount($id,$fname,$lname,$gmail,$image){
         global $conn;
         $sql = 'INSERT INTO account(aid,fname,lname,gmail,image) VALUES(?,?,?,?,?)';

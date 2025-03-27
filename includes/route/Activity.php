@@ -4,6 +4,8 @@ require_once("../includes/models/post.php");
 require_once("../includes/models/register.php");
 class ACTIVITY
 {
+   
+
     function PageShow()
     {
         isLogin();
@@ -347,5 +349,24 @@ class ACTIVITY
         header("location:/activity/register/show?status=success&message=ส่งรูปภาพสำเร็จ");
         exit();
     }
+    function PageShowNew()
+    {
+        isLogin();
+        $login_token = $_SESSION["login_token"];
+        require_once('../app/views/activity/Showactivity.php');
+        exit();
+    }
+    function SearchUsers() {
+        isLogin();
+        if (!isset($_POST["search"]) || empty($_POST["search"])) {
+            exit();
+        }
+        $aid = $_SESSION["login_token"];
+        $search = $_POST["search"];
+        $users = searchUsers($aid, $search);
+        require_once('../app/views/activity/Showactivity.php');
+        exit();
+    }
+    
 }
 $Activity = new Activity();
