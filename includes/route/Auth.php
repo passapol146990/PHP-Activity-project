@@ -11,6 +11,18 @@ class AUTH{
         header("Location:{$url}");
         exit();
     }
+    function authNormal() {
+        if (isset($_POST['gmail']) && isset($_POST['password'])) {
+            $gmail = $_POST['gmail'];
+            $password = $_POST['password'];
+            loginNormal($gmail, $password);
+        } else {
+            header('Location: /login?message=Please enter both email and password');
+            exit();
+        }
+    }
+    
+    
     function callback(){
         $code = $_GET['code'] ?? null;
         if (!$code) {
