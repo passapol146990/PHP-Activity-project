@@ -26,14 +26,14 @@
         <h2 class="text-center">Login</h2>
         <form action="" method="POST">
             <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
+                <label for="email" class="" style="color:aliceblue"> Email</label>
                 <input type="email" class="form-control" id="email" name="email" required>
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
+            <div class="mb-3 ">
+                <label for="password" class=""  style="color:aliceblue">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn btn-primary btn-login w-100"><p>Login</p></button>
+            <div class="text-center"> <button type="submit" class="btn btn-primary w-50">Login</button></div>
         </form>
     </div>
 </div>
