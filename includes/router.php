@@ -81,6 +81,7 @@ if ($method == "GET") {
 } else if ($method == "POST") {
     switch ($path) {
         case '/login':
+            // print_r($_POST);
             $Auth->authNormal();
             break;
         case '/activity/create':

@@ -43,38 +43,37 @@
         $_SESSION['login_name'] = ($data["fname"] ?? "") . " " . ($data["lname"] ?? "");
         $_SESSION['login_time'] = time();
     };
-    function loginNormal($email, $password) {
-        // สร้างการเชื่อมต่อกับฐานข้อมูล
-        $conn = new mysqli('your_server', 'your_username', 'your_password', 'your_database');
-        
-        // ตรวจสอบการเชื่อมต่อ
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-    
-        // หลีกเลี่ยง SQL injection
-        $stmt = $conn->prepare("SELECT * FROM account WHERE gmail = ? AND password = ?");
-        $stmt->bind_param("ss", $email, $password);
-        $stmt->execute();
-        $result = $stmt->get_result();
-    
-        if ($result->num_rows === 0) {
-            // ไม่พบบัญชีผู้ใช้ หรืออีเมลและรหัสผ่านไม่ตรง
-            header('location:/login?message=Invalid email or password');
+    function loginNormal($gmail, $password) {
+        global $conn;
+        $sql = "SELECT aid, password, fname, lname, image FROM account WHERE gmail = ?";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            header('Location: /login?message=Error preparing database query');
             exit();
         }
-    
-        // บัญชีผู้ใช้พบและรหัสผ่านตรง
-        $data = $result->fetch_assoc();
-    
-        // ตั้งค่า session ด้วยข้อมูลผู้ใช้
-        $_SESSION['login_token'] = $data['aid'];  // สมมติว่า 'aid' เป็น primary key
-        $_SESSION['login_image'] = $data['image'];  // เก็บรูปภาพผู้ใช้
-        $_SESSION['login_name'] = ($data['fname'] ?? "") . " " . ($data['lname'] ?? "");  // เก็บชื่อผู้ใช้
-        $_SESSION['login_time'] = time();  // เก็บเวลาที่เข้าสู่ระบบ
-    
-    };
-    
+        $stmt->bind_param("s", $gmail);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['login_token'] = $user['aid'];
+                $_SESSION['login_image'] = $user['image'];
+                $_SESSION['login_name'] = $user['fname'] . " " . $user['lname'];
+                $_SESSION['login_time'] = time();
+                header('Location: /dashboard');
+                exit();
+            } else {
+                header('Location: /login?message=Invalid password');
+                exit();
+            }
+        } else {
+            header('Location: /login?message=Invalid email');
+            exit();
+        }
+    }
+    // loginNormal("user1@a.com", "123456");
+
     function setBirthday($date,$id){
         global $conn;
         $sql = 'UPDATE account SET birthday = ? WHERE aid = ?';
@@ -150,5 +149,33 @@
             }
         }
     }
+    function createAccountnormal($fname, $lname, $gmail, $password) {
+        global $conn;
+        $id = hash('sha256', $gmail);
+        $Hashpassword = password_hash($password, PASSWORD_DEFAULT);
+        $filename = '3ab60813c9df1727e210dc7f58320390ef9f73c8ff9014fd8ee0660fa3e455d4_1742221251.jpg';
+        $birthday = "2005-03-06"; // เก็บค่าวันเกิดไว้ในตัวแปร
+        $sql = 'INSERT INTO account(aid, fname, lname, gmail, image, password, birthday) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            return ["status" => 400, "message" => "prepare error!"];
+        }
+        $stmt->bind_param('sssssss', $id, $fname, $lname, $gmail, $filename, $Hashpassword, $birthday);
+        if (!$stmt->execute()) {
+            return ["status" => 400, "message" => "execute error!"];
+        }
+        $data = $stmt->get_result(); 
+        return ["status" => 200, "message" => "successfully created account.", "data" => $data];
+    }
     
+    // createAccountnormal('A','B',"user1@a.com","123456");
+    // createAccountnormal('C','C',"user2@a.com","123456");
+    // createAccountnormal('D','D',"user3@a.com","123456");
+    // createAccountnormal('E','E',"user4@a.com","123456");
+    // createAccountnormal('F','F',"user5@a.com","123456");
+    // createAccountnormal('G','G',"user6@a.com","123456");
+    // createAccountnormal('H','H',"user7@a.com","123456");
+    // createAccountnormal('I','I',"user8@a.com","123456");
+    // createAccountnormal('J','J',"user9@a.com","123456");
+    // createAccountnormal('P','P',"user10@a.com","123456");
 ?>

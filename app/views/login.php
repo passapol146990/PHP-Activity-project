@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="style/login.css">
     <title>เข้าสู่ระบบ</title>
 </head>
+
 <body>
     <nav id="navbar"></nav>
     <div class="login-box text-center">
@@ -22,15 +24,24 @@
             Sign in with Google
         </a> -->
         <form action="/login" method="post">
-            <div class="mb-3">
-                <input type="text" class="form-control" id="username" placeholder="Username" required>
-            </div>
-            <div class="mb-3">
-                <input type="password" class="form-control" id="password" placeholder="Password" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Login</button>
-        </form>
+    <div class="mb-3">
+        <input type="text" class="form-control" id="gmail" name="gmail" placeholder="Gmail" required>
+    </div>
+    <div class="mb-3">
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+    <?php
+    if (isset($_GET['message'])) {
+        echo '<div style="color: red;">' . htmlspecialchars($_GET['message']) . '</div>';
+    }
+    ?>
+</form>
+
+
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
