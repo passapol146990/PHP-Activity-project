@@ -13,15 +13,30 @@
     <nav id="navbar"></nav>
     <div class="login-box text-center">
         <h1>Login</h1>
-        <p>Please Login with Google account</p>
+         <p>Please Login with your Email </p> <!-- <p>Please Login with Google account</p> -->
     </div>
-    <div class="login-form">
+    <!-- <div class="login-form">
         <a href="/auth/google" class="btn btn-light w-100 btn-google mb-3">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png"
                 alt="Google Logo" width="30" class="me-2">
             Sign in with Google
         </a>
+    </div> -->
+    <div class="login-form">
+        <h2 class="text-center">Login</h2>
+        <form action="" method="POST">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-login w-100"><p>Login</p></button>
+        </form>
     </div>
+</div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
