@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XSS</title>
+</head>
+<body>
+    <div style="width: 100vw;height: 100vh;overflow: hidden;background: black;top: 0px;left: 0px;position: fixed;color: #fff;display: flex;justify-content: center;align-items: center;font-size: 50px;font-weight: 600;z-index: 9999;">XSS Success</div>
+    <!-- https://www.youtube.com/@passapolsutatam -->
+     <script>
+        document.getElementsByTagName("body").innerHTML = ''
+     </script>
+</body>
+</html>

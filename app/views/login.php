@@ -4,8 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
     <link rel="shortcut icon" type="image/x-icon" href="Logo_size32.png">
     <link rel="stylesheet" href="style/login.css">
     <title>เข้าสู่ระบบ</title>
@@ -17,29 +20,12 @@
         <h1>Login</h1>
         <p>Please Login with Google account</p>
     </div>
-    <div class="login-form">
-        <!-- <a href="/auth/google" class="btn btn-light w-100 btn-google mb-3">
+    <div class="login-form" style="background-color: #f8f9fa;">
+        <a href="/auth/google" class="btn btn-light w-100 btn-google mb-3">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png"
                 alt="Google Logo" width="30" class="me-2">
             Sign in with Google
-        </a> -->
-        <form action="/login" method="post">
-    <div class="mb-3">
-        <input type="text" class="form-control" id="gmail" name="gmail" placeholder="Gmail" required>
-    </div>
-    <div class="mb-3">
-        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-    </div>
-    <button type="submit" class="btn btn-primary w-100">Login</button>
-    <?php
-    if (isset($_GET['message'])) {
-        echo '<div style="color: red;">' . htmlspecialchars($_GET['message']) . '</div>';
-    }
-    ?>
-</form>
-
-
-
+        </a>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

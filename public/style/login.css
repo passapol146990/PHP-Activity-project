@@ -46,7 +46,6 @@ body {
     transform: translate(-10%, -50%);
     width: 400px;
     height: auto;
-    background: rgba(0, 0, 0, 0.8);
 }
 
 .btn-google {
